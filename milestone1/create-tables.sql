@@ -36,7 +36,7 @@ arrival_datetime DATE NOT NULL,
 duration INTEGER NOT NULL CHECK (duration > 0),
 mileage INTEGER NOT NULL CHECK (mileage > 0));
 
-INSERT INTO Users VALUES (0, 'sqllover@duke.edu', crypt('encryptedpassword', gen_salt('bf')));
+INSERT INTO Users VALUES (0, 'sqllover@duke.edu', crypt('password', gen_salt('bf')));
 INSERT INTO Users VALUES (1, 'ra4ever@duke.edu', crypt('otherpassword', gen_salt('bf')));
 
 INSERT INTO Trips VALUES(0, 0, 'to internship');
