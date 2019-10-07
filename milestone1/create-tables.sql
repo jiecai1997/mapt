@@ -1,10 +1,10 @@
 CREATE TABLE Flights
 (fid INTEGER PRIMARY KEY,
 tid INTEGER NOT NULL REFERENCES Trips.tid,
-airline_iata CHAR(2) REFERENCES Airlines.iata_code, 
+airline_iata CHAR(2) REFERENCES Airlines.iata, 
 flight_num INTEGER CHECK (flight_num > 0),
-depart_iata CHAR(3) NOT NULL REFERENCES Airports.iata_code,
-arrival_iata CHAR(3) NOT NULL REFERENCES Airports.iata_code,
+depart_iata CHAR(3) NOT NULL REFERENCES Airports.iata,
+arrival_iata CHAR(3) NOT NULL REFERENCES Airports.iata,
 depart_datetime DATE NOT NULL,
 arrival_datetime DATE NOT NULL,
 duration INTEGER NOT NULL CHECK (duration > 0),
