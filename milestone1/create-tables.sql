@@ -1,11 +1,13 @@
+CREATE EXTENSION pgcrypto; 
+
 CREATE TABLE Users
 (uid INTEGER NOT NULL PRIMARY KEY, 
 email VARCHAR(50) NOT NULL UNIQUE CHECK (email LIKE '%_@_%._%'), 
-password VARCHAR(50) NOT NULL);
+password VARCHAR(60) NOT NULL);
 
 CREATE TABLE Trips
 (tid INTEGER NOT NULL PRIMARY KEY,
-uid INTEGER REFERENCES Users.uid,
+uid INTEGER REFERENCES Users(uid),
 trip_name VARCHAR(30));
 
 CREATE TABLE Airlines
@@ -24,11 +26,11 @@ dst CHAR(1) NOT NULL CHECK (dst IN ('E', 'A', 'S', 'O', 'Z', 'N', 'U')));
 
 CREATE TABLE Flights
 (fid INTEGER PRIMARY KEY,
-tid INTEGER NOT NULL REFERENCES Trips.tid,
-airline_iata CHAR(2) REFERENCES Airlines.iata, 
+tid INTEGER NOT NULL REFERENCES Trips(tid),
+airline_iata CHAR(2) REFERENCES Airlines(iata), 
 flight_num INTEGER CHECK (flight_num > 0),
-depart_iata CHAR(3) NOT NULL REFERENCES Airports.iata,
-arrival_iata CHAR(3) NOT NULL REFERENCES Airports.iata,
+depart_iata CHAR(3) NOT NULL REFERENCES Airports(iata),
+arrival_iata CHAR(3) NOT NULL REFERENCES Airports(iata),
 depart_datetime DATE NOT NULL,
 arrival_datetime DATE NOT NULL,
 duration INTEGER NOT NULL CHECK (duration > 0),
