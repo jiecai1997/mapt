@@ -34,7 +34,6 @@ tid INTEGER NOT NULL PRIMARY KEY,
 uid REFERENCES Users.uid,
 trip_name VARCHAR(30));
 
-CREATE TABLE Entries
-(tid,
-fid,
-PRIMARY KEY(tid, fid));
+CREATE TABLE Legs
+(tid INTEGER NOT NULL,
+fid INTEGER NOT NULL PRIMARY KEY REFERENCES Flights.fid);
