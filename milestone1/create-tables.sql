@@ -1,5 +1,6 @@
 CREATE TABLE Flights
 (fid INTEGER PRIMARY KEY,
+tid INTEGER NOT NULL REFERENCES Trips.tid,
 flight_airline CHAR(3) REFERENCES Airlines.iata_code, 
 flight_num INTEGER,
 depart_aid CHAR(3) NOT NULL REFERENCES Airports.iata_code,
@@ -29,11 +30,6 @@ email VARCHAR(50) NOT NULL UNIQUE,
 password VARCHAR(50) NOT NULL);
 
 CREATE TABLE Trips
-(
-tid INTEGER NOT NULL PRIMARY KEY,
+(tid INTEGER NOT NULL PRIMARY KEY,
 uid REFERENCES Users.uid,
 trip_name VARCHAR(30));
-
-CREATE TABLE Legs
-(tid INTEGER NOT NULL,
-fid INTEGER NOT NULL PRIMARY KEY REFERENCES Flights.fid);
