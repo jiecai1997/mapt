@@ -50,7 +50,10 @@ INSERT INTO TRIPS VALUES(0, 2, 'from internship');
 INSERT INTO AIRLINES VALUES('DAL', 'Delta Air Lines');
 INSERT INTO AIRLINES VALUES ('ASA', 'Alaska Airlines');
 
-INSERT INTO AIRPORTS VALUES ('RDU', 'Raleigh Durham International Airport', 'Raleigh-Durham', 'USA', '35.8776', '-78.7875', 'America/ New_York')
+INSERT INTO AIRPORTS VALUES ('RDU', 'Raleigh Durham International Airport', 'Raleigh-Durham', 'USA', 35.8776, -78.7875, 'America/ New_York', 'A');
+INSERT INTO AIRPORTS VALUES ('IAD', 'Washington Dulles International Airport', 'Washington, DC', 'USA', 38.9445, -77.4558, 'America/ New_York', 'A');
+INSERT INTO AIRPORTS VALUES ('SEA', 'Seattle Tacoma International Airport', 'Seattle', 'USA', 47.4490, -122.309, 'America/ Los_Angeles', 'A');
+INSERT INTO AIRPORTS VALUES ('BWI', 'Baltimore/Washington International Thurgood Marshall Airport', 'Baltimore', 'USA', 39.1754, -76.6683, 'America/ New_York', 'A');
 
 
 
