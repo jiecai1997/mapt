@@ -1,32 +1,32 @@
 CREATE TABLE Flights
 (fid INTEGER PRIMARY KEY,
 tid INTEGER NOT NULL REFERENCES Trips.tid,
-flight_airline CHAR(3) REFERENCES Airlines.iata_code, 
-flight_num INTEGER,
-depart_aid CHAR(3) NOT NULL REFERENCES Airports.iata_code,
-arrival_aid CHAR(4) NOT NULL REFERENCES Airports.iata_code,
+airline_iata CHAR(2) REFERENCES Airlines.iata_code, 
+flight_num INTEGER CHECK (flight_num > 0),
+depart_iata CHAR(3) NOT NULL REFERENCES Airports.iata_code,
+arrival_iata CHAR(3) NOT NULL REFERENCES Airports.iata_code,
 depart_datetime DATE NOT NULL,
 arrival_datetime DATE NOT NULL,
-duration INTEGER NOT NULL,
-mileage INTEGER NOT NULL);
+duration INTEGER NOT NULL CHECK (duration > 0),
+mileage INTEGER NOT NULL CHECK (mileage > 0));
 
 CREATE TABLE Airlines
-(iata_code CHAR(2) NOT NULL PRIMARY KEY,
-al_name VARCHAR(50) NOT NULL);
+(iata CHAR(2) NOT NULL PRIMARY KEY,
+name VARCHAR(50) NOT NULL);
 
 CREATE TABLE Airports
-(iata_code CHAR(3) NOT NULL PRIMARY KEY,
+(iata CHAR(3) NOT NULL PRIMARY KEY,
 name VARCHAR(75) NOT NULL, 
 city VARCHAR(75) NOT NULL,
 country VARCHAR(50) NOT NULL,
-longitude FLOAT NOT NULL, 
-latitude FLOAT NOT NULL, 
-time_zone VARCHAR(5) NOT NULL,
-dst CHAR(1) NOT NULL IN ('E', 'A', 'S', 'O', 'Z', 'N', 'U'));
+longitude FLOAT NOT NULL CHECK (longitude >= -180 AND longitude <= 180), 
+latitude FLOAT NOT NULL CHECK (latitude >= -90 AND latitude <= 90), 
+time_zone VARCHAR(60) NOT NULL,
+dst CHAR(1) NOT NULL CHECK (dst IN ('E', 'A', 'S', 'O', 'Z', 'N', 'U')));
 
 CREATE TABLE Users
 (uid INTEGER NOT NULL PRIMARY KEY, 
-email VARCHAR(50) NOT NULL UNIQUE, 
+email VARCHAR(50) NOT NULL UNIQUE CHECK (email LIKE '%_@_%._%'), 
 password VARCHAR(50) NOT NULL);
 
 CREATE TABLE Trips
