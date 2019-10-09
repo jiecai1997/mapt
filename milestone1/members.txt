@@ -1,4 +1,4 @@
-Jie Cai
+Jie Cai - came up with web-app idea, designed initial prototype and schema, found open-source dataset for airports and airlines.
 Ethan Holland
 Jaiveer Katariya - created basic file structure, contributed to schema/table design, contributed to test-sample creation, wrote groundwork for create-tables.sql, for both creating and loading tables.
 Eric Tay
