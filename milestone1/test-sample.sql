@@ -54,7 +54,7 @@ Arrival_airport AS(
 	SELECT * FROM airports
 )
 SELECT *
-FROM Flights 
+FROM Trips NATURAL JOIN Flights 
 JOIN Depart_airport ON Depart_Airport.iata = Flights.depart_iata
 JOIN Arrival_airport ON Arrival_airport.iata = Flights.arrival_iata
 WHERE 
@@ -66,7 +66,7 @@ OR Arrival_airport.name LIKE '%Baltimore%'
 OR Arrival_airport.city LIKE '%Baltimore%')
 AND uid = 0;
 
---Trips that contain a certain airport/city
+-- Trips that contain a certain airport/city
 WITH Depart_airport AS(
 	SELECT * FROM airports
 ),
@@ -85,9 +85,19 @@ OR Depart_airport.city LIKE '%SEA%'
 OR Arrival_airport.iata LIKE '%Baltimore%'
 OR Arrival_airport.name LIKE '%Baltimore%'
 OR Arrival_airport.city LIKE '%Baltimore%')
-AND uid = 0;
 )
-SELECT Trips.*
-FROM Trips JOIN Relevant_flight_trips ON Trips.tid = Relevant_flights.tid;
+SELECT tid
+FROM Trips NATURAL JOIN Relevant_flights
+WHERE uid = 0;
 
+-- Details from a trip
+SELECT airport_iata, note
+FROM trips NATURAL JOIN Details
+WHERE uid = 0
+AND tid = 0;
 
+-- Details from an airport
+SELECT trip_name, note
+FROM trips NATURAL JOIN Details
+WHERE uid = 1
+AND airport_iata = 'IAD';
