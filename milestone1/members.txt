@@ -1,5 +1,5 @@
 Jie Cai - came up with web-app idea, designed initial prototype and schema, found open-source dataset for airports and airlines.
-Ethan Holland
+Ethan Holland - contributed to schema and E/R diagram, helped debug create-tables.sql and test-sample.sql, looked into secure ways of storing passwords
 Jaiveer Katariya - created basic file structure, contributed to schema/table design, contributed to test-sample creation, wrote groundwork for create-tables.sql, for both creating and loading tables.
 Eric Tay
 Kelly Zhang - wrote assumptions and general information for the milestone, contributed the details idea and creation of the table + trigger + relevent test samples, helped review the E/R diagram and check over test cases
