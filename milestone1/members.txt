@@ -2,4 +2,4 @@ Jie Cai
 Ethan Holland
 Jaiveer Katariya - created basic file structure, contributed to schema/table design, contributed to test-sample creation, wrote groundwork for create-tables.sql
 Eric Tay
-Kelly Zhang
+Kelly Zhang - wrote assumptions and general information for the milestone, contributed the details idea and creation of the table + trigger + relevent test samples, helped review the E/R diagram and check over test cases
