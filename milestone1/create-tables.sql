@@ -7,7 +7,7 @@ password VARCHAR(60) NOT NULL);
 
 CREATE TABLE Trips
 (tid INTEGER NOT NULL PRIMARY KEY,
-uid INTEGER REFERENCES Users(uid),
+uid INTEGER REFERENCES Users(uid) ON DELETE CASCADE,
 trip_name VARCHAR(30));
 
 CREATE TABLE Airlines
@@ -26,11 +26,11 @@ dst CHAR(1) NOT NULL CHECK (dst IN ('E', 'A', 'S', 'O', 'Z', 'N', 'U')));
 
 CREATE TABLE Flights
 (fid INTEGER PRIMARY KEY,
-tid INTEGER NOT NULL REFERENCES Trips(tid),
+tid INTEGER NOT NULL REFERENCES Trips(tid) ON DELETE CASCADE,
 airline_iata CHAR(2) REFERENCES Airlines(iata), 
 flight_num INTEGER CHECK (flight_num > 0),
-depart_iata CHAR(3) NOT NULL REFERENCES Airports(iata),
-arrival_iata CHAR(3) NOT NULL REFERENCES Airports(iata),
+depart_iata CHAR(3) NOT NULL REFERENCES Airports(iata) ON DELETE CASCADE,
+arrival_iata CHAR(3) NOT NULL REFERENCES Airports(iata) ON DELETE CASCADE,
 depart_datetime DATE NOT NULL,
 arrival_datetime DATE NOT NULL,
 duration INTEGER NOT NULL CHECK (duration > 0),
@@ -38,8 +38,8 @@ mileage INTEGER NOT NULL CHECK (mileage > 0));
 
 CREATE TABLE Details
 (did INTEGER PRIMARY KEY,
-tid INTEGER NOT NULL REFERENCES Trips(tid),
-airport_iata CHAR(3) NOT NULL REFERENCES Airports(iata),
+tid INTEGER NOT NULL REFERENCES Trips(tid) ON DELETE CASCADE,
+airport_iata CHAR(3) NOT NULL REFERENCES Airports(iata) ON DELETE CASCADE,
 note VARCHAR(280) NOT NULL);
 
 
@@ -87,3 +87,4 @@ INSERT INTO Flights VALUES(0, 0, 'DL', 1253, 'RDU', 'SEA', '20190505 07:25:00 AM
 
 INSERT INTO Details VALUES(1, 1, 'IAD', 'Best place to get boba is TeaDM');
 INSERT INTO Details VALUES(0, 1, 'IAD', 'Lots of cool museums to go to!');
+
