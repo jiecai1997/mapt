@@ -36,6 +36,34 @@ arrival_datetime DATE NOT NULL,
 duration INTEGER NOT NULL CHECK (duration > 0),
 mileage INTEGER NOT NULL CHECK (mileage > 0));
 
+CREATE TABLE Details
+(did INTEGER PRIMARY KEY,
+tid INTEGER NOT NULL REFERENCES Trips(tid),
+airport_iata CHAR(3) NOT NULL REFERENCES Airports(iata),
+note VARCHAR(280) NOT NULL);
+
+
+CREATE FUNCTION TF_Detail_not_visited_airportiata() RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.airport_iata NOT IN (SELECT depart_iata 
+				FROM Flights
+				WHERE NEW.tid=Flights.tid 
+		     	  UNION
+			  SELECT arrival_iata
+				FROM Flights
+				WHERE NEW.tid=Flights.tid) THEN
+	RAISE EXCEPTION 'cannot write a detail for an airport not visited on this trip';
+	END If;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER TG_Detail_not_visited_airportiata
+  BEFORE INSERT OR UPDATE ON Details
+  FOR EACH ROW
+  EXECUTE PROCEDURE TF_Detail_not_visited_airportiata();
+
+
 INSERT INTO Users VALUES (0, 'sqllover@duke.edu', crypt('password', gen_salt('bf')));
 INSERT INTO Users VALUES (1, 'ra4ever@duke.edu', crypt('otherpassword', gen_salt('bf')));
 
@@ -56,3 +84,6 @@ INSERT INTO Flights VALUES(3, 2, 'AS', 0922, 'SEA', 'BWI', '20190727 08:00:00 AM
 INSERT INTO Flights VALUES(2, 1, 'DL', 2220, 'IAD', 'SEA', '20190609 05:00:00 PM', '20190609 07:39:00 PM', 339, 2306); 
 INSERT INTO Flights VALUES(1, 1, 'DL', 2680, 'SEA', 'IAD', '20190605 10:45:00 PM', '20190606 06:07:00 AM', 339, 2306); 
 INSERT INTO Flights VALUES(0, 0, 'DL', 1253, 'RDU', 'SEA', '20190505 07:25:00 AM', '20190505 10:13:00 AM', 348, 2355); 
+
+INSERT INTO Details VALUES(1, 1, 'IAD', 'Best place to get boba is TeaDM');
+INSERT INTO Details VALUES(0, 1, 'IAD', 'Lots of cool museums to go to!');
