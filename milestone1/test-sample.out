@@ -1,11 +1,19 @@
+-- QUERIES
 -- Whether or not a given username, password combination is valid
-SELECT uid
+SELECT uid --right password
 FROM Users
 WHERE email = 'ra4ever@duke.edu' AND password = crypt('otherpassword', password);
  uid 
 -----
    1
 (1 row)
+
+SELECT uid --wrong password
+FROM Users
+WHERE email = 'ra4ever@duke.edu' AND password = crypt('incorrectpassword', password);
+ uid 
+-----
+(0 rows)
 
 -- Airlines whose name or abbreviation contain some substring
 SELECT * 
@@ -33,8 +41,8 @@ FROM Trips NATURAL JOIN Flights
 WHERE uid = 0;
  tid | uid |    trip_name    | fid | airline_iata | flight_num | depart_iata | arrival_iata | depart_datetime | arrival_datetime | duration | mileage 
 -----+-----+-----------------+-----+--------------+------------+-------------+--------------+-----------------+------------------+----------+---------
-   2 |   0 | from internship |   3 | AS           |        922 | SEA         | BWI          | 2019-07-27      | 2019-07-27       |      315 |    2335
    0 |   0 | to internship   |   0 | DL           |       1253 | RDU         | SEA          | 2019-05-05      | 2019-05-05       |      348 |    2355
+   2 |   0 | from internship |   3 | AS           |        922 | SEA         | BWI          | 2019-07-27      | 2019-07-27       |      315 |    2335
 (2 rows)
 
 -- Flights belonging to a user and matching a certain trip name
@@ -88,11 +96,11 @@ WITH Depart_airport AS(
 Arrival_airport AS(
 	SELECT * FROM airports
 )
-SELECT *
+SELECT Flights.*
 FROM Trips NATURAL JOIN Flights 
 JOIN Depart_airport ON Depart_Airport.iata = Flights.depart_iata
 JOIN Arrival_airport ON Arrival_airport.iata = Flights.arrival_iata
-WHERE 
+WHERE
 (Depart_airport.iata LIKE '%SEA%'
 OR Depart_airport.name LIKE '%SEA%'
 OR Depart_airport.city LIKE '%SEA%'
@@ -100,9 +108,9 @@ OR Arrival_airport.iata LIKE '%Baltimore%'
 OR Arrival_airport.name LIKE '%Baltimore%'
 OR Arrival_airport.city LIKE '%Baltimore%')
 AND uid = 0;
- tid | uid |    trip_name    | fid | airline_iata | flight_num | depart_iata | arrival_iata | depart_datetime | arrival_datetime | duration | mileage | iata |                 name                 |  city   | country | latitude | longitude |      time_zone       | dst | iata |                             name                             |   city    | country | latitude | longitude |     time_zone     | dst 
------+-----+-----------------+-----+--------------+------------+-------------+--------------+-----------------+------------------+----------+---------+------+--------------------------------------+---------+---------+----------+-----------+----------------------+-----+------+--------------------------------------------------------------+-----------+---------+----------+-----------+-------------------+-----
-   2 |   0 | from internship |   3 | AS           |        922 | SEA         | BWI          | 2019-07-27      | 2019-07-27       |      315 |    2335 | SEA  | Seattle Tacoma International Airport | Seattle | USA     |   47.449 |  -122.309 | America/ Los_Angeles | A   | BWI  | Baltimore/Washington International Thurgood Marshall Airport | Baltimore | USA     |  39.1754 |  -76.6683 | America/ New_York | A
+ fid | tid | airline_iata | flight_num | depart_iata | arrival_iata | depart_datetime | arrival_datetime | duration | mileage 
+-----+-----+--------------+------------+-------------+--------------+-----------------+------------------+----------+---------
+   3 |   2 | AS           |        922 | SEA         | BWI          | 2019-07-27      | 2019-07-27       |      315 |    2335
 (1 row)
 
 -- Trips that contain a certain airport/city
@@ -114,34 +122,34 @@ Arrival_airport AS(
 ),
 Relevant_flights AS(
 SELECT tid
-FROM Flights 
+FROM Flights
 JOIN Airports Depart_airport ON Depart_Airport.iata = Flights.depart_iata
 	JOIN Airports Arrival_airport ON Arrival_airport.iata = Flights.arrival_iata
-WHERE 
+WHERE
 (Depart_airport.iata LIKE '%SEA%'
 OR Depart_airport.name LIKE '%SEA%'
 OR Depart_airport.city LIKE '%SEA%'
-OR Arrival_airport.iata LIKE '%Baltimore%'
-OR Arrival_airport.name LIKE '%Baltimore%'
-OR Arrival_airport.city LIKE '%Baltimore%')
+OR Arrival_airport.iata LIKE '%SEA%'
+OR Arrival_airport.name LIKE '%SEA%'
+OR Arrival_airport.city LIKE '%SEA%')
 )
-SELECT tid
+SELECT tid, trip_name
 FROM Trips NATURAL JOIN Relevant_flights
 WHERE uid = 0;
- tid 
------
-   2
-(1 row)
+ tid |    trip_name    
+-----+-----------------
+   0 | to internship
+   2 | from internship
+(2 rows)
 
 -- Details from a trip
 SELECT airport_iata, note
 FROM trips NATURAL JOIN Details
 WHERE uid = 0
 AND tid = 0;
- airport_iata |             note             
---------------+------------------------------
- SEA          | cant wait for my internship!
-(1 row)
+ airport_iata | note 
+--------------+------
+(0 rows)
 
 -- Details from an airport
 SELECT trip_name, note
@@ -154,3 +162,87 @@ AND airport_iata = 'IAD';
  graduation | Lots of cool museums to go to!
 (2 rows)
 
+-- MODIFICATIONS
+-- Users changing flight info
+SELECT * FROM flights; --before
+ fid | tid | airline_iata | flight_num | depart_iata | arrival_iata | depart_datetime | arrival_datetime | duration | mileage 
+-----+-----+--------------+------------+-------------+--------------+-----------------+------------------+----------+---------
+   2 |   1 | DL           |       2220 | IAD         | SEA          | 2019-06-09      | 2019-06-09       |      339 |    2306
+   1 |   1 | DL           |       2680 | SEA         | IAD          | 2019-06-05      | 2019-06-06       |      339 |    2306
+   0 |   0 | DL           |       1253 | RDU         | SEA          | 2019-05-05      | 2019-05-05       |      348 |    2355
+   3 |   2 | AS           |        922 | SEA         | BWI          | 2019-07-27      | 2019-07-27       |      315 |    2335
+(4 rows)
+
+UPDATE Flights
+SET flight_num = 1234 --can also change other attributes
+WHERE fid = 0;
+UPDATE 1
+SELECT * FROM flights; --after
+ fid | tid | airline_iata | flight_num | depart_iata | arrival_iata | depart_datetime | arrival_datetime | duration | mileage 
+-----+-----+--------------+------------+-------------+--------------+-----------------+------------------+----------+---------
+   2 |   1 | DL           |       2220 | IAD         | SEA          | 2019-06-09      | 2019-06-09       |      339 |    2306
+   1 |   1 | DL           |       2680 | SEA         | IAD          | 2019-06-05      | 2019-06-06       |      339 |    2306
+   3 |   2 | AS           |        922 | SEA         | BWI          | 2019-07-27      | 2019-07-27       |      315 |    2335
+   0 |   0 | DL           |       1234 | RDU         | SEA          | 2019-05-05      | 2019-05-05       |      348 |    2355
+(4 rows)
+
+-- Users inserting/deleting flights from past trips
+DELETE FROM Flights
+WHERE fid = 0;
+DELETE 1
+SELECT * FROM flights;
+ fid | tid | airline_iata | flight_num | depart_iata | arrival_iata | depart_datetime | arrival_datetime | duration | mileage 
+-----+-----+--------------+------------+-------------+--------------+-----------------+------------------+----------+---------
+   2 |   1 | DL           |       2220 | IAD         | SEA          | 2019-06-09      | 2019-06-09       |      339 |    2306
+   1 |   1 | DL           |       2680 | SEA         | IAD          | 2019-06-05      | 2019-06-06       |      339 |    2306
+   3 |   2 | AS           |        922 | SEA         | BWI          | 2019-07-27      | 2019-07-27       |      315 |    2335
+(3 rows)
+
+INSERT INTO Flights VALUES(0, 0, 'DL', 1253, 'RDU', 'SEA', '20190505 07:25:00 AM', '20190505 10:13:00 AM', 348, 2355); -- revert
+INSERT 0 1
+-- User changing email and/or password
+SELECT * FROM Users; --before
+ uid |       email       |                           password                           
+-----+-------------------+--------------------------------------------------------------
+   1 | ra4ever@duke.edu  | $2a$06$8/rnVWvaCTvlMsQIDo5MTebJ3BuVyGg0AE0u3E7Br.UxWSec5Mlpm
+   0 | sqllover@duke.edu | $2a$06$dQUxptOUduUWysFq5VMoheoUjvz36E7Z/844WOb0VK60hg9zjyA5G
+(2 rows)
+
+UPDATE Users
+SET email = 'mongolover@duke.edu', password = crypt('newpassword', gen_salt('bf'))
+WHERE uid = 0;
+UPDATE 1
+SELECT * FROM Users; --after
+ uid |        email        |                           password                           
+-----+---------------------+--------------------------------------------------------------
+   1 | ra4ever@duke.edu    | $2a$06$8/rnVWvaCTvlMsQIDo5MTebJ3BuVyGg0AE0u3E7Br.UxWSec5Mlpm
+   0 | mongolover@duke.edu | $2a$06$zQH/kCmUV378kydZav.52.KkzaWq7DQYxeRRN8.Uv94duirnSp1f.
+(2 rows)
+
+-- User deleting entire account
+DELETE FROM Users
+WHERE uid = 0;
+DELETE 1
+SELECT * FROM Users; --after
+ uid |      email       |                           password                           
+-----+------------------+--------------------------------------------------------------
+   1 | ra4ever@duke.edu | $2a$06$8/rnVWvaCTvlMsQIDo5MTebJ3BuVyGg0AE0u3E7Br.UxWSec5Mlpm
+(1 row)
+
+SELECT * FROM Flights; --after (shows cascade)
+ fid | tid | airline_iata | flight_num | depart_iata | arrival_iata | depart_datetime | arrival_datetime | duration | mileage 
+-----+-----+--------------+------------+-------------+--------------+-----------------+------------------+----------+---------
+   2 |   1 | DL           |       2220 | IAD         | SEA          | 2019-06-09      | 2019-06-09       |      339 |    2306
+   1 |   1 | DL           |       2680 | SEA         | IAD          | 2019-06-05      | 2019-06-06       |      339 |    2306
+(2 rows)
+
+INSERT INTO Users VALUES (0, 'sqllover@duke.edu', crypt('password', gen_salt('bf'))); --revert
+INSERT 0 1
+INSERT INTO Trips VALUES(0, 0, 'to internship'); --revert
+INSERT 0 1
+INSERT INTO Trips VALUES(2, 0, 'from internship'); --revert
+INSERT 0 1
+INSERT INTO Flights VALUES(0, 0, 'DL', 1253, 'RDU', 'SEA', '20190505 07:25:00 AM', '20190505 10:13:00 AM', 348, 2355); --revert
+INSERT 0 1
+INSERT INTO Flights VALUES(3, 2, 'AS', 0922, 'SEA', 'BWI', '20190727 08:00:00 AM', '20190727 4:15:00 PM', 315, 2335); --revert
+INSERT 0 1
