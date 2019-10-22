@@ -1,66 +1,16 @@
-import { Component, OnInit } from '@angular/core';
 
-@Component({
-  selector: 'app-map',
-  templateUrl: './map.component.html',
-  styleUrls: ['./map.component.css']
-
-})
-export class MapComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
-  // on init, set lat/long to user's current location?
-
-  lat:number = 32.2226;
-  lng:number = -110.9747;
-
-  options = 
-    {
-      streetViewControl: "false"
-    }
-  
-
-  styles = [
-    {
-      "elementType": "labels.text.stroke",
-        "stylers": [{
-          "weight": "0.5"
-        }]
-    },
-    {
-      "elementType": "labels.icon",
-        "stylers": [{
-          "visibility":"off"
-        }]
-    },
+{ "styles": 
+    [
     {
     "featureType": "administrative",
         "stylers": [{
-          "color": "#bbbbbb"
+            "visibility":"off"
         }]
     },
     {
-      "featureType": "administrative",
-      "elementType": "labels.text",
-          "stylers": [{
-            "visibility": "off"
-          }]
-    },
-    {
-      "featureType": "administrative.country",
-      "elementType": "labels.text",
-          "stylers": [{
-            "visibility": "on",
-          }]
-      },
-    {
     "featureType": "administrative.country",
         "stylers": [{
-          "color": "#ffffff",
+            "visibility":"off"
         }]
     },
     {
@@ -84,22 +34,13 @@ export class MapComponent implements OnInit {
     {
     "featureType": "administrative.province",
         "stylers": [{
-            "color":"#777777"
+            "visibility":"off"
         }]
     },
-    {
-      "featureType": "administrative.province",
-      "elementType": 'labels.text',
-          "stylers": [{
-              "visibility":"on",
-              "color":"#777777"
-          }]
-    },
-    {
+            {
     "featureType": "landscape",
         "stylers": [{
-            "color": "#ffffff",
-            "visibility":"on"
+            "visibility":"off"
         }]
     },
     {
@@ -111,7 +52,7 @@ export class MapComponent implements OnInit {
     {
     "featureType": "landscape.natural",
         "stylers": [{
-            "color":"#bbbbbb"
+            "visibility":"off"
         }]
     },
             {
@@ -255,7 +196,8 @@ export class MapComponent implements OnInit {
     {
         "featureType": "water",
         "stylers": [{
-            "color": "#000000"
+            "visibility":"off"
             }]
-    }];
+    }
+]
 }
