@@ -1,0 +1,14 @@
+p{
+    color: white;
+}
+
+#chart_div{
+    border: 5px solid red;
+}
+
+agm-map {
+    height: 600px;
+    border: 5px solid red;
+  }
+
+  
