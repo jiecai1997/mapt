@@ -10,14 +10,10 @@ import { Flight } from '../models/Flight';
 })
 export class MapComponent implements OnInit {
 
-  constructor(private flightsService:FlightsService) { 
-    console.log('flights');
-    this.getFlights();
-    console.log('flights', this.flights);
-
-  }
+  constructor(private flightsService:FlightsService) { }
 
   ngOnInit() {
+    this.getFlights();
 
   }
 
@@ -29,7 +25,8 @@ export class MapComponent implements OnInit {
   flights:Flight[]
 
   getFlights(): void{
-      this.flights = this.flightsService.getFlights();
+      this.flightsService.getFlights().subscribe(
+          flights => this.flights = flights);
   }
 
 
