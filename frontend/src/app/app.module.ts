@@ -14,6 +14,12 @@ import { MapComponent } from '@app/map/map.component';
 import { EdittripComponent } from '@app/edittrip/edittrip.component';
 import { TopbarComponent } from '@app/topbar/topbar.component';
 import { StatsComponent } from './stats/stats.component';
+import { ProfileComponent } from './profile/profile.component';
+import { LoginComponent } from './login/login.component';
+import { AddtripComponent } from './addtrip/addtrip.component';
+import { FlightlistComponent } from './flightlist/flightlist.component';
+import { TripnameComponent } from './tripname/tripname.component';
+import { TriplistComponent } from './triplist/triplist.component';
 
 let apiKey: string = environment.apiKey;
 
@@ -24,7 +30,13 @@ let apiKey: string = environment.apiKey;
     EdittripComponent,
     TopbarComponent,
     HomepageComponent,
-    StatsComponent
+    StatsComponent,
+    ProfileComponent,
+    LoginComponent,
+    AddtripComponent,
+    FlightlistComponent,
+    TripnameComponent,
+    TriplistComponent
   ],
   imports: [
     BrowserModule,
