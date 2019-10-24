@@ -1,1 +1,11 @@
-html { background-color: black; }
+html { 
+    background-color: black;
+}
+
+p {
+    color: white;
+}
+
+.mat-divider {
+    border-top-color: white;
+}
