@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AgmCoreModule } from '@agm/core';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { environment } from "@app/../environments/environment";
 
 //containers
@@ -30,7 +31,8 @@ let apiKey: string = environment.apiKey;
     AgmCoreModule.forRoot({
       apiKey: apiKey
     }),
-    MatDividerModule
+    MatDividerModule,
+    MatGridListModule
   ],
   providers: [],
   bootstrap: [AppComponent]
