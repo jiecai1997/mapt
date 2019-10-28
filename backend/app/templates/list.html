@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+   <body>
+      <table border = 5>
+         <thead>
+            <td>UID</td>
+            <td>Email</td>
+            <td>Username</td>
+            <td>Password</td>
+         </thead>
+         
+         {% for row in rows %}
+            <tr>
+               <td>{{row["uid"]}}</td>
+               <td>{{row["email"]}}</td>
+               <td>{{row["username"]}}</td>
+               <td>{{row['password']}}</td>	
+            </tr>
+         {% endfor %}
+      </table>
+      
+      <a href = "/">Home</a>
+   </body>
+</html>
