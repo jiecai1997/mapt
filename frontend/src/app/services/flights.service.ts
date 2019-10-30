@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
 import { Flight } from '../models/Flight';
 import { Point } from '../models/Point';
-import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FlightsService {
 
-  constructor() { }
+  constructor(private http:HttpClient) { }
 
   getFlights():Observable<Flight[]> {
 
@@ -24,19 +26,20 @@ export class FlightsService {
 
 
   coordToFlight(flightObj): Flight {
-    const firstPoint = {
+    const firstPoint:Point = {
       lat: flightObj['flight']['firstPoint']['lat'],
       long: flightObj['flight']['firstPoint']['long']
     }
 
-    const secondPoint = {
+    const secondPoint:Point = {
       lat: flightObj['flight']['secondPoint']['lat'],
       long: flightObj['flight']['secondPoint']['long']
     }
 
     const myFlight:Flight = {
       startPoint: firstPoint,
-      endPoint: secondPoint
+      endPoint: secondPoint,
+      opacity: 1
     }
 
     return myFlight;

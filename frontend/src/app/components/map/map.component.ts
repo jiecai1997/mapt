@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FlightsService } from '../services/flights.service';
-import { Flight } from '../models/Flight';
+import { FlightsService } from '@app/services/flights.service';
+import { Flight } from '@app/models/Flight';
 
 @Component({
   selector: 'app-map',
@@ -26,7 +26,11 @@ export class MapComponent implements OnInit {
 
   getFlights(): void{
       this.flightsService.getFlights().subscribe(
-          flights => this.flights = flights);
+          flights => {
+              this.flights = flights;
+              console.log('flights', flights);
+            
+            });
   }
 
 
