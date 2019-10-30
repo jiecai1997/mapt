@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FlightsService } from '@app/services/flights.service';
+import { Flight } from '@app/models/Flight';
 
 @Component({
   selector: 'app-map',
@@ -8,15 +10,29 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MapComponent implements OnInit {
 
-  constructor() { }
+  constructor(private flightsService:FlightsService) { }
 
   ngOnInit() {
+    this.getFlights();
+
   }
 
   // on init, set lat/long to user's current location?
 
   lat:number = 32.2226;
   lng:number = -110.9747;
+
+  flights:Flight[]
+
+  getFlights(): void{
+      this.flightsService.getFlights().subscribe(
+          flights => {
+              this.flights = flights;
+              console.log('flights', flights);
+            
+            });
+  }
+
 
   options = 
     {

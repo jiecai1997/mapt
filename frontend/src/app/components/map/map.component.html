@@ -1,0 +1,11 @@
+<p>I'm the map</p>
+
+<agm-map [latitude]="lat" [longitude]="lng" [styles]="styles" [streetViewControl]="false" [zoom]="5">
+
+  
+  <agm-polyline *ngFor="let flight of flights" [strokeColor]="'red'" [geodesic] = "true" [strokeWeight]="2" [strokeOpacity]="flight.opacity">
+        <agm-polyline-point [latitude]="flight.startPoint.lat" [longitude]="flight.startPoint.long" ></agm-polyline-point>
+        <agm-polyline-point [latitude]="flight.endPoint.lat" [longitude]="flight.endPoint.long" ></agm-polyline-point>
+  </agm-polyline> 
+
+</agm-map>
