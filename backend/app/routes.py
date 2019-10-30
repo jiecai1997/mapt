@@ -1,6 +1,6 @@
 from app import app
 from flask import render_template, flash, redirect
-from app.forms import LoginForm
+from app.forms import LoginForm, RegisterForm
 import sqlite3 as sql
 
 @app.route('/')
@@ -15,6 +15,15 @@ def login():
             form.username.data, form.remember_me.data))
         return redirect(url_for('/'))
     return render_template('login.html', title='Sign In', form=form)
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        flash('Register requested for user {}, remember_me={}'.format(
+            form.username.data, form.remember_me.data))
+        return redirect(url_for('/'))
+    return render_template('register.html', title='Register', form=form)
 
 @app.route('/list')
 def list():
