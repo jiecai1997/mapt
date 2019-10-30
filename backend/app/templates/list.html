@@ -8,17 +8,17 @@
             <td>Username</td>
             <td>Password</td>
          </thead>
-         
+
          {% for row in rows %}
             <tr>
                <td>{{row["uid"]}}</td>
                <td>{{row["email"]}}</td>
                <td>{{row["username"]}}</td>
-               <td>{{row['password']}}</td>	
+               <td>{{row['password']}}</td>
             </tr>
          {% endfor %}
       </table>
-      
+
       <a href = "/">Home</a>
    </body>
 </html>
