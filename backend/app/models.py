@@ -4,8 +4,6 @@ from sqlalchemy.orm import validates
 from sqlalchemy import CheckConstraint
 
 class User(db.Model):
-	__tablename__ = 'address'
-
 	uid = db.Column(db.Integer, primary_key=True)
 	username = db.Column(db.String(20), unique=True, nullable=False)
 	email = db.Column(db.String(50), unique=True, nullable=False)
@@ -18,7 +16,7 @@ class User(db.Model):
 
 class Trips(db.Model):
 	tid = db.Column(db.Integer, primary_key=True)
-	uid = db.Column(db.Integer, db.ForeignKey('User.uid'), nullable=False)
+	uid = db.Column(db.Integer, db.ForeignKey(User.uid), nullable=False)
 	trip_name = db.Column(db.String(30), default="Trip Created on " + str(datetime.now()), nullable=False)
 
 	def __repr__(self):
@@ -53,11 +51,11 @@ class Airports(db.Model):
 
 class Flights(db.Model):
 	fid = db.Column(db.Integer, primary_key=True)
-	tid = db.Column(db.Integer, db.ForeignKey('Trips.tid'), nullable=False)
-	airline_iata = db.Column(db.String(2), db.ForeignKey('Airlines.iata'))
+	tid = db.Column(db.Integer, db.ForeignKey(Trips.tid), nullable=False)
+	airline_iata = db.Column(db.String(2), db.ForeignKey(Airlines.iata))
 	flight_num = db.Column(db.Integer) ##TODO: does this need to be >0?
-	depart_iata = db.Column(db.String(3), db.ForeignKey('Airports.iata'), nullable=False)
-	arrival_iata = db.Column(db.String(3), db.ForeignKey('Airports.iata'), nullable=False)
+	depart_iata = db.Column(db.String(3), db.ForeignKey(Airports.iata), nullable=False)
+	arrival_iata = db.Column(db.String(3), db.ForeignKey(Airports.iata), nullable=False)
 	depart_datetime = db.Column(db.DateTime, nullable=False)
 	arrival_datetime = db.Column(db.DateTime, nullable=False)
 	duration = db.Column(db.Integer, nullable=False)
