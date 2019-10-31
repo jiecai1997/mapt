@@ -22,8 +22,10 @@ def register():
     if form.validate_on_submit():
         flash('Register requested for user {}, remember_me={}'.format(
             form.username.data, form.remember_me.data))
-        return redirect(url_for('/'))
-    return render_template('register.html', title='Register', form=form)
+    form.username.data = ""
+    form.email.data = ""
+    form.remember_me.data = 0
+    return redirect(url_for('login'))
 
 @app.route('/list')
 def list():
