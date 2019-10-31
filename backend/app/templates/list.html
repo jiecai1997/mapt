@@ -39,6 +39,37 @@
          {% endfor %}
       </table>
 
+      <h2> Flights </h2>
+      <table border = 5>
+         <thead>
+           <td>FID</td>
+           <td>TID</td>
+           <td>Airline IATA</td>
+           <td>Flight Number</td>
+           <td>Depart IATA</td>
+           <td>Arrival IATA</td>
+           <td>Depart Date & Time</td>
+           <td>Arrival Date & Time</td>
+           <td>Duration</td>
+           <td>Mileage</td>
+         </thead>
+
+         {% for row in flightsrows %}
+            <tr>
+               <td>{{row["fid"]}}</td>
+               <td>{{row["tid"]}}</td>
+               <td>{{row["airline_iata"]}}</td>
+               <td>{{row["flight_num"]}}</td>
+               <td>{{row["depart_iata"]}}</td>
+               <td>{{row["arrival_iata"]}}</td>
+               <td>{{row["depart_datetime"]}}</td>
+               <td>{{row["arrival_datetime"]}}</td>
+               <td>{{row["duration"]}}</td>
+               <td>{{row["mileage"]}}</td>
+            </tr>
+         {% endfor %}
+      </table>
+
       <h2> Airlines </h2>
       <table border = 5>
          <thead>
@@ -80,38 +111,6 @@
             </tr>
          {% endfor %}
       </table>
-
-      <h2> Flights </h2>
-      <table border = 5>
-         <thead>
-           <td>FID</td>
-           <td>TID</td>
-           <td>Airline IATA</td>
-           <td>Flight Number</td>
-           <td>Depart IATA</td>
-           <td>Arrival IATA</td>
-           <td>Depart Date & Time</td>
-           <td>Arrival Date & Time</td>
-           <td>Duration</td>
-           <td>Mileage</td>
-         </thead>
-
-         {% for row in flightsrows %}
-            <tr>
-               <td>{{row["fid"]}}</td>
-               <td>{{row["tid"]}}</td>
-               <td>{{row["airline_iata"]}}</td>
-               <td>{{row["flight_num"]}}</td>
-               <td>{{row["depart_iata"]}}</td>
-               <td>{{row["arrival_iata"]}}</td>
-               <td>{{row["depart_datetime"]}}</td>
-               <td>{{row["arrival_datetime"]}}</td>
-               <td>{{row["duration"]}}</td>
-               <td>{{row["mileage"]}}</td>
-            </tr>
-         {% endfor %}
-      </table>
-
       <br><a href = "/">Home</a></br>
    </body>
 </html>
