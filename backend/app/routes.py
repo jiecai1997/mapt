@@ -38,7 +38,6 @@ def register():
 			return redirect('/list')
 	return render_template('register.html', title='Register', form=form)
 
-
 @app.route('/list')
 def list():
 	with sql.connect("app.db") as con:
@@ -51,7 +50,20 @@ def list():
 		cur.execute("select * from trips")
 		tripsrows = cur.fetchall()
 		cur.close()
-	return render_template("list.html",userrows = userrows,tripsrows = tripsrows)
+		cur = con.cursor()
+		cur.execute("select * from airlines")
+		airlinesrows = cur.fetchall()
+		cur.close()
+		cur = con.cursor()
+		cur.execute("select * from airports")
+		airportsrows = cur.fetchall()
+		cur.close()
+		cur = con.cursor()
+		cur.execute("select * from flights")
+		flightsrows = cur.fetchall()
+		cur.close()
+	return render_template("list.html",userrows = userrows,tripsrows = tripsrows,
+    airlinesrows = airlinesrows, airportsrows = airportsrows, flightsrows = flightsrows)
 
 @app.route('/update')
 def update():
