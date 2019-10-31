@@ -1,5 +1,5 @@
 from app import app
-from flask import render_template, flash, redirect
+from flask import render_template, flash, redirect, url_for, session, request
 from app.forms import LoginForm, RegisterForm
 import sqlite3 as sql
 
@@ -18,14 +18,26 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    form = RegisterForm()
-    if form.validate_on_submit():
-        flash('Register requested for user {}, remember_me={}'.format(
-            form.username.data, form.remember_me.data))
-    form.username.data = ""
-    form.email.data = ""
-    form.remember_me.data = 0
-    return redirect(url_for('login'))
+	form = RegisterForm(request.form)
+	if request.method == 'POST' and form.validate():
+		username = form.username.data
+		email = form.email.data
+		password = form.password.data
+		print(username)
+		print(email)
+		print(password)
+		with sql.connect("app.db") as con:
+			con.row_factory = sql.Row
+			cur = con.cursor()
+			# TODO display page properly if constraint is violated
+			n = cur.execute("SELECT MAX(uid) FROM user").fetchone()[0]
+			cur.execute("INSERT INTO user (uid, username, email, password, public) VALUES (?,?,?,?,?)",(n+1, username, email, password, 1))
+			con.commit()
+			cur.close()
+			flash('Thanks for registering')
+			return redirect('/list')
+	return render_template('register.html', title='Register', form=form)
+
 
 @app.route('/list')
 def list():
