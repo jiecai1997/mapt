@@ -46,8 +46,8 @@ def update():
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
-		#cur.execute("INSERT INTO user(uid, username, email, password, public) VALUES(1, 'llama', 'llama@gmail.com', 'llamallamallama', 1)")
-		#cur.execute("INSERT INTO user(uid, username, email, password, public) VALUES(2, 'alpaca', 'alpaca@gmail.com', 'alpacaalpacaalpaca', 1)")
+		cur.execute("INSERT INTO user(uid, username, email, password, public) VALUES(1, 'llama', 'llama@gmail.com', 'llamallamallama', 1)")
+		cur.execute("INSERT INTO user(uid, username, email, password, public) VALUES(2, 'alpaca', 'alpaca@gmail.com', 'alpacaalpacaalpaca', 1)")
 		cur.execute("INSERT INTO trips(tid, uid, trip_name) VALUES(1,1,'llama')")
 		con.commit()
 		cur.close()
