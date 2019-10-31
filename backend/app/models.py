@@ -31,6 +31,9 @@ class Airlines(db.Model):
 	iata = db.Column(db.String(2), primary_key=True)
 	name = db.Column(db.String(50), nullable=False)
 
+	def __repr__(self):
+		return '<Airlines {}>'.format(self.iata)
+
 
 class Airports(db.Model):
 	iata = db.Column(db.String(3), primary_key=True)
@@ -43,7 +46,7 @@ class Airports(db.Model):
 	dst = db.Column(db.String(1), nullable=False)
 
 	def __repr__(self):
-		return '<User {}>'.format(self.iata)
+		return '<Airports {}>'.format(self.iata)
 
 	## TODO: we don't need to verify the long, lat, and dst right? bc the airport data is waht we are entering and should be valid
 
@@ -59,3 +62,6 @@ class Flights(db.Model):
 	arrival_datetime = db.Column(db.DateTime, nullable=False)
 	duration = db.Column(db.Integer, nullable=False)
 	mileage = db.Column(db.Integer, nullable=False)
+
+	def __repr__(self):
+		return '<Flights {}>'.format(self.fid)
