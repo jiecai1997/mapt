@@ -7,14 +7,32 @@
             <td>Email</td>
             <td>Username</td>
             <td>Password</td>
+            <td>Public</td>
          </thead>
 
-         {% for row in rows %}
+         {% for row in userrows %}
             <tr>
                <td>{{row["uid"]}}</td>
                <td>{{row["email"]}}</td>
                <td>{{row["username"]}}</td>
                <td>{{row['password']}}</td>
+               <td>{{row['public']}}</td>
+            </tr>
+         {% endfor %}
+      </table>
+
+      <table border = 5>
+         <thead>
+            <td>TID</td>
+            <td>UID</td>
+            <td>Trip Name</td>
+         </thead>
+
+         {% for row in tripsrows %}
+            <tr>
+               <td>{{row["tid"]}}</td>
+               <td>{{row["uid"]}}</td>
+               <td>{{row["trip_name"]}}</td>
             </tr>
          {% endfor %}
       </table>
