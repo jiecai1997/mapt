@@ -1,11 +1,7 @@
-html { 
-    background-color: black;
-}
+@import '@angular/material/prebuilt-themes/pink-bluegrey.css';
 
-p {
-    color: white;
-}
-
-.mat-divider {
-    border-color: white;
+html, body, .mat-app-background { /* make theme take up whole page */
+    margin: 0;
+    height: 100%;
+    overflow: auto;
 }
