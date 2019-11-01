@@ -2,7 +2,10 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
-  template: '<div main><app-topbar></app-topbar><app-homepage></app-homepage></div>'
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
 
 export class AppComponent {}
+
+// eventually gonna want to use routing to switch views between components - see https://angular.io/tutorial/toh-pt5 
