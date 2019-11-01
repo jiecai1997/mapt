@@ -12,6 +12,8 @@ export class FlightsService {
 
   constructor(private http:HttpClient) { }
 
+  private serverURL = 'http://localhost:5000';
+
   getFlights():Observable<Flight[]> {
 
     const listOfJsons = [
@@ -20,6 +22,9 @@ export class FlightsService {
     ];
 
     const listOfFlights:Flight[] = listOfJsons.map(x => this.coordToFlight(x));
+    // this.http.get(this.serverURL + '/list').subscribe( flightData => {
+    //   console.log('flights', flightData);
+    // });
 
     return of(listOfFlights);
   }

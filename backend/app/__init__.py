@@ -1,10 +1,13 @@
 from flask import Flask
+from flask_cors import CORS
 from config import Config
 import os
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
 app = Flask(__name__)
+CORS(app)
+
 app.config.from_object(Config)
 
 SECRET_KEY = os.urandom(32)
