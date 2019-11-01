@@ -1,7 +1,10 @@
 @import '@angular/material/prebuilt-themes/pink-bluegrey.css';
 
 html, body, .mat-app-background { /* make theme take up whole page */
-    margin: 0;
     height: 100%;
-    overflow: auto;
+}
+
+body { 
+    margin: 0; 
+    font-family: Roboto, "Helvetica Neue", sans-serif;
 }
