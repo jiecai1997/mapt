@@ -23,6 +23,7 @@ import { AddtripComponent } from './addtrip/addtrip.component';
 import { FlightlistComponent } from './flightlist/flightlist.component';
 import { TripnameComponent } from './tripname/tripname.component';
 import { TriplistComponent } from './triplist/triplist.component';
+import { AppRoutingModule } from './app-routing.module';
 
 let apiKey: string = environment.apiKey;
 
@@ -45,6 +46,7 @@ let apiKey: string = environment.apiKey;
     AgmCoreModule.forRoot({
       apiKey: apiKey
     }),
+    AppRoutingModule,
     BrowserModule,
     HttpClientModule,
     MatDividerModule,
