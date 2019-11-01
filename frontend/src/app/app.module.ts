@@ -26,6 +26,7 @@ import { TripnameComponent } from './tripname/tripname.component';
 import { TriplistComponent } from './triplist/triplist.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MappageComponent } from './components/mappage/mappage.component';
 
 let apiKey: string = environment.apiKey;
 
@@ -42,7 +43,8 @@ let apiKey: string = environment.apiKey;
     AddtripComponent,
     FlightlistComponent,
     TripnameComponent,
-    TriplistComponent
+    TriplistComponent,
+    MappageComponent
   ],
   imports: [
     AgmCoreModule.forRoot({
