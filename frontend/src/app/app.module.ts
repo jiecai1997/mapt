@@ -4,9 +4,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule }    from '@angular/common/http';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatCardModule } from '@angular/material/card';
 import { NgModule } from '@angular/core';
 import { environment } from "@app/../environments/environment";
-
 
 //containers
 import { AppComponent } from '@app/app';
@@ -48,7 +48,8 @@ let apiKey: string = environment.apiKey;
     BrowserModule,
     HttpClientModule,
     MatDividerModule,
-    MatGridListModule
+    MatGridListModule,
+    MatCardModule
   ],
   providers: [],
   bootstrap: [AppComponent]
