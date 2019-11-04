@@ -38,7 +38,7 @@ def register():
 			return redirect('/list')
 	return render_template('register.html', title='Register', form=form)
 
-@app.route('/flights/<uid>'):
+@app.route('/flights/<uid>')
 def user_flights(uid):
 	with sql.connect("app.db") as con:
 		cur = con.cursor()
