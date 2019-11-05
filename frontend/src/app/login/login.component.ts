@@ -48,6 +48,6 @@ export class LoginComponent implements OnInit {
       this.passwordFormControl.hasError('minlength') || 
       this.emailFormControl.hasError('required') || 
       this.emailFormControl.hasError('email') || 
-      (!this.isCreateAccount && this.usernameFormControl.hasError('required'));
+      (this.isCreateAccount && this.usernameFormControl.hasError('required'));
   }
 }
