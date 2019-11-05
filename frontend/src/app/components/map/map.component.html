@@ -1,4 +1,4 @@
-<agm-map [latitude]="lat" [longitude]="lng" [styles]="styles" [streetViewControl]="false" [zoom]="5">
+<agm-map [latitude]="lat" [longitude]="lng" [styles]="styles" [streetViewControl]="false" [zoom]="3" [minZoom]="2" [scaleControl]="false">
 
   
   <agm-polyline *ngFor="let flight of flights" [strokeColor]="'red'" [geodesic] = "true" [strokeWeight]="2" [strokeOpacity]="flight.opacity">
