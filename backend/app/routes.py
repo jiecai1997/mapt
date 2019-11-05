@@ -37,6 +37,15 @@ def register():
 			return redirect('/list')
 	return render_template('register.html', title='Register', form=form)
 
+@app.route('/flights', methods=['GET', 'POST'])
+def flights():
+    form = FlightsForm()
+    if form.validate(): ## request.method == 'POST'
+        with sql.connect("app.db") as con:
+            con.row_factory = sql.Row
+            con.execute(flights.insert(), )
+    return render_template('flights.html', title="Add a Flight", form=FlightsForm())
+
 @app.route('/list')
 def list():
 	with sql.connect("app.db") as con:
