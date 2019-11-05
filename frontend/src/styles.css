@@ -1,11 +1,10 @@
-html { 
-    background-color: black;
+@import '@angular/material/prebuilt-themes/pink-bluegrey.css';
+
+html, body, .mat-app-background { /* make theme take up whole page */
+    height: 100%;
 }
 
-p {
-    color: white;
-}
-
-.mat-divider {
-    border-top-color: white;
+body { 
+    margin: 0; 
+    font-family: Roboto, "Helvetica Neue", sans-serif;
 }
