@@ -33,10 +33,10 @@ class RegisterForm(FlaskForm):
 class FlightsForm(FlaskForm):
     fid = IntegerField('Fid')
     tid = IntegerField('Tid')
-    airline_iata = StringField('Airline Code', [validators.Length(min=2, max=2)])
+    airline_iata = StringField('Airline Code', [validators.Length(min=2, max=3)])
     flight_num = IntegerField('Flight Number')
-    depart_iata = StringField('Departure Airport', [validators.Length(min=3, max=3)])
-    arrival_iata = StringField('Arrival Airport', [validators.Length(min=3, max=3)])
+    depart_iata = StringField('Departure Airport', [validators.Length(min=3, max=4)])
+    arrival_iata = StringField('Arrival Airport', [validators.Length(min=3, max=4)])
     depart_datetime = DateTimeField('Departure Date & Time')
     arrival_datetime = DateTimeField('Arrival Date & Time')
     duration = IntegerField('Duration/hr')
