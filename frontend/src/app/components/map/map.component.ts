@@ -269,7 +269,7 @@ export class MapComponent implements OnInit {
     {
         "featureType": "water",
         "stylers": [{
-            "color": "#000000"
+            "color": "#303030"
             }]
     }];
 }
