@@ -1,4 +1,4 @@
-{% from "_formhelpers.html" import render_field %}
+<!-- {% from "_formhelpers.html" import render_field %}
 <form method=post>
   <dl>
     {{ render_field(form.fid) }}
@@ -14,4 +14,79 @@
 
   </dl>
   <p><input type=submit value='Add Flight'>
-</form>
+</form> -->
+
+<html>
+   <body>
+        {% block content %}
+            <h1>Add Flight</h1>
+            <form action="" method="post" novalidate>
+              {{ form.hidden_tag() }}
+              <p>
+                  {{ form.tid.label }}<br>
+                  {{ form.tid(size=32) }}<br>
+                  {% for error in form.tid.errors %}
+                  <span style="color: red;">[{{ error }}]</span>
+                  {% endfor %}
+              </p>
+              <p>
+                  {{ form.airline_iata.label }}<br>
+                  {{ form.airline_iata(size=32) }}<br>
+                  {% for error in form.airline_iata.errors %}
+                  <span style="color: red;">[{{ error }}]</span>
+                  {% endfor %}
+              </p>
+              <p>
+                  {{ form.flight_num.label }}<br>
+                  {{ form.flight_num(size=32) }}<br>
+                  {% for error in form.flight_num.errors %}
+                  <span style="color: red;">[{{ error }}]</span>
+                  {% endfor %}
+              </p>
+              <p>
+                  {{ form.depart_iata.label }}<br>
+                  {{ form.depart_iata(size=32) }}<br>
+                  {% for error in form.depart_iata.errors %}
+                  <span style="color: red;">[{{ error }}]</span>
+                  {% endfor %}
+              </p>
+              <p>
+                  {{ form.arrival_iata.label }}<br>
+                  {{ form.arrival_iata(size=32) }}<br>
+                  {% for error in form.arrival_iata.errors %}
+                  <span style="color: red;">[{{ error }}]</span>
+                  {% endfor %}
+              </p>
+              <p>
+                  {{ form.depart_datetime.label }}<br>
+                  {{ form.depart_datetime(size=32) }}<br>
+                  {% for error in form.depart_datetime.errors %}
+                  <span style="color: red;">[{{ error }}]</span>
+                  {% endfor %}
+              </p>
+              <p>
+                  {{ form.arrival_datetime.label }}<br>
+                  {{ form.arrival_datetime(size=32) }}<br>
+                  {% for error in form.arrival_datetime.errors %}
+                  <span style="color: red;">[{{ error }}]</span>
+                  {% endfor %}
+              </p>
+              <p>
+                  {{ form.duration.label }}<br>
+                  {{ form.duration(size=32) }}<br>
+                  {% for error in form.duration.errors %}
+                  <span style="color: red;">[{{ error }}]</span>
+                  {% endfor %}
+              </p>
+              <p>
+                  {{ form.mileage.label }}<br>
+                  {{ form.mileage(size=32) }}<br>
+                  {% for error in form.mileage.errors %}
+                  <span style="color: red;">[{{ error }}]</span>
+                  {% endfor %}
+              </p>
+              <p>{{ form.submit() }}</p>
+            </form>
+        {% endblock %}
+   </body>
+</html>

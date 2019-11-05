@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from app.models import User
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, DateTimeField, validators
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from datetime import datetime
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -37,8 +38,13 @@ class FlightsForm(FlaskForm):
     flight_num = IntegerField('Flight Number')
     depart_iata = StringField('Departure Airport', [validators.Length(min=3, max=3)])
     arrival_iata = StringField('Arrival Airport', [validators.Length(min=3, max=3)])
-    depart_datetime = DateTimeField('Departure Date & Time')
-    arrival_datetime = DateTimeField('Arrival Date & Time')
+    depart_datetime = DateTimeField('Departure Date & Time', default=datetime.now())
+    arrival_datetime = DateTimeField('Arrival Date & Time', default=datetime.now())
     duration = IntegerField('Duration/hr')
     mileage = IntegerField('Mileage')
     submit = SubmitField('Create Flight')
+
+class TripsForm(FlaskForm):
+    uid = IntegerField('Uid')
+    trip_name = StringField('Trip Name')
+    submit = SubmitField('Create Trip')
