@@ -30,8 +30,7 @@ def register():
 			con.row_factory = sql.Row
 			cur = con.cursor()
 			# TODO display page properly if constraint is violated
-			n = cur.execute("SELECT MAX(uid) FROM user").fetchone()[0]
-			cur.execute("INSERT INTO user (uid, username, email, password, public) VALUES (?,?,?,?,?)",(n+1, username, email, password, 1))
+			cur.execute("INSERT INTO user (username, email, password, public) VALUES (?,?,?,?)",(username, email, password, 1))
 			con.commit()
 			cur.close()
 			flash('Thanks for registering')
@@ -70,8 +69,8 @@ def update():
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
-		cur.execute("INSERT INTO user(uid, username, email, password, public) VALUES(1, 'llama', 'llama@gmail.com', 'llamallamallama', 1)")
-		cur.execute("INSERT INTO user(uid, username, email, password, public) VALUES(2, 'alpaca', 'alpaca@gmail.com', 'alpacaalpacaalpaca', 1)")
+		cur.execute("INSERT INTO user(uid, username, email, password, public) VALUES(2, 'llama', 'llama@gmail.com', 'llamallamallama', 1)")
+		cur.execute("INSERT INTO user(uid, username, email, password, public) VALUES(3, 'alpaca', 'alpaca@gmail.com', 'alpacaalpacaalpaca', 1)")
 		cur.execute("INSERT INTO trips(tid, uid, trip_name) VALUES(1,1,'llama')")
 		con.commit()
 		cur.close()
