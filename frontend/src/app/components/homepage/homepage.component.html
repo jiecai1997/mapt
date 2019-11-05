@@ -1,4 +1,20 @@
-<p>homepage works!</p>
-<app-map></app-map>
-<mat-divider></mat-divider>
-<app-stats></app-stats>
+<mat-toolbar>
+    <span>mapt</span>
+    <mat-tab-group backgroundColor="secondary" color="primary" [(selectedIndex)]="selectedTab">
+            <mat-tab label="map"></mat-tab>
+            <mat-tab label="+trip"></mat-tab>
+            <mat-tab label="edit"></mat-tab>
+            <mat-tab label="profile"></mat-tab>
+    </mat-tab-group>
+</mat-toolbar>
+
+<mat-tab-group class="hidden-tabs" [(selectedIndex)]="selectedTab">
+        <mat-tab> <app-mappage></app-mappage> </mat-tab>
+        <mat-tab> <app-addtrip></app-addtrip> </mat-tab>
+        <mat-tab>
+            <ng-template matTabContent>
+                <app-edittrip></app-edittrip>
+            </ng-template>
+        </mat-tab>
+        <mat-tab> <app-profile></app-profile> </mat-tab>
+</mat-tab-group>
