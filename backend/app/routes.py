@@ -1,6 +1,8 @@
 from app import app
 from flask import render_template, flash, redirect, url_for, session, request
-from app.forms import LoginForm, RegisterForm, FlightsForm
+from app.forms import LoginForm, RegisterForm, FlightsForm, TripsForm
+from app.models import User
+from flask_login import login_user, current_user, logout_user, login_required
 import sqlite3 as sql
 
 @app.route('/')
@@ -59,6 +61,22 @@ def flights():
 			flash('You Added A Flight!')
 			return redirect('/list')
 	return render_template('flights.html', title="Add a Flight", form=FlightsForm())
+
+@app.route('/trips', methods=['GET', 'POST'])
+def trips():
+	form = TripsForm(request.form)
+	if request.method == 'POST' and form.validate():
+		uid = form.uid.data
+		trip_name = form.trip_name.data
+		with sql.connect("app.db") as con:
+			con.row_factory = sql.Row
+			cur = con.cursor()
+			cur.execute("INSERT INTO trips (uid, trip_name) VALUES (?,?)",(uid, trip_name))
+			con.commit()
+			cur.close()
+			flash('You Added A Trip!')
+			return redirect('/list')
+	return render_template('trips.html', title="Add a Trip", form=TripsForm())
 
 @app.route('/list')
 def list():

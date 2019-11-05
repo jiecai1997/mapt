@@ -43,3 +43,8 @@ class FlightsForm(FlaskForm):
     duration = IntegerField('Duration/hr')
     mileage = IntegerField('Mileage')
     submit = SubmitField('Create Flight')
+
+class TripsForm(FlaskForm):
+    uid = IntegerField('Uid')
+    trip_name = StringField('Trip Name')
+    submit = SubmitField('Create Trip')
