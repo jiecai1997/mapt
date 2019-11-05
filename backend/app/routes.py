@@ -40,14 +40,21 @@ def register():
 		with sql.connect("app.db") as con:
 			con.row_factory = sql.Row
 			cur = con.cursor()
-			# TODO display page properly if constraint is violated
-			n = cur.execute("SELECT MAX(uid) FROM user").fetchone()[0]
-			cur.execute("INSERT INTO user (uid, username, email, password, public) VALUES (?,?,?,?,?)",(n+1, username, email, hashed_password, 1))
+			cur.execute("INSERT INTO user (username, email, password, public) VALUES (?,?,?,?)",(username, email, hashed_password, 1))
 			con.commit()
 			cur.close()
 			flash('Thanks for registering')
 			return redirect('/list')
 	return render_template('register.html', title='Register', form=form)
+
+@app.route('/flights', methods=['GET', 'POST'])
+def flights():
+    form = FlightsForm()
+    if form.validate(): ## request.method == 'POST'
+        with sql.connect("app.db") as con:
+            con.row_factory = sql.Row
+            con.execute(flights.insert(), )
+    return render_template('flights.html', title="Add a Flight", form=FlightsForm())
 
 @app.route('/list')
 def list():

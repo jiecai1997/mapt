@@ -1,0 +1,17 @@
+{% from "_formhelpers.html" import render_field %}
+<form method=post>
+  <dl>
+    {{ render_field(form.fid) }}
+    {{ render_field(form.tid) }}
+    {{ render_field(form.airline_iata) }}
+    {{ render_field(form.flight_num) }}
+    {{ render_field(form.depart_iata) }}
+    {{ render_field(form.arrival_iata) }}
+    {{ render_field(form.depart_datetime) }}
+    {{ render_field(form.arrival_datetime) }}
+    {{ render_field(form.duration) }}
+    {{ render_field(form.mileage) }}
+
+  </dl>
+  <p><input type=submit value='Add Flight'>
+</form>
