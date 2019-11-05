@@ -21,13 +21,7 @@
         {% block content %}
             <h1>Add Flight</h1>
             <form action="" method="post" novalidate>
-              <p>
-                  {{ form.fid.label }}<br>
-                  {{ form.fid(size=32) }}<br>
-                  {% for error in form.fid.errors %}
-                  <span style="color: red;">[{{ error }}]</span>
-                  {% endfor %}
-              </p>
+              {{ form.hidden_tag() }}
               <p>
                   {{ form.tid.label }}<br>
                   {{ form.tid(size=32) }}<br>

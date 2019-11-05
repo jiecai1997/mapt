@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from app.models import User
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, DateTimeField, validators
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from datetime import datetime
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -33,12 +34,12 @@ class RegisterForm(FlaskForm):
 class FlightsForm(FlaskForm):
     fid = IntegerField('Fid')
     tid = IntegerField('Tid')
-    airline_iata = StringField('Airline Code', [validators.Length(min=2, max=3)])
+    airline_iata = StringField('Airline Code', [validators.Length(min=2, max=2)])
     flight_num = IntegerField('Flight Number')
-    depart_iata = StringField('Departure Airport', [validators.Length(min=3, max=4)])
-    arrival_iata = StringField('Arrival Airport', [validators.Length(min=3, max=4)])
-    depart_datetime = DateTimeField('Departure Date & Time')
-    arrival_datetime = DateTimeField('Arrival Date & Time')
+    depart_iata = StringField('Departure Airport', [validators.Length(min=3, max=3)])
+    arrival_iata = StringField('Arrival Airport', [validators.Length(min=3, max=3)])
+    depart_datetime = DateTimeField('Departure Date & Time', default=datetime.now())
+    arrival_datetime = DateTimeField('Arrival Date & Time', default=datetime.now())
     duration = IntegerField('Duration/hr')
     mileage = IntegerField('Mileage')
     submit = SubmitField('Create Flight')
