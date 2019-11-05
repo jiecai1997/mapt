@@ -3,11 +3,16 @@
         <title>Mapt</title>
     </head>
     <body>
-        <h1>My Mapt</h1>
+        {% if session['logged_in'] %} 
+            <h1>Logged In YEET</h1>
+            <a href = "/flights">Add Flight</a>
+            <a href = "/logout">Logout</a>
+        {% else %}
+            <h1>Home</h1>
+            <a href = "/register">Register</a>
+            <a href = "/login">Login</a>
+        {% endif %}
         <a href = "/list">List</a>
         <a href = "/update">Update</a>
-        <a href = "/register">Register</a>
-        <a href = "/login">Login</a>
-        <a href = "/flights">Add Flight</a>
     </body>
 </html>

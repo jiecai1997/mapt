@@ -10,6 +10,25 @@ class User(db.Model):
 	password = db.Column(db.String(20), nullable=False)
 	public = db.Column(db.Boolean(), nullable=False)
 
+	def __init__(self, uid, username, email, password, public):
+		self.uid = uid
+		self.username = username
+		self.email = email
+		self.password = password
+		self.public = public
+
+	def is_authenticated(self):
+		return True
+
+	def is_active(self):
+		return True
+
+	def is_anonymous(self):
+		return False
+
+	def get_id(self):
+		return self.uid
+
 	def __repr__(self):
 		return '<User {}>'.format(self.username)
 
