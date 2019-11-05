@@ -1,6 +1,6 @@
 from app import app
 from flask import render_template, flash, redirect, url_for, session, request
-from app.forms import LoginForm, RegisterForm
+from app.forms import LoginForm, RegisterForm, FlightsForm
 import sqlite3 as sql
 
 @app.route('/')
@@ -39,13 +39,29 @@ def register():
 	return render_template('register.html', title='Register', form=form)
 
 @app.route('/flights', methods=['GET', 'POST'])
-def flights():
-    form = FlightsForm()
-    if form.validate(): ## request.method == 'POST'
-        with sql.connect("app.db") as con:
-            con.row_factory = sql.Row
-            con.execute(flights.insert(), )
-    return render_template('flights.html', title="Add a Flight", form=FlightsForm())
+def addflights():
+	form = FlightsForm(request.form)
+	if request.method == 'POST' and form.validate():
+		fid = form.fid.data
+		tid = form.tid.data
+		airline_iata = form.airline_iata.data
+		flight_num = form.flight_num.data
+		depart_iata = form.depart_iata.data
+		arrival_iata = form.arrival_iata.data
+		depart_datetime = form.depart_datetime.data
+		arrival_datetime = form.arrival_datetime.data
+		duration = form.duration.data
+		mileage = form.mileage.data
+		with sql.connect("app.db") as con:
+			con.row_factory = sql.Row
+			cur = con.cursor()
+			# n = cur.execute("SELECT MAX(uid) FROM user").fetchone()[0]
+			cur.execute("INSERT INTO flights (fid, tid, airline_iata, flight_num, depart_iata,arrival_iata,depart_datetime,arrival_datetime,duration,mileage) VALUES (?,?,?,?,?,?,?,?,?,?)",(fid, tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage))
+			con.commit()
+			cur.close()
+			flash('You Added A Flight!')
+			return redirect('/list')
+	return render_template('flights.html', title='Add Flight', form=form)
 
 @app.route('/list')
 def list():

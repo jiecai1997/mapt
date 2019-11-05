@@ -1,7 +1,7 @@
 """empty message
 
 Revision ID: c1e1a71b7c92
-Revises: 
+Revises:
 Create Date: 2019-10-30 21:28:17.983799
 
 """
@@ -42,7 +42,6 @@ def upgrade():
     sa.Column('public', sa.Boolean(), nullable=False),
     sa.PrimaryKeyConstraint('uid'),
     sa.UniqueConstraint('email'),
-    sa.UniqueConstraint('password'),
     sa.UniqueConstraint('username')
     )
     op.create_table('trips',
