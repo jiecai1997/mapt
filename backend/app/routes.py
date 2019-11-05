@@ -103,9 +103,10 @@ def update():
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
-		cur.execute("INSERT INTO user(uid, username, email, password, public) VALUES(1, 'llama', 'llama@gmail.com', 'llamallamallama', 1)")
-		cur.execute("INSERT INTO user(uid, username, email, password, public) VALUES(2, 'alpaca', 'alpaca@gmail.com', 'alpacaalpacaalpaca', 1)")
-		cur.execute("INSERT INTO trips(tid, uid, trip_name) VALUES(1,1,'llama')")
+		# cur.execute("INSERT INTO user(uid, username, email, password, public) VALUES(1, 'llama', 'llama@gmail.com', 'llamallamallama', 1)")
+		# cur.execute("INSERT INTO user(uid, username, email, password, public) VALUES(2, 'alpaca', 'alpaca@gmail.com', 'alpacaalpacaalpaca', 1)")
+		# cur.execute("INSERT INTO trips(tid, uid, trip_name) VALUES(1,1,'llama')")
+		cur.execute("INSERT INTO airports (iata, name, city, country, latitude, longitude, time_zone, dst) VALUES('SIN','Singapore Changi Airport','Singapore','Singapore',1.35019,103.994003,'N','Asia/Singapore')")
 		con.commit()
 		cur.close()
 	return render_template('home.html')
