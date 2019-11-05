@@ -38,15 +38,6 @@ def register():
 			return redirect('/list')
 	return render_template('register.html', title='Register', form=form)
 
-@app.route('/flights/<uid>')
-def user_flights(uid):
-	with sql.connect("app.db") as con:
-		cur = con.cursor()
-		cur.execute("SELECT * FROM flights WHERE uid = VALUES(?)"), (uid)
-		flightsrows = cur.fetchall()
-		cur.close()
-	return render_template("list.html",flightsrows = flightsrows)
-
 @app.route('/list')
 def list():
 	with sql.connect("app.db") as con:
@@ -73,6 +64,18 @@ def list():
 		cur.close()
 	return render_template("list.html",userrows = userrows,tripsrows = tripsrows,
     airlinesrows = airlinesrows, airportsrows = airportsrows, flightsrows = flightsrows)
+
+@app.route('/update')
+def update():
+	with sql.connect("app.db") as con:
+		con.row_factory = sql.Row
+		cur = con.cursor()
+		cur.execute("INSERT INTO user(uid, username, email, password, public) VALUES(1, 'llama', 'llama@gmail.com', 'llamallamallama', 1)")
+		cur.execute("INSERT INTO user(uid, username, email, password, public) VALUES(2, 'alpaca', 'alpaca@gmail.com', 'alpacaalpacaalpaca', 1)")
+		cur.execute("INSERT INTO trips(tid, uid, trip_name) VALUES(1,1,'llama')")
+		con.commit()
+		cur.close()
+	return render_template('home.html')
 
 if __name__ == '__main__':
    app.run(debug = True)
