@@ -12,3 +12,14 @@
 .add-button {
     float: right; 
 }
+
+.mat-card-content::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+
+.mat-list{
+    padding-top: 0px;
+    float: left;
+}

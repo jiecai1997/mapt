@@ -1,55 +1,85 @@
 <mat-card *ngFor="let flight of flights; let i = index">
-    <mat-card-subtitle>
-        <span>Flight {{i + 1}}</span>
-        <button mat-button class="close-button" (click)="removeFlight(i)" *ngIf="flights.length > 1"> <!-- delete flight -->
+     <!-- button to delete flight -->
+    <mat-card-subtitle *ngIf="flights.length > 1">
+        <button mat-button class="close-button" (click)="removeFlight(i)">
             <mat-icon>close</mat-icon>
         </button>
     </mat-card-subtitle>
 
     <mat-card-content>
-        from
-        <mat-form-field class="example-full-width">
-            <input type="text" placeholder="Dep" matInput [matAutocomplete]="auto" [(ngModel)]="flight.obj.dep.airport">
-            <mat-autocomplete #auto="matAutocomplete">
-                <mat-option *ngFor="let airport of getAirportSuggestions(flight.obj.dep.airport)" [value]="airport">
-                {{airport}}
-                </mat-option>
-            </mat-autocomplete>
-        </mat-form-field>
+        <!-- departure -->
+        <mat-list>
+            <mat-list-item>From</mat-list-item>
 
-        <mat-form-field>
-            <input matInput 
-                [matDatepicker]="depPicker" 
-                placeholder="Departure Date" 
-                [formControl]="flight.forms.dep.date" 
-                [(ngModel)]="flight.obj.dep.date ? flight.obj.dep.date: flight.obj.arr.date">
-            <mat-datepicker-toggle matSuffix [for]="depPicker"></mat-datepicker-toggle>
-            <mat-datepicker #depPicker></mat-datepicker>
-        </mat-form-field>
+            <!-- airport -->
+            <mat-list-item>
+                <mat-form-field class="example-full-width">
+                    <input type="text" placeholder="Departure Airport" matInput [matAutocomplete]="auto" [(ngModel)]="flight.obj.dep.airport">
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let airport of getAirportSuggestions(flight.obj.dep.airport)" [value]="airport">
+                        {{airport}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </mat-list-item>
 
-        <!-- <mat-form-field>
-            <input matInput type="time" placeholder="start date">
-        </mat-form-field> -->
+            <!-- date -->
+            <mat-list-item>
+                <mat-form-field>
+                    <input matInput 
+                        [matDatepicker]="depPicker" 
+                        placeholder="Departure Date" 
+                        [formControl]="flight.forms.dep.date" 
+                        [(ngModel)]="flight.obj.dep.date ? flight.obj.dep.date: flight.obj.arr.date">
+                    <mat-datepicker-toggle matSuffix [for]="depPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #depPicker></mat-datepicker>
+                </mat-form-field>
+            </mat-list-item>
 
-        to
-        <mat-form-field class="example-full-width">
-            <input type="text" placeholder="Arr" matInput [matAutocomplete]="auto" [(ngModel)]="flight.obj.arr.airport">
-            <mat-autocomplete #auto="matAutocomplete">
-                <mat-option *ngFor="let airport of getAirportSuggestions(flight.obj.arr.airport)" [value]="airport">
-                {{airport}}
-                </mat-option>
-            </mat-autocomplete>
-        </mat-form-field>
+            <!-- time -->
+            <mat-list-item>
+                <mat-form-field>
+                    <input matInput type="time" placeholder="Departure Time" [(ngModel)]="flight.obj.dep.time">
+                </mat-form-field>
+            </mat-list-item>
+        </mat-list>
 
-        <mat-form-field>
-            <input matInput 
-                [matDatepicker]="arrPicker"
-                placeholder="Arrival Date"
-                [formControl]="flight.forms.arr.date"
-                [(ngModel)]="flight.obj.arr.date ? flight.obj.arr.date : flight.obj.dep.date">
-            <mat-datepicker-toggle matSuffix [for]="arrPicker"></mat-datepicker-toggle>
-            <mat-datepicker #arrPicker></mat-datepicker>
-        </mat-form-field>
+        <!-- arrival -->
+        <mat-list>
+            <mat-list-item>To</mat-list-item>
+
+            <!-- airport -->
+            <mat-list-item>
+                <mat-form-field class="example-full-width">
+                    <input type="text" placeholder="Arrival Airport" matInput [matAutocomplete]="auto" [(ngModel)]="flight.obj.arr.airport">
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let airport of getAirportSuggestions(flight.obj.arr.airport)" [value]="airport">
+                        {{airport}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </mat-list-item>
+    
+            <!-- date -->
+            <mat-list-item>
+                <mat-form-field>
+                    <input matInput 
+                        [matDatepicker]="arrPicker" 
+                        placeholder="Departure Date" 
+                        [formControl]="flight.forms.dep.date" 
+                        [(ngModel)]="flight.obj.dep.date ? flight.obj.dep.date: flight.obj.arr.date">
+                    <mat-datepicker-toggle matSuffix [for]="arrPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #arrPicker></mat-datepicker>
+                </mat-form-field>
+            </mat-list-item>
+
+            <!-- time -->
+            <mat-list-item>
+                <mat-form-field>
+                    <input matInput type="time" placeholder="Arrival Time" [(ngModel)]="flight.obj.arr.time">
+                </mat-form-field>
+            </mat-list-item>
+        </mat-list>
     </mat-card-content>
 </mat-card>
 <button mat-mini-fab (click)="addFlight()" class="add-button"><mat-icon>add</mat-icon></button>
