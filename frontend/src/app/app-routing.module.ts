@@ -1,10 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { MapComponent } from '@app/components/map/map.component';
 import { LoginComponent } from './login/login.component';
-import { ProfileComponent } from './profile/profile.component';
-import { EdittripComponent } from './components/edittrip/edittrip.component';
-import { AddtripComponent } from './addtrip/addtrip.component';
 import { HomepageComponent } from './components/homepage/homepage.component';
 
 

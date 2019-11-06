@@ -10,5 +10,3 @@ import { Component, ViewEncapsulation } from '@angular/core';
 export class AppComponent {
   selectedTab: number = 0;
 }
-
-// eventually gonna want to use routing to switch views between components - see https://angular.io/tutorial/toh-pt5 
