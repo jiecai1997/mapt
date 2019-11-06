@@ -30,7 +30,7 @@
                         [matDatepicker]="depPicker" 
                         placeholder="Departure Date" 
                         [formControl]="flight.forms.dep.date" 
-                        [(ngModel)]="flight.obj.dep.date ? flight.obj.dep.date: flight.obj.arr.date">
+                        [(ngModel)]="flight.obj.dep.date">
                     <mat-datepicker-toggle matSuffix [for]="depPicker"></mat-datepicker-toggle>
                     <mat-datepicker #depPicker></mat-datepicker>
                 </mat-form-field>
@@ -65,9 +65,9 @@
                 <mat-form-field>
                     <input matInput 
                         [matDatepicker]="arrPicker" 
-                        placeholder="Departure Date" 
-                        [formControl]="flight.forms.dep.date" 
-                        [(ngModel)]="flight.obj.dep.date ? flight.obj.dep.date: flight.obj.arr.date">
+                        placeholder="Arrival Date" 
+                        [formControl]="flight.forms.arr.date" 
+                        [(ngModel)]="flight.obj.arr.date">
                     <mat-datepicker-toggle matSuffix [for]="arrPicker"></mat-datepicker-toggle>
                     <mat-datepicker #arrPicker></mat-datepicker>
                 </mat-form-field>
@@ -82,4 +82,5 @@
         </mat-list>
     </mat-card-content>
 </mat-card>
+<button mat-raised-button (click)="submit()" color="primary">Save</button>
 <button mat-mini-fab (click)="addFlight()" class="add-button"><mat-icon>add</mat-icon></button>

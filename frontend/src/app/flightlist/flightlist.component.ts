@@ -50,4 +50,8 @@ export class FlightlistComponent implements OnInit {
       }
     });
   }
+
+  submit(): void {
+    console.log(this.flights.map(flight => flight.obj));
+  }
 }
