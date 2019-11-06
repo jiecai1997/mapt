@@ -5,8 +5,8 @@ import { HomepageComponent } from './components/homepage/homepage.component';
 
 
 const routes: Routes = [
-  { path: '', component: HomepageComponent },
-  { path: 'login', component: LoginComponent },
+  { path: '', component: LoginComponent },
+  { path: ':id', component: HomepageComponent},
   { path: '**', redirectTo: '', pathMatch: 'full' } // default to homepage
 ];
 

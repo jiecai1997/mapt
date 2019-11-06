@@ -52,6 +52,9 @@ export class FlightlistComponent implements OnInit {
   }
 
   submit(): void {
-    console.log(this.flights.map(flight => flight.obj));
+    console.log({
+      tripname: 'mytrip',
+      flights: this.flights.map(flight => flight.obj)
+    });
   }
 }

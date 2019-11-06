@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { LoginService } from '@app/services/login.service';
+
 
 @Component({
   selector: 'app-login',
@@ -30,16 +32,20 @@ export class LoginComponent implements OnInit {
     Validators.minLength(this.minPassLen),
   ]);
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private loginService: LoginService) { }
 
   ngOnInit() {
   }
 
   submit() : void {
     if(this.isCreateAccount){
-      console.log(this.email, this.username, this.password);
+      console.log(this.username, this.email, this.password);
+      this.loginService.newUser(this.username, this.email, this.password);
+      this.router.navigate([this.username]);
     }else{
       console.log(this.email, this.password);
+      this.loginService.attemptLogin(this.username, this.password);
+      this.router.navigate([this.email]); //TODO: get username to navigate to from sql
     }
   }
 
