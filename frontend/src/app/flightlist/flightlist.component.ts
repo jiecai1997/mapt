@@ -29,6 +29,10 @@ export class FlightlistComponent implements OnInit {
     }
   }
 
+  removeFlight(index): void{
+    this.flights.splice(index, 1);
+  }
+
   addFlight(): void{
     console.log('adding flgiht')
     this.flights.push({

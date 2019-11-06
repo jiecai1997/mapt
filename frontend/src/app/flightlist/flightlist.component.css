@@ -1,3 +1,14 @@
+
+.mat-card-subtitle {
+    width: 100%;
+}
+
+.close-button {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
 .add-button {
-    float: right;
+    float: right; 
 }

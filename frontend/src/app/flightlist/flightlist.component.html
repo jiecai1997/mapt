@@ -1,6 +1,11 @@
-<p>flightlist works!</p>
 <mat-card *ngFor="let flight of flights; let i = index">
-    <mat-card-subtitle>Flight {{i + 1}}</mat-card-subtitle>
+    <mat-card-subtitle>
+        <span>Flight {{i + 1}}</span>
+        <button mat-button class="close-button" (click)="removeFlight(i)" *ngIf="flights.length > 1"> <!-- delete flight -->
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-card-subtitle>
+
     <mat-card-content>
         from
         <mat-form-field class="example-full-width">
