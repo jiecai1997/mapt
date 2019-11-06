@@ -50,6 +50,29 @@ def register():
 			return redirect('/list')
 	return render_template('register.html', title='Register', form=form)
 
+@app.route('/register1', methods=['POST'])
+def register1():
+	form = RegisterForm(request.form)
+    json = request.get_json()
+	if request.method == 'POST':
+		username = json.username.data
+		email = json.email.data
+		password = json.password.data
+		print(username)
+		print(email)
+		print(password)
+
+		# with sql.connect("app.db") as con:
+		# 	con.row_factory = sql.Row
+		# 	cur = con.cursor()
+		# 	# TODO display page properly if constraint is violated
+		# 	cur.execute("INSERT INTO user (username, email, password, public) VALUES (?,?,?,?)",(username, email, password, 1))
+		# 	con.commit()
+		# 	cur.close()
+		# 	flash('Thanks for registering')
+		# 	return redirect('/list')
+	return render_template('register.html', title='Register', form=form)
+
 @app.route('/flights', methods=['GET', 'POST'])
 def flights():
 	form = FlightsForm(request.form)
