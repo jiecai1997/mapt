@@ -1,3 +1,7 @@
 span{
     padding-right: 30px;
 }
+
+::ng-deep .mat-tab-body-content { /* deep ensures that property from angular mat theme file is overriden */
+    overflow: hidden !important;
+}

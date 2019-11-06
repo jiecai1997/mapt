@@ -2,6 +2,7 @@
 
 html, body, .mat-app-background { /* make theme take up whole page */
     height: 100%;
+    overflow: hidden;
 }
 
 body { 
@@ -10,5 +11,5 @@ body {
 }
 
 mat-card {
-    margin-bottom: 10px;
+    margin: 5px;
 }
