@@ -8,6 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { NgModule } from '@angular/core';
@@ -21,7 +22,6 @@ import { HomepageComponent } from '@app/components/homepage/homepage.component';
 //components
 import { MapComponent } from '@app/components/map/map.component';
 import { EdittripComponent } from '@app/components/edittrip/edittrip.component';
-import { TopbarComponent } from '@app/components/topbar/topbar.component';
 import { StatsComponent } from '@app/components/stats/stats.component';
 import { ProfileComponent } from './profile/profile.component';
 import { LoginComponent } from './login/login.component';
@@ -40,7 +40,6 @@ let apiKey: string = environment.apiKey;
     AppComponent,
     MapComponent,
     EdittripComponent,
-    TopbarComponent,
     HomepageComponent,
     StatsComponent,
     ProfileComponent,
@@ -66,6 +65,7 @@ let apiKey: string = environment.apiKey;
     MatToolbarModule,
     MatTabsModule,
     MatFormFieldModule,
+    MatDatepickerModule,
     MatInputModule,
     MatAutocompleteModule,
     BrowserAnimationsModule,

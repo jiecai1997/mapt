@@ -4,6 +4,27 @@ from app.forms import LoginForm, RegisterForm, FlightsForm, TripsForm
 from app.models import User
 from flask_login import login_user, current_user, logout_user, login_required
 import sqlite3 as sql
+from flask import jsonify
+
+# json routes
+@app.route('/user/register', methods=['POST'])
+def register_user():
+	json = request.get_json()
+
+	username = json['username']
+	email = json['email']
+	password = json['hashedPassword']
+
+	with sql.connect("app.db") as con:
+		con.row_factory = sql.Row
+		cur = con.cursor()
+		cur.execute("INSERT INTO user (username, email, password, public) VALUES (?,?,?,?)",(username, email, password, 1))
+		con.commit()
+		cur.close()
+
+		return jsonify({'success': True})
+
+
 
 @app.route('/')
 def home():
@@ -35,15 +56,14 @@ def register():
 	if request.method == 'POST' and form.validate():
 		username = form.username.data
 		email = form.email.data
-		password = form.password.data
+		hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
 		print(username)
 		print(email)
-		print(password)
 		with sql.connect("app.db") as con:
 			con.row_factory = sql.Row
 			cur = con.cursor()
 			# TODO display page properly if constraint is violated
-			cur.execute("INSERT INTO user (username, email, password, public) VALUES (?,?,?,?)",(username, email, password, 1))
+			cur.execute("INSERT INTO user (username, email, password, public) VALUES (?,?,?,?)",(username, email, hashed_password, 1))
 			con.commit()
 			cur.close()
 			flash('Thanks for registering')

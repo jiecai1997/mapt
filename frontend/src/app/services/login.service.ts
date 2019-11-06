@@ -16,21 +16,21 @@ export class LoginService {
 
   constructor(private http:HttpClient) { }
 
-  private newUser(username:string, email:string, password:string){
+  newUser(username:string, email:string, password:string){
     // put request to make new user, make a salt-generating function to write to db
     // write to DB salted password - see how to work with request bodies
     
     const hashedSalty:string = this.generatePassword(email, password);
 
-    const reqBody = {'username':username, 'email': email, 'hashedPassword':hashedSalty};
+    const reqBody = {'username':username, 'email': email, 'hashedPassword': hashedSalty};
 
-    return this.http.post(this.serverURL + '/register', reqBody).subscribe( result => {
+    return this.http.post(this.serverURL + '/user/register', reqBody).subscribe( result => {
       return result;
     });
     
   }
 
-  private attemptLogin(email:string, password:string){
+  attemptLogin(email:string, password:string){
     const hashedSalty:string = this.generatePassword(email, password);
     const reqBody = {'email': email, 'hashedPassword': hashedSalty}
 

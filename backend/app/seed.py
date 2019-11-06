@@ -28,5 +28,5 @@ with sql.connect("app.db") as con:
             cur.execute("INSERT INTO airports (iata, name, city, country, latitude, longitude, time_zone, dst) VALUES (?,?,?,?,?,?,?,?)",(c[0], c[1], c[2], c[3], c[4], c[5], c[9], c[8]))
 
 
-        con.commit()
-        cur.close()
+    con.commit()
+    cur.close()

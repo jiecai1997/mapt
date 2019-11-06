@@ -1,0 +1,29 @@
+
+.mat-card-subtitle {
+    width: 100%;
+}
+
+.mat-card {
+    padding-top: 0px;
+}
+
+.close-button {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+.add-button {
+    float: right; 
+}
+
+.mat-card-content::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+
+.mat-list{
+    padding-top: 0px;
+    float: left;
+}
