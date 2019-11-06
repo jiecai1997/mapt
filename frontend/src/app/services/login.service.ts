@@ -7,7 +7,11 @@ import { Md5 } from 'ts-md5/dist/md5';
 @Injectable({
   providedIn: 'root'
 })
+
 export class LoginService {
+
+  private uid:number;
+
   private serverURL = 'http://localhost:5000';
 
   constructor(private http:HttpClient) { }
@@ -32,7 +36,8 @@ export class LoginService {
 
     return this.http.post(this.serverURL + '/loginattempt', reqBody).subscribe( result => {
       if(result['success'] == 'true'){
-        return result['uid'];
+        this.uid = result['uid'];
+        return this.uid;
       }
       else{
         return 'UNSUCCESSFUL';
