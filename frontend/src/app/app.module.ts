@@ -8,6 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { NgModule } from '@angular/core';
@@ -66,6 +67,7 @@ let apiKey: string = environment.apiKey;
     MatToolbarModule,
     MatTabsModule,
     MatFormFieldModule,
+    MatDatepickerModule,
     MatInputModule,
     MatAutocompleteModule,
     BrowserAnimationsModule,
