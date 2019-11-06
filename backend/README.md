@@ -10,3 +10,6 @@
 1. if models.py has been edited, cd to this folder
 2. then run `flask db migrate`
 3. then run `flask db upgrade`
+
+## Populate the database with Airports and Airlines
+1. run python `./app/seed.py`
