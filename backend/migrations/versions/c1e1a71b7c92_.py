@@ -23,6 +23,7 @@ def upgrade():
     sa.Column('name', sa.String(length=50), nullable=False),
     sa.PrimaryKeyConstraint('iata')
     )
+
     op.create_table('airports',
     sa.Column('iata', sa.String(length=3), nullable=False),
     sa.Column('name', sa.String(length=75), nullable=False),

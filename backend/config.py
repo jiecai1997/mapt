@@ -1,5 +1,8 @@
 import os
+from unipath import Path
+
 basedir = os.path.abspath(os.path.dirname(__file__))
+BASEDIR = Path(__file__).parent
 
 class Config(object):
     # ...

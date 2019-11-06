@@ -1,29 +1,32 @@
-import csv
-from sqlalchemy import create_engine, Table, Column, Integer, MetaData
+from flask import render_template, flash, redirect, url_for, session, request
+from flask_login import login_user, current_user, logout_user, login_required
+import sqlite3 as sql
+from alembic import op
+import sqlalchemy as sa
+from sqlalchemy.sql import table, column
+import csv as csv
+from csv import reader
 
-engine = create_engine('sqlite:///test.db', echo=True)
 
-metadata = MetaData()
-# Define the table with sqlalchemy:
-my_table = Table('MyTable', metadata,
-    Column('foo', Integer),
-    Column('bar', Integer),
-)
-metadata.create_all(engine)
-insert_query = my_table.insert()
 
-# Or read the definition from the DB:
-# metadata.reflect(engine, only=['MyTable'])
-# my_table = Table('MyTable', metadata, autoload=True, autoload_with=engine)
-# insert_query = my_table.insert()
+with sql.connect("app.db") as con:
+    con.row_factory = sql.Row
+    cur = con.cursor()
 
-# Or hardcode the SQL query:
-# insert_query = "INSERT INTO MyTable (foo, bar) VALUES (:foo, :bar)"
+    airline_csv = './app/csv/Airlines.csv'
+    with open(airline_csv) as file_handler:
+        csv = [row for row in reader(file_handler) if any(row)]
+        for c in csv:
+            csv.pop(0)
+            cur.execute("INSERT INTO airlines (iata, name) VALUES (?,?)",(c[1], c[0]))
 
-with open('test.csv', 'r', encoding="utf-8") as csvfile:
-    csv_reader = csv.reader(csvfile, delimiter=',')
-    engine.execute(
-        insert_query,
-        [{"foo": row[0], "bar": row[1]}
-            for row in csv_reader]
-    )
+    airports_csv = './app/csv/Airports.csv'
+    with open(airports_csv) as file_handler:
+        csv = [row for row in reader(file_handler) if any(row)]
+        for c in csv:
+            csv.pop(0)
+            cur.execute("INSERT INTO airports (iata, name, city, country, latitude, longitude, time_zone, dst) VALUES (?,?,?,?,?,?,?,?)",(c[0], c[1], c[2], c[3], c[4], c[5], c[9], c[8]))
+
+
+        con.commit()
+        cur.close()
