@@ -29,6 +29,24 @@ export class FlightsService {
     return of(listOfFlights);
   }
 
+  // eventually, have the backend give us a session token for the current user, and then feed that session token as well
+  // as the id into the body of the request. before the request is fulfilled and the flight is added, the session token sent by
+  // the frontend through the service must match the session token stored by the backend.
+  // we'd need a table for that
+  addTrip(uid:number, sessionToken:number, tripName:string, flights:Flight[]){
+    const reqBody = {'userID': uid, sessionToken: sessionToken, 'tripName': tripName, 'flights': flights};
+    console.log('reqBody', reqBody);
+    return this.http.post(this.serverURL + '/trips/add', reqBody).subscribe(result => {
+      if(result['success'] == 'true'){
+        return 'Success';
+      }
+      else{
+        return 'Add trip failed';
+      }
+    })
+
+  }
+
 
   coordToFlight(flightObj): Flight {
     const firstPoint:Point = {

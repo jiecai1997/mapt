@@ -12,4 +12,7 @@ export class TripnameComponent implements OnInit {
   ngOnInit() {
   }
 
+  submit(): void {
+    console.log('submitting');
+  }
 }
