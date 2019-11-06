@@ -13,7 +13,7 @@ def register_user():
 
 	username = json['username']
 	email = json['email']
-	password = json['password']
+	password = json['hashedPassword']
 
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
