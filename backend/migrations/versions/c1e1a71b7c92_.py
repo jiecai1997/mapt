@@ -23,7 +23,6 @@ def upgrade():
     sa.Column('name', sa.String(length=50), nullable=False),
     sa.PrimaryKeyConstraint('iata')
     )
-
     op.create_table('airports',
     sa.Column('iata', sa.String(length=3), nullable=False),
     sa.Column('name', sa.String(length=75), nullable=False),
@@ -69,6 +68,15 @@ def upgrade():
     sa.ForeignKeyConstraint(['tid'], ['trips.tid'], ),
     sa.PrimaryKeyConstraint('fid')
     )
+    op.create_table('details',
+    sa.Column('did', sa.Integer, nullable=False),
+    sa.Column('tid', sa.Integer(), nullable=False),
+    sa.Column('iata', sa.String(length=3), nullable=False),
+    sa.Column('note', sa.String(length=500), nullable=False),
+    sa.ForeignKeyConstraint(['tid'], ['trips.tid'], ),
+    sa.ForeignKeyConstraint(['iata'], ['airports.iata'], ),
+    sa.PrimaryKeyConstraint('did')
+    )
     # ### end Alembic commands ###
 
 
@@ -79,4 +87,5 @@ def downgrade():
     op.drop_table('user')
     op.drop_table('airports')
     op.drop_table('airlines')
+    op.drop_table('details')
     # ### end Alembic commands ###

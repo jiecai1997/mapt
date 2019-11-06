@@ -83,6 +83,7 @@ class Flights(db.Model):
 	def __repr__(self):
 		return '<Flights {}>'.format(self.fid)
 
+
 class Details(db.Model):
 	did = db.Column(db.Integer, primary_key=True)
 	tid = db.Column(db.Integer, db.ForeignKey(Trips.tid), nullable=False)
