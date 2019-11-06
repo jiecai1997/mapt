@@ -92,7 +92,16 @@ def flights():
 			cur.close()
 			flash('You Added A Flight!')
 			return redirect('/list')
-	return render_template('flights.html', title="Add a Flight", form=FlightsForm())
+			
+		with sql.connect("app.db") as con:
+			con.row_factory = sql.Row
+			cur = con.cursor()
+			cur.execute("SELECT departAirports.Latitude, departAirports.Longitude, arrivalAirports.Latitude, arrivalAirports.Longitude FROM flights, airports AS departAirports, airports AS arriveAirports WHERE flights.depart_iata = departAirports.IATA AND flights.arrival_iata = arriveAirports.IATA")
+			flightRows = cur.fetchall()
+			print('flights')
+			print(flightRows)
+
+			return jsonify({'flights': flightRows})
 
 @app.route('/trips', methods=['GET', 'POST'])
 def trips():
