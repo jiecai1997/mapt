@@ -13,7 +13,7 @@ def register_user():
 
 	username = json['username']
 	email = json['email']
-	password = json['password']
+	password = json['hashedPassword']
 
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
@@ -56,15 +56,14 @@ def register():
 	if request.method == 'POST' and form.validate():
 		username = form.username.data
 		email = form.email.data
-		password = form.password.data
+		hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
 		print(username)
 		print(email)
-		print(password)
 		with sql.connect("app.db") as con:
 			con.row_factory = sql.Row
 			cur = con.cursor()
 			# TODO display page properly if constraint is violated
-			cur.execute("INSERT INTO user (username, email, password, public) VALUES (?,?,?,?)",(username, email, password, 1))
+			cur.execute("INSERT INTO user (username, email, password, public) VALUES (?,?,?,?)",(username, email, hashed_password, 1))
 			con.commit()
 			cur.close()
 			flash('Thanks for registering')

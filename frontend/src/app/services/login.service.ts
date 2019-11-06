@@ -22,9 +22,9 @@ export class LoginService {
     
     const hashedSalty:string = this.generatePassword(email, password);
 
-    const reqBody = {'username':username, 'email': email, 'hashedPassword':hashedSalty};
+    const reqBody = {'username':username, 'email': email, 'hashedPassword': hashedSalty};
 
-    return this.http.post(this.serverURL + '/register', reqBody).subscribe( result => {
+    return this.http.post(this.serverURL + '/user/register', reqBody).subscribe( result => {
       return result;
     });
     
