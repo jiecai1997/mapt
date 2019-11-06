@@ -14,7 +14,7 @@ export class MapComponent implements OnInit {
 
   ngOnInit() {
     this.getFlights();
-    this.flightsService.addTrip(35, 36, 'testTrip', this.flights);
+    // this.flightsService.addTrip(35, 36, 'testTrip', this.flights);
 
   }
 

@@ -34,7 +34,6 @@ export class FlightlistComponent implements OnInit {
   }
 
   addFlight(): void{
-    console.log('adding flgiht')
     this.flights.push({
       obj: {
         dep: {},
