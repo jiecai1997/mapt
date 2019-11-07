@@ -8,14 +8,14 @@ FROM Users
 WHERE email = 'ra4ever@duke.edu' AND password = crypt('incorrectpassword', password);
 
 -- Airlines whose name or abbreviation contain some substring
-SELECT * 
-FROM Airlines 
+SELECT *
+FROM Airlines
 WHERE name LIKE '%Delta%'
 OR iata LIKE '%Delta%';
 
 -- Airports whose name or abbreviation contain some substring
-SELECT * 
-FROM Airports 
+SELECT *
+FROM Airports
 WHERE name LIKE '%Dulles%'
 OR iata LIKE '%Dulles%';
 
@@ -50,7 +50,7 @@ WHERE uid = 0
 AND depart_datetime >= DATE('2019-01-01')
 AND arrival_datetime <= DATE('2019-06-01');
 
--- Flights from/to a certain airport/city 
+-- Flights from/to a certain airport/city
 WITH Depart_airport AS(
 	SELECT * FROM airports
 ),
@@ -58,7 +58,7 @@ Arrival_airport AS(
 	SELECT * FROM airports
 )
 SELECT Flights.*
-FROM Trips NATURAL JOIN Flights 
+FROM Trips NATURAL JOIN Flights
 JOIN Depart_airport ON Depart_Airport.iata = Flights.depart_iata
 JOIN Arrival_airport ON Arrival_airport.iata = Flights.arrival_iata
 WHERE
