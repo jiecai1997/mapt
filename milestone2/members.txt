@@ -1,5 +1,5 @@
 Jie Cai -
-Ethan Holland -
+Ethan Holland - Worked on frontend. Made webapp layout as well as the templates for the add trip page, the non-map parts of the mappage, and the login/create account page
 Jaiveer Katariya -
 Eric Tay - Worked on the backend. Wrote templates, forms, routes, migrations and models. Formatted csv files. Also tested SQL statements and implemented them in flask.
 Kelly Zhang -
