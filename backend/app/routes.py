@@ -78,12 +78,14 @@ def flights():
 			cur = con.cursor()
 			cur.execute("SELECT departAirports.Latitude AS deptLat, departAirports.Longitude AS deptLong, arriveAirports.Latitude as arrLat, arriveAirports.Longitude as arrLong FROM flights, airports AS departAirports, airports AS arriveAirports WHERE flights.depart_iata = departAirports.IATA AND flights.arrival_iata = arriveAirports.IATA")
 			flightRows = cur.fetchall()
-
+		print(flightRows)
 		flights = []
 		for flight in flightRows:
 			tempDict = {'firstPointLat': flight['deptLat'], 'firstPointLong': flight['deptLong'], 'secondPointLat': flight['arrLat'], 'secondPointLong': flight['arrLong']}
 			flights.append(tempDict)
-		
+		print('here')
+
+		print(flights)
 		return jsonify({'flights': flights})
 	else:
 		# placeholder for post
