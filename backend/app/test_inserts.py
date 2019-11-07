@@ -30,6 +30,7 @@ with sql.connect("app.db") as con:
     cur.execute("INSERT INTO Airlines VALUES ('AS', 'Alaska Airlines')")
     cur.execute("INSERT INTO Airports VALUES ('BWI','Baltimore/Washington International Thurgood Marshall Airport','Baltimore','United States',39.1754,-76.668297,'America/New_York','A')")
     cur.execute("INSERT INTO Airports VALUES ('SEA','Seattle Tacoma International Airport','Seattle','United States',47.449001,-122.308998,'America/Los_Angeles','A')")
+    cur.execute("INSERT INTO Airports VALUES ('RDU','Raleigh Durham International Airport','Raleigh-durham','United States',35.87760162,-78.78749847,'America/New_York','A')")
 
     con.commit()
     cur.close()

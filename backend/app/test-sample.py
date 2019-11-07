@@ -115,19 +115,6 @@ with sql.connect("app.db") as con:
     df.to_csv(r'./app/csv/10test.csv',index=False)
     cur.close()
 
-    #Query 10 - Flights from/to a certain airport/city DOESNT WORK
-    cur = con.cursor()
-    cur.execute("""
-    WITH Depart_airport AS(
-    	SELECT * FROM airports
-    ),
-    SELECT * FROM Depart_airport
-    """)
-    rows = cur.fetchall()
-    df = DataFrame(rows)
-    df.to_csv(r'./app/csv/10test.csv',index=False)
-    cur.close()
-
     #Query 11 - Trips that contain a certain airport/city
     cur = con.cursor()
     cur.execute("""
