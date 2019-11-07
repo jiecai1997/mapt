@@ -1,0 +1,5 @@
+Jie Cai -
+Ethan Holland -
+Jaiveer Katariya -
+Eric Tay - Worked on the backend. Wrote templates, forms, routes, migrations and models. Formatted csv files. Also tested SQL statements and implemented them in flask.
+Kelly Zhang -
