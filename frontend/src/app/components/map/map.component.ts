@@ -27,18 +27,19 @@ export class MapComponent implements OnInit {
 
   getFlights(): void{
       this.flightsService.getFlights().subscribe(
-          flights => {
-              this.flights = flights;
+          flightsObj => {
+              this.flights = flightsObj['flights'];
             });
   }
 
-
+  //  ---------------------------------------------------------------------------------------------
+  // -------------------------------------- STYLING OPTIONS --------------------------------------
+  //  ---------------------------------------------------------------------------------------------
   options = 
     {
       streetViewControl: "false"
     }
   
-
   styles = [
     {
       "elementType": "labels.text.stroke",

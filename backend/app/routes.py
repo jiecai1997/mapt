@@ -72,35 +72,47 @@ def register():
 
 @app.route('/flights', methods=['GET', 'POST'])
 def flights():
-	# form = FlightsForm(request.form)
-	# if request.method == 'POST': and form.validate():
-		# tid = form.tid.data
-		# airline_iata = form.airline_iata.data
-		# flight_num = form.flight_num.data
-		# depart_iata = form.depart_iata.data
-		# arrival_iata = form.arrival_iata.data
-		# depart_datetime = form.depart_datetime.data
-		# arrival_datetime = form.arrival_datetime.data
-		# duration = form.duration.data
-		# mileage = form.mileage.data
-		# with sql.connect("app.db") as con:
-		# 	con.row_factory = sql.Row
-		# 	cur = con.cursor()
-		# 	cur.execute("INSERT INTO flights (tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage) VALUES (?,?,?,?,?,?,?,?,?)",(tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage))
-		# 	con.commit()
-		# 	cur.close()
-		# 	flash('You Added A Flight!')
-		# 	return redirect('/list')
+	if request.method == 'GET':
+		with sql.connect("app.db") as con:
+			con.row_factory = sql.Row
+			cur = con.cursor()
+			cur.execute("SELECT departAirports.Latitude AS deptLat, departAirports.Longitude AS deptLong, arriveAirports.Latitude as arrLat, arriveAirports.Longitude as arrLong FROM flights, airports AS departAirports, airports AS arriveAirports WHERE flights.depart_iata = departAirports.IATA AND flights.arrival_iata = arriveAirports.IATA")
+			flightRows = cur.fetchall()
 
-	with sql.connect("app.db") as con:
-		con.row_factory = sql.Row
-		cur = con.cursor()
-		cur.execute("SELECT departAirports.Latitude, departAirports.Longitude, arriveAirports.Latitude, arriveAirports.Longitude FROM flights, airports AS departAirports, airports AS arriveAirports WHERE flights.depart_iata = departAirports.IATA AND flights.arrival_iata = arriveAirports.IATA")
-		flightRows = cur.fetchall()
-		print('flights')
-		print(flightRows)
+		flights = []
+		for flight in flightRows:
+			tempDict = {'firstPointLat': flight['deptLat'], 'firstPointLong': flight['deptLong'], 'secondPointLat': flight['arrLat'], 'secondPointLong': flight['arrLong']}
+			flights.append(tempDict)
+		
+		return jsonify({'flights': flights})
+	else:
+		# placeholder for post
+		return {}
 
-	return jsonify({})
+	
+
+@app.route('/manual', methods=['GET', 'POST'])
+def manual():
+	form = FlightsForm(request.form)
+	if request.method == 'POST' and form.validate():
+		tid = form.tid.data
+		airline_iata = form.airline_iata.data
+		flight_num = form.flight_num.data
+		depart_iata = form.depart_iata.data
+		arrival_iata = form.arrival_iata.data
+		depart_datetime = form.depart_datetime.data
+		arrival_datetime = form.arrival_datetime.data
+		duration = form.duration.data
+		mileage = form.mileage.data
+		with sql.connect("app.db") as con:
+			con.row_factory = sql.Row
+			cur = con.cursor()
+			cur.execute("INSERT INTO flights (tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage) VALUES (?,?,?,?,?,?,?,?,?)",(tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage))
+			con.commit()
+			cur.close()
+			flash('You Added A Flight!')
+			return redirect('/list')
+	return render_template('flights.html', title="Add a Flight", form=FlightsForm())
 
 @app.route('/trips', methods=['GET', 'POST'])
 def trips():

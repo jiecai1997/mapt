@@ -1,6 +1,8 @@
 import { Point } from './Point';
 export class Flight{
-    startPoint:Point;
-    endPoint:Point;
+    firstPointLat:number;
+    fistPointLong:number;
+    secondPointLat:number;
+    secondPointLong:number;
     opacity:number;
 }

@@ -25,10 +25,7 @@ export class FlightsService {
     // this.http.get(this.serverURL + '/list').subscribe( flightData => {
     //   console.log('flights', flightData);
     // });
-
-    return of(listOfFlights);
-
-    // return this.http.get<Flight[]>(this.serverURL + '/flights');
+    return this.http.get<Flight[]>(this.serverURL + '/flights')   
   }
 
   // eventually, have the backend give us a session token for the current user, and then feed that session token as well
