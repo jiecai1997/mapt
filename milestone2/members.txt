@@ -1,5 +1,5 @@
 Jie Cai -
 Ethan Holland -
-Jaiveer Katariya - Wrote additional layout and functionality for map component. Wrote services for login and flight data, implemented frontend HTTP protocols, and implemented backend functionality for dynamically fetching flights
+Jaiveer Katariya - Wrote additional layout and functionality for map component. Wrote services for login and flight data, implemented frontend HTTP protocols, and implemented backend functionality for dynamically fetching flights.
 Eric Tay - Worked on the backend. Wrote templates, forms, routes, migrations and models. Formatted csv files. Also tested SQL statements and implemented them in flask.
 Kelly Zhang -
