@@ -1,1 +1,42 @@
-<p>coming soon!</p>
+<div class="profile-container">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Edit profile</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <form>
+                <table cellspacing="10px">
+                    <!-- username -->
+                    <tr><td>
+                        <mat-form-field>
+                            <input matInput 
+                                placeholder="Username" 
+                                [(ngModel)]="username" 
+                                name="changeusername" 
+                                [formControl]="usernameFormControl"
+                                [errorStateMatcher]="matcher" required>
+                            <mat-error *ngIf="usernameFormControl.hasError('required')">
+                                Username is <strong>required</strong>
+                            </mat-error>
+                        </mat-form-field>
+                    </td></tr>
+
+                    <!-- public/private -->
+                    <tr><td>
+                        <mat-slide-toggle matInput
+                            name="ispublic"
+                            color="accent"
+                            [(ngModel)] = "isPublic">
+                            {{isPublic ? "Make private" : "Make public"}}
+                        </mat-slide-toggle>
+                    </td></tr>
+                </table>
+            </form>
+            <mat-spinner [style.display]="showSpinner ? 'block' : 'none'"></mat-spinner>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button (click)="save()" color="primary" [disabled]="!data_changed() || has_errors()" style="position:absolute; left:10%; bottom: 5%;">Save Changes</button>
+            <button mat-raised-button (click)="cancel()" color="primary" [disabled]="!data_changed()" style="position:absolute; right:7%; bottom: 5%;">Cancel</button>
+        </mat-card-actions>
+    </mat-card>
+</div>

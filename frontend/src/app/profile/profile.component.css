@@ -1,0 +1,15 @@
+.profile-container {
+    display: flex;
+    /* flex-direction: column; */
+    justify-content: center;
+    align-items: center;
+}
+
+table {
+    padding: 10px;
+}
+
+.mat-card {
+    margin-top: 100px;
+    padding: 30px;
+}
