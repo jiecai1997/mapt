@@ -2,15 +2,6 @@ import { AgmCoreModule } from '@agm/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule }    from '@angular/common/http';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatCardModule } from '@angular/material/card';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatInputModule } from '@angular/material/input';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { NgModule } from '@angular/core';
 import { CustomMaterialModule } from '@app/modules/material.module'; //angular material modules
 import { environment } from "@app/../environments/environment";
@@ -59,15 +50,6 @@ let apiKey: string = environment.apiKey;
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    MatDividerModule,
-    MatGridListModule,
-    MatCardModule,
-    MatToolbarModule,
-    MatTabsModule,
-    MatFormFieldModule,
-    MatDatepickerModule,
-    MatInputModule,
-    MatAutocompleteModule,
     BrowserAnimationsModule,
     CustomMaterialModule
   ],
