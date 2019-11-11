@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import {
   MatButtonModule, MatCardModule, MatDialogModule, MatInputModule, MatTableModule,
   MatToolbarModule, MatMenuModule,MatIconModule, MatProgressSpinnerModule, 
-  MatNativeDateModule, MatListModule
+  MatNativeDateModule, MatListModule, MatSlideToggleModule
 } from '@angular/material';
 
 @NgModule({
@@ -20,6 +20,7 @@ import {
    MatIconModule,
    MatNativeDateModule,
    MatListModule,
+   MatSlideToggleModule,
    MatProgressSpinnerModule
    ],
 })
