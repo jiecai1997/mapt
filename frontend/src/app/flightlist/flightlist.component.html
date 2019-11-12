@@ -10,9 +10,12 @@
                 </mat-panel-description>
             </mat-expansion-panel-header>
         
-            <mat-form-field>
-                <input matInput placeholder="Trip Name" [(ngModel)]="trip.name">
-            </mat-form-field>
+            <mat-divider></mat-divider>
+            <div class="tripname-container">
+                <mat-form-field>
+                    <input matInput placeholder="Trip Name" [(ngModel)]="trip.name">
+                </mat-form-field>
+            </div>
 
             <mat-card *ngFor="let flight of trip.flights; let i = index">
                 <!-- button to delete flight -->
@@ -23,7 +26,7 @@
                 </mat-card-subtitle>
         
                 <mat-card-content>
-                    <table cellspacing="0">
+                    <table cellspacing="10">
                         <tr> <!-- label -->
                             <td>From</td>
                             <td>To</td>
