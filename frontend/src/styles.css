@@ -14,7 +14,7 @@ mat-card {
     margin: 5px;
 }
 
-.form-card-container {
+.form-card-container, .center-container {
     display: flex;
     justify-content: center;
     align-items: center;
