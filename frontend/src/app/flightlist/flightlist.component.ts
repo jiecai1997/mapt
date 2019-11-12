@@ -7,10 +7,9 @@ import { FormControl, Validators } from '@angular/forms';
   styleUrls: ['./flightlist.component.css']
 })
 export class FlightlistComponent implements OnInit {
-  tripname: string = "New Trip"
-  flights = [];
-
   sampleAirports = ['RDU', 'Raleigh-Durham International Airport', 'SEA', 'ORD', 'BWI', 'IAD', 'Dulles International Airport'];
+
+  trip = {name: 'New Trip', flights: []}
 
   constructor() {
     this.addFlight(); //start with one flight
@@ -20,7 +19,7 @@ export class FlightlistComponent implements OnInit {
   ngOnInit() {
   }
 
-  getAirportSuggestions(query): any {
+  getAirportSuggestions(query: string): any {
     if(query){
       query = query.toLowerCase(); //ignore case
       return this.sampleAirports.filter(airport => airport.toLowerCase().startsWith(query));
@@ -29,12 +28,12 @@ export class FlightlistComponent implements OnInit {
     }
   }
 
-  removeFlight(index): void{
-    this.flights.splice(index, 1);
+  removeFlight(index: number): void{
+    this.trip.flights.splice(index, 1);
   }
 
   addFlight(): void{
-    this.flights.push({
+    this.trip.flights.push({
       obj: {
         dep: {},
         arr: {}
@@ -51,9 +50,7 @@ export class FlightlistComponent implements OnInit {
   }
 
   submit(): void {
-    console.log({
-      tripname: 'mytrip',
-      flights: this.flights.map(flight => flight.obj)
-    });
+    this.trip.flights = this.trip.flights.map(flight => flight.obj); // remove references to form controls
+    console.log(this.trip);
   }
 }
