@@ -6,10 +6,8 @@
     padding-top: 0px;
 }
 
-.close-button {
-    position: absolute;
-    top: 0px;
-    right: 0px;
+.button-row {
+    margin-top: 16px;
 }
 
 .add-button {
@@ -19,4 +17,14 @@
 .tripname-container {
     text-align: center;
     padding-top: 1.25em;
+}
+
+.close-hidden{
+    visibility: hidden;
+}
+
+.mat-expansion-panel-header-title, .mat-expansion-panel-header-description {
+  flex-basis: 0;
+  justify-content: space-between;
+  align-items: center;
 }
