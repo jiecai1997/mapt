@@ -34,20 +34,20 @@
                     <tr> <!-- airport -->
                         <td>
                             <mat-form-field>
-                                <input matInput type="text" placeholder="Departure Airport" [matAutocomplete]="auto" [(ngModel)]="flight.obj.dep.airport">
-                                <mat-autocomplete #auto="matAutocomplete">
-                                    <mat-option *ngFor="let depAirport of getAirportSuggestions(flight).dep" [value]="depAirport">
-                                        {{depAirport}}
+                                <input matInput type="text" placeholder="Departure Airport" [matAutocomplete]="depAuto" [(ngModel)]="flight.obj.dep.airport">
+                                <mat-autocomplete #depAuto="matAutocomplete">
+                                    <mat-option *ngFor="let airport of getAirportSuggestions(flight, true)" [value]="airport">
+                                        {{airport}}
                                     </mat-option>
                                 </mat-autocomplete>
                             </mat-form-field>
                         </td>
                         <td>
                             <mat-form-field>
-                                <input matInput type="text" placeholder="Arrival Airport" [matAutocomplete]="auto" [(ngModel)]="flight.obj.arr.airport">
-                                <mat-autocomplete #auto="matAutocomplete">
-                                    <mat-option *ngFor="let arrAirport of getAirportSuggestions(flight).arr" [value]="arrAirport">
-                                        {{arrAirport}}
+                                <input matInput type="text" placeholder="Arrival Airport" [matAutocomplete]="arrAuto" [(ngModel)]="flight.obj.arr.airport">
+                                <mat-autocomplete #arrAuto="matAutocomplete">
+                                    <mat-option *ngFor="let airport of getAirportSuggestions(flight, false)" [value]="airport">
+                                        {{airport}}
                                     </mat-option>
                                 </mat-autocomplete>
                             </mat-form-field>

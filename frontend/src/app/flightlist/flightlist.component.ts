@@ -12,8 +12,6 @@ export class FlightlistComponent implements OnInit {
 
   constructor() {
     this.initialize(); //initialize
-
-    this.sampleAirports = this.sampleAirports.map(a => a.toLowerCase()); //standardize case
     this.sampleAirports.sort(); //sort sample airports alphabetically
   }
 
@@ -42,29 +40,19 @@ export class FlightlistComponent implements OnInit {
     });
   }
 
-  getAirportSuggestions(flight: any): any {
+  getAirportSuggestions(flight: any, isDep: boolean): any {
     const depAirport = (flight.obj.dep.airport || '').toLowerCase(),
           arrAirport = (flight.obj.arr.airport || '').toLowerCase();
 
-    console.log({
-      dep : this.sampleAirports.filter(airport => airport != arrAirport && airport.startsWith(depAirport)),
-      arr : this.sampleAirports.filter(airport => airport != depAirport && airport.startsWith(arrAirport))
-    })
-    return {
-      dep : this.sampleAirports.filter(airport => airport != arrAirport && airport.startsWith(depAirport)),
-      arr : this.sampleAirports.filter(airport => airport != depAirport && airport.startsWith(arrAirport))
+    var find: any, exclude: any;
+    if(isDep){
+      find = depAirport, exclude = arrAirport;
+    }else{
+      find = arrAirport, exclude = depAirport;
     }
-  }
 
-  // getAirportSuggestions(query: string): any {
-  //   if(query){
-  //     query = query.toLowerCase(); //ignore case
-  //     console.log(this.sampleAirports.filter(airport => airport.toLowerCase().startsWith(query)))
-  //     return this.sampleAirports.filter(airport => airport.toLowerCase().startsWith(query));
-  //   }else{
-  //     return this.sampleAirports;
-  //   }
-  // }
+    return this.sampleAirports.filter(airport => airport.toLowerCase() != exclude && airport.toLowerCase().startsWith(find));
+  }
 
   getFlightDescription(flight: any, index: number): string {
     if(flight.obj.dep.airport && flight.obj.arr.airport){
