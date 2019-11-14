@@ -1,0 +1,69 @@
+,IATA,Name,City,Country,Latitude,Longitude,A,B,DST,Time Zone
+459,BGG,Bing√∂l √áeltiksuyu Airport,Bingol,Turkey,38.85926056,40.59596252,3506,3,E,Europe/Istanbul
+890,CHR,"Ch√¢teauroux-Déols ""Marcel Dassault"" Airport",Chateauroux,France,46.860278,1.721111,529,1,E,Europe/Paris
+932,CKZ,√áanakkale Airport,Canakkale,Turkey,40.13769913,26.42679977,23,3,E,Europe/Istanbul
+970,CNG,Cognac-Ch√¢teaubernard (BA 709) Air Base,Cognac,France,45.65829849,-0.317499995,102,1,E,Europe/Paris
+1242,DNZ,√áardak Airport,Denizli,Turkey,37.78559875,29.70129967,2795,3,E,Europe/Istanbul
+1348,EDO,Balƒ±kesir K√∂rfez Airport,Balikesir Korfez,Turkey,39.55459976,27.01379967,50,3,E,Europe/Istanbul
+1364,EGS,Egilssta√∞ir Airport,Egilsstadir,Iceland,65.28330231,-14.40139961,76,0,N,Atlantic/Reykjavik
+1433,EPU,P√§rnu Airport,Parnu,Estonia,58.41899872,24.472799300000002,47,2,E,Europe/Tallinn
+1529,FEZ,Sa√Øss Airport,Fes,Morocco,33.9272995,-4.97796011,1900,0,N,Africa/Casablanca
+1553,FLF,Flensburg-Sch√§ferhaus Airport,Flensburg,Germany,54.7733345,9.378889083999999,131,1,E,Europe/Berlin
+1575,FNI,N√Æmes-Arles-Camargue Airport,Nimes,France,43.75740051,4.416349888,309,1,E,Europe/Paris
+1619,FTU,T√¥lanaro Airport,Tolagnaro,Madagascar,-25.03809929,46.95610046,29,3,U,Indian/Antananarivo
+1686,GEL,Santo √öngelo Airport,Santo Angelo,Brazil,-28.2817,-54.169102,1056,-3,S,America/Sao_Paulo
+1691,GEV,G√§llivare Airport,Gallivare,Sweden,67.13240051,20.81459999,1027,1,E,Europe/Stockholm
+1727,GJR,Gj√∂gur Airport,Gjogur,Iceland,65.99530029,-21.32690048,83,0,N,Atlantic/Reykjavik
+1850,GVX,G√§vle Sandviken Airport,Gavle,Sweden,60.59329987,16.95140076,224,1,E,Europe/Stockholm
+1931,HFN,Hornafj√∂r√∞ur Airport,Hofn,Iceland,64.295601,-15.2272,24,0,N,Atlantic/Reykjavik
+2020,HOV,"√òrsta-Volda Airport, Hovden",Orsta-Volda,Norway,62.18000031,6.074100017999999,243,1,E,Europe/Oslo
+2095,HYV,Hyvink√§√§ Airfield,Hyvinkaa,Finland,60.65439987,24.8810997,430,2,E,Europe/Helsinki
+2129,IES,Riesa-G√∂hlis Airport,Riesa,Germany,51.29360962,13.35611057,322,1,E,Europe/Berlin
+2132,IFJ,√çsafj√∂r√∞ur Airport,Isafjordur,Iceland,66.05809784,-23.13529968,8,0,N,Atlantic/Reykjavik
+2141,IGL,√áiƒüli Airport,Izmir,Turkey,38.51300049,27.01009941,16,3,E,Europe/Istanbul
+2344,JKG,J√∂nk√∂ping Airport,Joenkoeping,Sweden,57.75759888,14.06869984,741,1,E,Europe/Stockholm
+2452,KDL,K√§rdla Airport,Kardla,Estonia,58.99079895,22.83069992,18,2,E,Europe/Tallinn
+2595,KOQ,K√∂then Airport,Koethen,Germany,51.7211113,11.95277786,305,1,E,Europe/Berlin
+2659,KTT,Kittil√§ Airport,Kittila,Finland,67.70099640000001,24.84679985,644,2,E,Europe/Helsinki
+2677,KVB,Sk√∂vde Airport,Skovde,Sweden,58.45640182,13.97270012,324,1,E,Europe/Stockholm
+2722,LAI,Lannion-C√¥te de Granit Airport,Lannion,France,48.754397999999995,-3.47166,290,1,E,Europe/Paris
+2775,LDK,Lidk√∂ping-Hovby Airport,Lidkoping,Sweden,58.4655,13.1744,200,1,E,Europe/Stockholm
+2895,LNZ,Linz H√∂rsching Airport,Linz,Austria,48.2332,14.1875,980,1,E,Europe/Vienna
+2914,LPI,Link√∂ping City Airport,Linkoeping,Sweden,58.40620041,15.68050003,172,1,E,Europe/Stockholm
+2960,LTQ,Le Touquet-C√¥te d'Opale Airport,Le Tourquet,France,50.51739883,1.6205899719999999,36,1,E,Europe/Paris
+2962,LTT,La M√¥le Airport,La M√¥le,France,43.205399,6.482,59,1,E,Europe/Paris
+3088,MDQ,√Åstor Piazzola International Airport,Mar Del Plata,Argentina,-37.9342,-57.5733,72,-3,N,America/Buenos_Aires
+3134,MGL,M√∂nchengladbach Airport,Moenchengladbach,Germany,51.230278000000006,6.504444,125,1,E,Europe/Berlin
+3225,MMX,Malm√∂ Sturup Airport,Malmoe,Sweden,55.53630536,13.37619781,236,1,E,Europe/Stockholm
+3352,MVA,Reykjahlí√∞ Airport,Myvatn,Iceland,65.65579987,-16.91810036,1030,0,N,Atlantic/Reykjavik
+3388,MXV,M√∂r√∂n Airport,Muren,Mongolia,49.66329956,100.09899899999999,4272,8,U,Asia/Ulaanbaatar
+3453,NCE,Nice-C√¥te d'Azur Airport,Nice,France,43.65840149,7.215869904,12,1,E,Europe/Paris
+3555,NOR,Nor√∞fj√∂r√∞ur Airport,Nordfjordur,Iceland,65.13189697,-13.74639988,13,0,E,Atlantic/Reykjavik
+3577,NRK,Norrk√∂ping Airport,Norrkoeping,Sweden,58.58629989999999,16.25060081,32,1,E,Europe/Stockholm
+3674,OER,√ñrnsk√∂ldsvik Airport,Ornskoldsvik,Sweden,63.40829849,18.98999977,354,1,E,Europe/Stockholm
+3692,OIA,Ouril√¢ndia do Norte Airport,Ourilandia do Norte,Brazil,-6.763100147,-51.04990005,901,-3,S,America/Belem
+3712,OLA,√òrland Airport,Orland,Norway,63.69889832,9.604000092,28,1,E,Europe/Oslo
+3752,ORB,√ñrebro Airport,Orebro,Sweden,59.22370148,15.03800011,188,1,E,Europe/Stockholm
+3770,OSD,Åre √ñstersund Airport,√ñstersund,Sweden,63.19440079,14.50030041,1233,1,E,Europe/Stockholm
+3894,PET,João Sim√µes Lopes Neto International Airport,Pelotas,Brazil,-31.718398999999998,-52.327702,59,-3,S,America/Sao_Paulo
+3901,PFJ,Patreksfj√∂r√∞ur Airport,Patreksfjordur,Iceland,65.555801,-23.965,11,0,N,Atlantic/Reykjavik
+4213,QXH,Sch√∂nhagen Airport,Schoenhagen,Germany,52.203609,13.156389,152,1,E,Europe/Berlin
+4266,REB,Rechlin-L√§rz Airport,Rechlin-laerz,Germany,53.30638886,12.75222206,220,1,E,Europe/Berlin
+4432,SAK,Sau√∞ürkrókur Airport,Saudarkrokur,Iceland,65.73169708,-19.57279968,8,0,N,Atlantic/Reykjavik
+4433,SAL,Monseñor √ìscar Arnulfo Romero International Airport,San Salvador,El Salvador,13.4409,-89.055702,101,-6,U,America/El_Salvador
+4439,SAW,Sabiha G√∂kçen International Airport,Istanbul,Turkey,40.89860153,29.30920029,312,3,E,Europe/Istanbul
+4483,SDL,Sundsvall-H√§rn√∂sand Airport,Sundsvall,Sweden,62.52809906,17.44389915,16,1,E,Europe/Stockholm
+4562,SIJ,Siglufj√∂r√∞ur Airport,Siglufjordur,Iceland,66.133301,-18.9167,10,0,N,Atlantic/Reykjavik
+4584,SJY,Sein√§joki Airport,Sein√§joki / Ilmajoki,Finland,62.692101,22.8323,302,2,E,Europe/Helsinki
+4664,SOO,S√∂derhamn Airport,Soderhamn,Sweden,61.26150131,17.09910011,88,1,E,Europe/Stockholm
+4796,SXF,Berlin-Sch√∂nefeld Airport,Berlin,Germany,52.380001,13.5225,157,1,E,Europe/Berlin
+4827,SZF,Samsun √áar≈üamba Airport,Samsun,Turkey,41.254501,36.567101,18,3,E,Europe/Istanbul
+4902,TEQ,Tekirdaƒü √áorlu Airport,√áorlu,Turkey,41.13819885,27.91909981,574,3,E,Europe/Istanbul
+4920,TGM,Transilvania T√¢rgu Mure≈ü International Airport,Tirgu Mures,Romania,46.46770096,24.41250038,963,2,E,Europe/Bucharest
+4929,THE,Senador Petr√¥nio Portela Airport,Teresina,Brazil,-5.059939861,-42.82350159,219,-3,S,America/Fortaleza
+4933,THN,Trollh√§ttan-V√§nersborg Airport,Trollhattan,Sweden,58.31809998,12.34500027,137,1,E,Europe/Stockholm
+5248,URC,√úrümqi Diwopu International Airport,Urumqi,China,43.90710068,87.47419739,2125,8,U,Asia/Shanghai
+5395,VPN,Vopnafj√∂r√∞ur Airport,Vopnafj√∂r√∞ur,Iceland,65.72059631,-14.85060024,16,0,N,Atlantic/Reykjavik
+5414,VST,Stockholm V√§sterås Airport,Vasteras,Sweden,59.58940125,16.63360023,21,1,E,Europe/Stockholm
+5429,VXO,V√§xj√∂ Kronoberg Airport,Vaxjo,Sweden,56.92910004,14.72799969,610,1,E,Europe/Stockholm
+5566,XCR,Ch√¢lons-Vatry Airport,Chalons,France,48.77333333,4.206111111,587,1,E,Europe/Paris
