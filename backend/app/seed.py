@@ -17,16 +17,13 @@ with sql.connect("app.db") as con:
     with open(airline_csv) as file_handler:
         csv = [row for row in reader(file_handler) if any(row)]
         for c in csv:
-            csv.pop(0)
             cur.execute("INSERT INTO airlines (iata, name) VALUES (?,?)",(c[1], c[0]))
 
     airports_csv = './app/csv/Airports.csv'
     with open(airports_csv) as file_handler:
         csv = [row for row in reader(file_handler) if any(row)]
         for c in csv:
-            csv.pop(0)
             cur.execute("INSERT INTO airports (iata, name, city, country, latitude, longitude, time_zone, dst) VALUES (?,?,?,?,?,?,?,?)",(c[0], c[1], c[2], c[3], c[4], c[5], c[9], c[8]))
-
 
     con.commit()
     cur.close()
