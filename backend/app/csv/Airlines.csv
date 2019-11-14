@@ -22,7 +22,6 @@ OneChina,1C
 TransRussiaAirlines,1E
 CB Airways UK ( Interliging Flights ),1F
 NetJets,1I
-Novair,1I
 BudgetAir,1K
 All America CL,1R
 1Time Airline,1T
@@ -85,7 +84,6 @@ Airlink (SAA),4Z
 Bassaka airlines,5B
 CAL Cargo Air Lines,5C
 Aerolitoral,5D
-DonbassAero,5D
 SGA Airlines,5E
 Skyservice Airlines,5G
 Fly540,5H
@@ -148,12 +146,10 @@ Jet4You,8J
 Voestar,8K
 Cargo Plus Aviation,8L
 Maxair,8M
-Myanmar Airways International,8M
 Barents AirLink,8N
 West Coast Air,8O
 Pacific Coastal Airline,8P
 Onur Air,8Q
-Maldivian Air Taxi,8Q
 TRIP Linhas A,8R
 Air Tindi,8T
 Afriqiyah Airways,8U
@@ -250,7 +246,6 @@ Centralwings,C0
 CanXpress,C1
 CanXplorer,C2
 Contact Air,C3
-QatXpress,C3
 LionXpress,C4
 CommutAir,C5
 Sky Wing Pacific,C7
@@ -258,7 +253,6 @@ Cirrus Airlines,C9
 Air China,CA
 CCML Airlines,CB
 Air Atlanta Icelandic,CC
-Macair Airlines,CC
 Air India Regional,CD
 Nationwide Airlines,CE
 City Airline,CF
@@ -375,8 +369,6 @@ Fly Dubai,FZ
 Ghana International Airlines,G0
 Indya Airline Group,G1
 City Connexion Airlines,G3
-Gol Transportes A√©reos,G3
-Sky Express,G3
 Allegiant Air,G4
 Huaxia,G5
 Air Volga,G6
@@ -442,7 +434,6 @@ MexicanaLink,I6
 Paramount Airways,I7
 IzAvia,I8
 Air Italy,I9
-Indigo,I9
 Iraqi Airways,IA
 Name,IATA
 Iberia Airlines,IB
@@ -486,7 +477,6 @@ Midway Airlines,JI
 TAM Brazilian Airlines,JJ
 Spanair,JK
 Japan Airlines,JL
-Japan Airlines Domestic,JL
 Air Jamaica,JM
 Excel Airways,JN
 JALways,JO
@@ -548,7 +538,6 @@ Liberty Airways,LE
 FlyNordic,LF
 Luxair,LG
 Lufthansa,LH
-Lufthansa Cargo,LH
 Leeward Islands Air Transport,LI
 Jin Air,LJ
 Air Luxor,LK
@@ -727,7 +716,6 @@ RACSA,R6
 Aserca Airlines,R7
 AirRussia,R8
 Nepal Airlines,RA
-Royal Nepal Airlines,RA
 Syrian Arab Airlines,RB
 Atlantic Airways,RC
 Ryan International Airlines,RD
@@ -779,7 +767,6 @@ Brussels Airlines,SN
 Salsa d\\'Haiti,SO
 SATA Air Acores,SP
 Singapore Airlines,SQ
-Singapore Airlines Cargo,SQ
 Swissair,SR
 Corsairfly,SS
 Germania,ST
@@ -808,7 +795,6 @@ TransHolding,TI
 T.J. Air,TJ
 Turkish Airlines,TK
 Airnorth,TL
-Trans Mediterranean Airlines,TL
 Air Mozambique,TM
 Air Tahiti Nui,TN
 Transavia France,TO
@@ -887,7 +873,6 @@ Aerosvit Airlines,VV
 Aeromar,VW
 Virgin America,VX
 Formosa Airlines,VY
-Vueling Airlines,VY
 MyTravel Airways,VZ
 World Experience Airline,W1
 Maastricht Airlines,W2
@@ -898,7 +883,6 @@ Wizz Air,W6
 Austral Brasil,W7
 Air Bagan,W9
 KLM Cityhopper,WA
-Western Airlines,WA
 Rwandair Express,WB
 Islena De Inversiones,WC
 Amsterdam Airlines,WD
@@ -976,9 +960,7 @@ REDjet,Z7
 Amaszonas,Z8
 Flightlink Tanzania,Z9
 Access Air,ZA
-Interavia Airlines,ZA
 Air Bourbon,ZB
-Monarch Airlines,ZB
 Korongo Airlines,ZC
 Eastar Jet,ZE
 Athens Airways,ZF
