@@ -13,3 +13,18 @@ body {
 mat-card {
     margin: 5px;
 }
+
+.form-card-container, .center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 50px;
+}
+
+.form-card-container table { /* select tables in .form-card-containers */
+    padding: 10px;
+}
+
+.form-card-container .mat-card {
+    padding: 30px;
+}

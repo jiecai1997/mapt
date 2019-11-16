@@ -1,4 +1,3 @@
-
 .mat-card-subtitle {
     width: 100%;
 }
@@ -7,23 +6,33 @@
     padding-top: 0px;
 }
 
-.close-button {
-    position: absolute;
-    top: 0px;
-    right: 0px;
+table {
+    margin: 0 auto; /* center fields within table */
+}
+
+.button-row {
+    margin-top: 16px;
 }
 
 .add-button {
     float: right; 
 }
 
-.mat-card-content::after {
-    content: "";
-    clear: both;
-    display: table;
-  }
+.tripname-container {
+    padding-top: 1.25em;
+}
 
-.mat-list{
-    padding-top: 0px;
-    float: left;
+.tripname-container .mat-form-field {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.close-hidden{
+    visibility: hidden;
+}
+
+.mat-expansion-panel-header-title, .mat-expansion-panel-header-description {
+  flex-basis: 0;
+  justify-content: space-between;
+  align-items: center;
 }
