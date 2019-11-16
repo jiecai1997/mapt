@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-flightlist',
@@ -7,50 +6,75 @@ import { FormControl, Validators } from '@angular/forms';
   styleUrls: ['./flightlist.component.css']
 })
 export class FlightlistComponent implements OnInit {
-  sampleAirports = ['RDU', 'Raleigh-Durham International Airport', 'SEA', 'ORD', 'BWI', 'IAD', 'Dulles International Airport'];
+  @Input() isAddTrip: boolean;
+  trips: Array<any> = [];
 
-  trip = {name: 'New Trip', flights: []}
+  sampleAirports = ['RDU', 'SEA', 'ORD', 'BWI', 'IAD'];
+  colors = ['red', 'blue', 'green'];
+  lastAddedTo: number; // trip which most recently had a flight added to it
 
-  constructor() {
-    this.addFlight(); //start with one flight
-    this.sampleAirports.sort(); //sort sample airports alphabetically
-  }
+  constructor() {}
 
   ngOnInit() {
+    this.initialize();
   }
 
-  getAirportSuggestions(query: string): any {
-    if(query){
-      query = query.toLowerCase(); //ignore case
-      return this.sampleAirports.filter(airport => airport.toLowerCase().startsWith(query));
+  initialize(): void {
+    this.sampleAirports.sort(); //sort sample airports alphabetically
+
+    if(this.isAddTrip){
+      // add one trip with one flight
+      this.trips = [{name: 'New Trip', color: "red", flights: []}]
+      this.addFlight(0); // start with one flight
     }else{
-      return this.sampleAirports;
+      //TODO: get trip data
+      this.trips = [
+        {color: "red", name: "Wedding", flights: [{
+          arr: {airport: "RDU", date: new Date('9/10/19'), time: "17:50"},
+          dep: {airport: "PHL", date: new Date('9/10/19'), time: "16:10"}
+        }]},
+        {color: "blue", name: "Graduation", flights: [
+          {arr: {airport: "IAD", date: new Date('6/8/19'), time: "11:50"},
+          dep: {airport: "SEA", date: new Date('6/8/19'), time: "14:10"}},
+          {arr: {airport: "SEA", date: new Date('6/11/19'), time: "8:35"},
+          dep: {airport: "IAD", date: new Date('6/11/19'), time: "16:30"}}
+        ]},
+      ];
     }
   }
 
-  removeFlight(index: number): void{
-    this.trip.flights.splice(index, 1);
+  addFlight(tripIndex: number): void{
+    this.trips[tripIndex].flights.push({dep: {}, arr: {}});
+    this.lastAddedTo = tripIndex;
   }
 
-  addFlight(): void{
-    this.trip.flights.push({
-      obj: {
-        dep: {},
-        arr: {}
-      },
-      forms: {
-        dep: {
-          date: new FormControl(new Date())
-        },
-        arr: {
-          date: new FormControl(new Date())
-        }
-      }
-    });
+  getAirportSuggestions(flight: any, isDep: boolean): any {
+    const depAirport = (flight.dep.airport || '').toLowerCase(),
+          arrAirport = (flight.arr.airport || '').toLowerCase();
+
+    var find: any, exclude: any;
+    if(isDep){
+      find = depAirport, exclude = arrAirport;
+    }else{
+      find = arrAirport, exclude = depAirport;
+    }
+
+    return this.sampleAirports.filter(airport => airport.toLowerCase() != exclude && airport.toLowerCase().startsWith(find));
   }
 
-  submit(): void {
-    this.trip.flights = this.trip.flights.map(flight => flight.obj); // remove references to form controls
-    console.log(this.trip);
+  getFlightDescription(flight: any, index: number): string {
+    if(flight.dep.airport && flight.arr.airport){
+      return `${flight.dep.airport} \u2794 ${flight.arr.airport}`; // DEP -> ARR
+    }
+    return `Flight ${index + 1}`;
+  }
+
+  removeFlight(tripIndex: number, flightIndex: number): void{
+    this.trips[tripIndex].flights.splice(flightIndex, 1);
+  }
+
+  saveTrip(): void {
+    console.log(this.trips);
+    this.initialize();
   }
 }

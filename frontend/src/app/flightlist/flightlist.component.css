@@ -6,12 +6,36 @@
     padding-top: 0px;
 }
 
-.close-button {
-    position: absolute;
-    top: 0px;
-    right: 0px;
+table {
+    margin: 0 auto; /* center fields within table */
+}
+
+.button-row {
+    margin-top: 16px;
 }
 
 .add-button {
     float: right; 
 }
+<<<<<<< HEAD
+=======
+
+.tripname-container {
+    padding-top: 1.25em;
+}
+
+.tripname-container .mat-form-field {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.close-hidden{
+    visibility: hidden;
+}
+
+.mat-expansion-panel-header-title, .mat-expansion-panel-header-description {
+  flex-basis: 0;
+  justify-content: space-between;
+  align-items: center;
+}
+>>>>>>> d43ac72817b4867510d9fd73803201298d0d6e33
