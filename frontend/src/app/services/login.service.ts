@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Observable, of } from 'rxjs';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Md5 } from 'ts-md5/dist/md5';
 
@@ -10,7 +10,16 @@ import { Md5 } from 'ts-md5/dist/md5';
 
 export class LoginService {
 
+  // private dataSource = new BehaviorSubject<SnapshotSelection>(new Data());
+  //   data = this.dataSource.asObservable();
+  
+  
+  //   updatedDataSelection(data: Data){
+  //     this.dataSource.next(data);
+
+
   private uid:number;
+  private sessionToken:string;
 
   private serverURL = 'http://localhost:5000';
 
@@ -30,6 +39,8 @@ export class LoginService {
     
   }
 
+  // add storing session token in service that can then be accessed by flight for verification/sending that to the backend 
+  // make sure that these instance variables can be accessed simultaneously by components, if not, figure out how
   attemptLogin(email:string, password:string){
     const hashedSalty:string = this.generatePassword(email, password);
     const reqBody = {'email': email, 'hashedPassword': hashedSalty}
@@ -37,6 +48,7 @@ export class LoginService {
     return this.http.post(this.serverURL + '/loginattempt', reqBody).subscribe( result => {
       if(result['success'] == 'true'){
         this.uid = result['uid'];
+        this.sessionToken = result['token'];
         return this.uid;
       }
       else{
@@ -56,6 +68,10 @@ export class LoginService {
     const hashed = md5.appendStr(salty);
 
     return String(hashed);
+  }
+
+  public getToken():string{
+    return this.sessionToken;
   }
 }
 
