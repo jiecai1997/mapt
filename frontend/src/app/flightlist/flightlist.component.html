@@ -32,7 +32,7 @@
                     <mat-panel-description>
                         {{getFlightDescription(flight, flightIndex)}}
                         <button mat-button
-                            *ngIf="trip.flights.length > 1"
+                            *ngIf="trips[tripIndex].flights.length > 1"
                             class="close-button"
                             (click)="removeFlight(tripIndex, flightIndex)">
                             <mat-icon>close</mat-icon>

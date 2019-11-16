@@ -18,10 +18,7 @@ mat-card {
     display: flex;
     justify-content: center;
     align-items: center;
-<<<<<<< HEAD
-=======
     padding-top: 50px;
->>>>>>> d43ac72817b4867510d9fd73803201298d0d6e33
 }
 
 .form-card-container table { /* select tables in .form-card-containers */
@@ -29,9 +26,5 @@ mat-card {
 }
 
 .form-card-container .mat-card {
-<<<<<<< HEAD
-    margin-top: 100px;
-=======
->>>>>>> d43ac72817b4867510d9fd73803201298d0d6e33
     padding: 30px;
 }
