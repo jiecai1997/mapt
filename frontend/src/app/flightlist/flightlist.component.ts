@@ -10,6 +10,7 @@ export class FlightlistComponent implements OnInit {
   trips: Array<any> = [];
 
   sampleAirports = ['RDU', 'SEA', 'ORD', 'BWI', 'IAD'];
+  colors = ['red', 'blue', 'green'];
   lastAddedTo: number; // trip which most recently had a flight added to it
 
   constructor() {}

@@ -6,11 +6,24 @@
             </mat-expansion-panel-header>
         
             <mat-divider></mat-divider>
-            <div class="tripname-container">
-                <mat-form-field>
-                    <input matInput placeholder="Trip Name" [(ngModel)]="trip.name">
-                </mat-form-field>
-            </div>
+            <table cellspacing="0" class="tripname-container"><tr>
+                <td>
+                    <mat-form-field>
+                        <input matInput placeholder="Trip Name" [(ngModel)]="trip.name">
+                    </mat-form-field>
+                </td>
+
+                <td>
+                    <mat-form-field>
+                        <input matInput type="text" placeholder="Display Color" [matAutocomplete]="colorAuto" [(ngModel)]="trip.color">
+                        <mat-autocomplete #colorAuto="matAutocomplete">
+                            <mat-option *ngFor="let color of colors" [value]="color">
+                                <span [style.color]="color">{{color}}</span>
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </td>
+            </tr></table>
 
             <mat-expansion-panel
                 *ngFor="let flight of trip.flights; let flightIndex = index" 

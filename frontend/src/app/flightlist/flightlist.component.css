@@ -6,6 +6,10 @@
     padding-top: 0px;
 }
 
+table {
+    margin: 0 auto; /* center fields within table */
+}
+
 .button-row {
     margin-top: 16px;
 }
@@ -15,8 +19,12 @@
 }
 
 .tripname-container {
-    text-align: center;
     padding-top: 1.25em;
+}
+
+.tripname-container .mat-form-field {
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 .close-hidden{
