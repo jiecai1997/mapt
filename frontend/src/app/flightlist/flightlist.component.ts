@@ -10,6 +10,7 @@ export class FlightlistComponent implements OnInit {
   trips: Array<any> = [];
 
   sampleAirports = ['RDU', 'SEA', 'ORD', 'BWI', 'IAD'];
+  lastAddedTo: number; // trip which most recently had a flight added to it
 
   constructor() {}
 
@@ -41,8 +42,9 @@ export class FlightlistComponent implements OnInit {
     }
   }
 
-  addFlight(index: number): void{
-    this.trips[index].flights.push({dep: {}, arr: {}});
+  addFlight(tripIndex: number): void{
+    this.trips[tripIndex].flights.push({dep: {}, arr: {}});
+    this.lastAddedTo = tripIndex;
   }
 
   getAirportSuggestions(flight: any, isDep: boolean): any {

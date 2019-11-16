@@ -12,14 +12,16 @@
                 </mat-form-field>
             </div>
 
-            <mat-expansion-panel *ngFor="let flight of trip.flights; let flightIndex = index" [expanded]="isAddTrip && flightIndex == 0">
+            <mat-expansion-panel
+                *ngFor="let flight of trip.flights; let flightIndex = index" 
+                [expanded]="tripIndex == lastAddedTo && flightIndex == trips[tripIndex].flights.length - 1"> <!-- expand if most recentyl added flight -->
                 <mat-expansion-panel-header>
                     <mat-panel-description>
                         {{getFlightDescription(flight, flightIndex)}}
                         <button mat-button
                             *ngIf="trip.flights.length > 1"
                             class="close-button"
-                            (click)="removeFlight(flightIndex)">
+                            (click)="removeFlight(tripIndex, flightIndex)">
                             <mat-icon>close</mat-icon>
                         </button>
                     </mat-panel-description>
