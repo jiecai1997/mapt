@@ -1,7 +1,7 @@
 """empty message
 
 Revision ID: ed060304bba1
-Revises: 
+Revises:
 Create Date: 2019-11-13 21:29:19.470099
 
 """
@@ -32,9 +32,9 @@ def upgrade():
     sa.Column('longitude', sa.Float(), nullable=False),
     sa.Column('time_zone', sa.String(length=60), nullable=False),
     sa.Column('dst', sa.String(length=1), nullable=False),
-    sa.CheckConstraint("dst IN ('E', 'A', 'S', 'O', 'Z', 'N', 'U')"),
-    sa.CheckConstraint('latitude >= -90 AND latitude <= 90'),
-    sa.CheckConstraint('longitude >= -180 AND longitude <= 180'),
+    # sa.CheckConstraint("dst IN ('E', 'A', 'S', 'O', 'Z', 'N', 'U')"),
+    # sa.CheckConstraint('latitude >= -90 AND latitude <= 90'),
+    # sa.CheckConstraint('longitude >= -180 AND longitude <= 180'),
     sa.PrimaryKeyConstraint('iata')
     )
     op.create_table('user',
