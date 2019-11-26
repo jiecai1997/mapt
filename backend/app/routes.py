@@ -24,7 +24,20 @@ def register_user():
 
 		return jsonify({'success': True})
 
+@app.route('/user/addtrip', methods=['POST'])
+def addtrip_user():
+	json = request.get_json()
 
+	uid = json['uid']
+	trip_name = json['trip_name']
+
+	with sql.connect("app.db") as con:
+		con.row_factory = sql.Row
+		cur = con.cursor()
+		cur.execute("INSERT INTO trip (uid, trip_name) VALUES (?,?)",(uid, trip_name))
+		con.commit()
+		cur.close()
+		return jsonify({'success': True})
 
 @app.route('/')
 def home():
