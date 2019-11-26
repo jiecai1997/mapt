@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 6575592b49d9
+Revision ID: c4e25a74ae62
 Revises: 
-Create Date: 2019-11-25 23:19:08.279217
+Create Date: 2019-11-25 23:45:43.617805
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '6575592b49d9'
+revision = 'c4e25a74ae62'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,8 +21,6 @@ def upgrade():
     op.create_table('airline',
     sa.Column('iata', sa.String(length=2), nullable=False),
     sa.Column('name', sa.String(length=50), nullable=False),
-    sa.Column('flight_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['flight_id'], ['flight.fid'], ),
     sa.PrimaryKeyConstraint('iata')
     )
     op.create_table('airport',
@@ -34,11 +32,6 @@ def upgrade():
     sa.Column('longitude', sa.Float(), nullable=False),
     sa.Column('time_zone', sa.String(length=60), nullable=False),
     sa.Column('dst', sa.String(length=1), nullable=False),
-    sa.Column('flight_id', sa.Integer(), nullable=False),
-    sa.CheckConstraint("dst IN ('E', 'A', 'S', 'O', 'Z', 'N', 'U')"),
-    sa.CheckConstraint('latitude >= -90 AND latitude <= 90'),
-    sa.CheckConstraint('longitude >= -180 AND longitude <= 180'),
-    sa.ForeignKeyConstraint(['flight_id'], ['flight.fid'], ),
     sa.PrimaryKeyConstraint('iata')
     )
     op.create_table('detail',
@@ -74,8 +67,8 @@ def upgrade():
     sa.Column('tid', sa.Integer(), nullable=False),
     sa.Column('uid', sa.Integer(), nullable=False),
     sa.Column('trip_name', sa.String(length=30), nullable=False),
-    sa.Column('detail_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['detail_id'], ['detail.did'], ),
+    sa.Column('detail', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['detail'], ['detail.did'], ),
     sa.ForeignKeyConstraint(['uid'], ['user.uid'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('tid')
     )
@@ -85,9 +78,9 @@ def upgrade():
     sa.Column('email', sa.String(length=50), nullable=False),
     sa.Column('password', sa.String(length=20), nullable=False),
     sa.Column('public', sa.Boolean(), nullable=False),
-    sa.Column('trip_id', sa.Integer(), nullable=False),
+    sa.Column('trip', sa.Integer(), nullable=False),
     sa.CheckConstraint("email LIKE '%_@_%._%'"),
-    sa.ForeignKeyConstraint(['trip_id'], ['trip.tid'], ),
+    sa.ForeignKeyConstraint(['trip'], ['trip.tid'], ),
     sa.PrimaryKeyConstraint('uid'),
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')

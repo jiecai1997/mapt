@@ -14,8 +14,8 @@ class User(db.Model):
 	email = db.Column(db.String(50), unique=True, nullable=False)
 	password = db.Column(db.String(20), nullable=False)
 	public = db.Column(db.Boolean(), nullable=False)
-	trip_id = db.Column(db.Integer, db.ForeignKey('trip.tid'), nullable=False)
-	trip = db.relationship('Trip', backref=db.backref('user', lazy=True))
+	trip = db.Column(db.Integer, db.ForeignKey('trip.tid'), nullable=False)
+	trip_rel = db.relationship('Trip', backref=db.backref('user', lazy=True))
 
 	def __init__(self, uid, username, email, password, public):
 		self.uid = uid
@@ -44,8 +44,9 @@ class Trip(db.Model):
 	tid = db.Column(db.Integer, primary_key=True)
 	uid = db.Column(db.Integer, db.ForeignKey('user.uid', ondelete="CASCADE"), nullable=False)
 	trip_name = db.Column(db.String(30), default="Trip Created on " + str(datetime.now()), nullable=False)
-	detail_id = db.Column(db.Integer, db.ForeignKey('detail.did'), nullable=False)
-	detail = db.relationship('Detail', backref=db.backref('trip', lazy=True))
+	detail = db.Column(db.Integer, db.ForeignKey('detail.did'), nullable=False)
+	flight_rel = db.relationship('Flight', backref=db.backref('flight', lazy=True))
+	detail_rel = db.relationship('Detail', backref=db.backref('trip', lazy=True))
 
 	def __repr__(self):
 		return '<Trip {}>'.format(self.tid)
@@ -56,19 +57,18 @@ class Trip(db.Model):
 class Airline(db.Model):
 	iata = db.Column(db.String(2), primary_key=True)
 	name = db.Column(db.String(50), nullable=False)
-	flight_id = db.Column(db.Integer, db.ForeignKey('flight.fid'), nullable=False)
-	flight = db.relationship('Flight', backref=db.backref('airline', lazy=True))
+	flight_rel = db.relationship('Flight', backref=db.backref('airline', lazy=True))
 
 	def __repr__(self):
 		return '<Airline {}>'.format(self.iata)
 
 
 class Airport(db.Model):
-	__table_args__ = (
-		CheckConstraint('latitude >= -90 AND latitude <= 90'),
-		CheckConstraint('longitude >= -180 AND longitude <= 180'),
-		CheckConstraint('dst IN (\'E\', \'A\', \'S\', \'O\', \'Z\', \'N\', \'U\')'),
-	)
+	# __table_args__ = (
+	# 	CheckConstraint('latitude >= -90 AND latitude <= 90'),
+	# 	CheckConstraint('longitude >= -180 AND longitude <= 180'),
+	# 	CheckConstraint('dst IN (\'E\', \'A\', \'S\', \'O\', \'Z\', \'N\', \'U\')'),
+	# )
 	iata = db.Column(db.String(3), primary_key=True)
 	name = db.Column(db.String(75), nullable=False)
 	city = db.Column(db.String(75), nullable=False)
@@ -77,8 +77,8 @@ class Airport(db.Model):
 	longitude = db.Column(db.Float(), nullable=False)
 	time_zone = db.Column(db.String(60), nullable=False)
 	dst = db.Column(db.String(1), nullable=False)
-	flight_id = db.Column(db.Integer, db.ForeignKey('flight.fid'), nullable=False)
-	flight = db.relationship('Flight', backref=db.backref('airport', lazy=True))
+	flight_rel = db.relationship('Flight', backref=db.backref('airport', lazy=True))
+	detail_rel = db.relationship('Detail', backref=db.backref('airport', lazy=True))
 
 	def __repr__(self):
 		return '<Airport {}>'.format(self.iata)
@@ -102,9 +102,6 @@ class Flight(db.Model):
 	arrival_datetime = db.Column(db.DateTime, nullable=False)
 	duration = db.Column(db.Integer, nullable=False)
 	mileage = db.Column(db.Integer, nullable=False)
-	airline = db.relationship('Airline', backref=db.backref('airport', lazy=True))
-	depart = db.relationship('Airport', backref=db.backref('airport', lazy=True))
-	arrival = db.relationship('Airport', backref=db.backref('airport', lazy=True))
 
 	def __repr__(self):
 		return '<Flight {}>'.format(self.fid)
@@ -115,8 +112,6 @@ class Detail(db.Model):
 	tid = db.Column(db.Integer, db.ForeignKey('trip.tid', ondelete="CASCADE"), nullable=False)
 	iata = db.Column(db.String(3), db.ForeignKey('airport.iata', ondelete="CASCADE"), nullable=False)
 	note = db.Column(db.String(500), nullable=False)
-	trip = db.relationship('Trip', backref=db.backref('detail', lazy=True))
-	airport = db.relationship('Airport', backref=db.backref('detail', lazy=True))
 
 	def __repr__(self):
 		return '<Detail {}>'.format(self.did)
