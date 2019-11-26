@@ -14,7 +14,6 @@ class User(db.Model):
 	email = db.Column(db.String(50), unique=True, nullable=False)
 	password = db.Column(db.String(20), nullable=False)
 	public = db.Column(db.Boolean(), nullable=False)
-	trip = db.Column(db.Integer, db.ForeignKey('trip.tid'), nullable=False)
 	trip_rel = db.relationship('Trip', backref=db.backref('user', lazy=True))
 
 	def __init__(self, uid, username, email, password, public):
@@ -44,7 +43,6 @@ class Trip(db.Model):
 	tid = db.Column(db.Integer, primary_key=True)
 	uid = db.Column(db.Integer, db.ForeignKey('user.uid', ondelete="CASCADE"), nullable=False)
 	trip_name = db.Column(db.String(30), default="Trip Created on " + str(datetime.now()), nullable=False)
-	detail = db.Column(db.Integer, db.ForeignKey('detail.did'), nullable=False)
 	flight_rel = db.relationship('Flight', backref=db.backref('flight', lazy=True))
 	detail_rel = db.relationship('Detail', backref=db.backref('trip', lazy=True))
 
@@ -77,7 +75,8 @@ class Airport(db.Model):
 	longitude = db.Column(db.Float(), nullable=False)
 	time_zone = db.Column(db.String(60), nullable=False)
 	dst = db.Column(db.String(1), nullable=False)
-	flight_rel = db.relationship('Flight', backref=db.backref('airport', lazy=True))
+	aflight_rel = db.relationship('Flight', backref=db.backref('arrival', lazy=True), foreign_keys = 'Flight.arrival_iata')
+	dflight_rel = db.relationship('Flight', backref=db.backref('depart', lazy=True), foreign_keys = 'Flight.depart_iata')
 	detail_rel = db.relationship('Detail', backref=db.backref('airport', lazy=True))
 
 	def __repr__(self):
