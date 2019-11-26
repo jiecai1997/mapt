@@ -73,10 +73,14 @@ def register():
 @app.route('/flights', methods=['GET', 'POST'])
 def flights():
 	if request.method == 'GET':
+		json = request.get_json()
+
+		username = json['userid']
+
 		with sql.connect("app.db") as con:
 			con.row_factory = sql.Row
 			cur = con.cursor()
-			cur.execute("SELECT departAirports.Latitude AS deptLat, departAirports.Longitude AS deptLong, arriveAirports.Latitude as arrLat, arriveAirports.Longitude as arrLong FROM flights, airports AS departAirports, airports AS arriveAirports WHERE flights.depart_iata = departAirports.IATA AND flights.arrival_iata = arriveAirports.IATA")
+			cur.execute("SELECT departAirports.Latitude AS deptLat, departAirports.Longitude AS deptLong, arriveAirports.Latitude as arrLat, arriveAirports.Longitude as arrLong FROM flight, airport AS departAirports, airport AS arriveAirports WHERE flight.depart_iata = departAirports.IATA AND flight.arrival_iata = arriveAirports.IATA")
 			flightRows = cur.fetchall()
 		print(flightRows)
 		flights = []
@@ -87,11 +91,10 @@ def flights():
 
 		print(flights)
 		return jsonify({'flights': flights})
-	else:
-		# placeholder for post
+	else: # request method is a POST
 		return {}
 
-	
+
 
 @app.route('/manual', methods=['GET', 'POST'])
 def manual():
@@ -109,7 +112,7 @@ def manual():
 		with sql.connect("app.db") as con:
 			con.row_factory = sql.Row
 			cur = con.cursor()
-			cur.execute("INSERT INTO flights (tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage) VALUES (?,?,?,?,?,?,?,?,?)",(tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage))
+			cur.execute("INSERT INTO flight (tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage) VALUES (?,?,?,?,?,?,?,?,?)",(tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage))
 			con.commit()
 			cur.close()
 			flash('You Added A Flight!')
@@ -125,7 +128,7 @@ def trips():
 		with sql.connect("app.db") as con:
 			con.row_factory = sql.Row
 			cur = con.cursor()
-			cur.execute("INSERT INTO trips (uid, trip_name) VALUES (?,?)",(uid, trip_name))
+			cur.execute("INSERT INTO trip (uid, trip_name) VALUES (?,?)",(uid, trip_name))
 			con.commit()
 			cur.close()
 			flash('You Added A Trip!')
@@ -141,19 +144,19 @@ def list():
 		userrows = cur.fetchall()
 		cur.close()
 		cur = con.cursor()
-		cur.execute("select * from trips")
+		cur.execute("select * from trip")
 		tripsrows = cur.fetchall()
 		cur.close()
 		cur = con.cursor()
-		cur.execute("select * from airlines")
+		cur.execute("select * from airline")
 		airlinesrows = cur.fetchall()
 		cur.close()
 		cur = con.cursor()
-		cur.execute("select * from airports")
+		cur.execute("select * from airport")
 		airportsrows = cur.fetchall()
 		cur.close()
 		cur = con.cursor()
-		cur.execute("select * from flights")
+		cur.execute("select * from flight")
 		flightsrows = cur.fetchall()
 		cur.close()
 	return render_template("list.html",userrows = userrows,tripsrows = tripsrows,
@@ -166,8 +169,8 @@ def update():
 		cur = con.cursor()
 		cur.execute("INSERT INTO user(uid, username, email, password, public) VALUES(1, 'llama', 'llama@gmail.com', 'llamallamallama', 1)")
 		cur.execute("INSERT INTO user(uid, username, email, password, public) VALUES(2, 'alpaca', 'alpaca@gmail.com', 'alpacaalpacaalpaca', 1)")
-		cur.execute("INSERT INTO trips(tid, uid, trip_name) VALUES(1,1,'llama')")
-		cur.execute("INSERT INTO airlines(iata, name) VALUES('SQ', 'Singapore Airlines')")
+		cur.execute("INSERT INTO trip(tid, uid, trip_name) VALUES(1,1,'llama')")
+		cur.execute("INSERT INTO airline(iata, name) VALUES('SQ', 'Singapore Airlines')")
 		con.commit()
 		cur.close()
 	return render_template('home.html')

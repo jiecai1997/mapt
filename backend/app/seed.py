@@ -8,7 +8,6 @@ import csv as csv
 from csv import reader
 
 
-
 with sql.connect("app.db") as con:
     con.row_factory = sql.Row
     cur = con.cursor()
