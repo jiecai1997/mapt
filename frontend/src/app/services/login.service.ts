@@ -33,7 +33,7 @@ export class LoginService {
 
     const reqBody = {'username':username, 'email': email, 'hashedPassword': hashedSalty};
 
-    return this.http.post(this.serverURL + '/user/register', reqBody).subscribe( result => {
+    return this.http.post(this.serverURL + '/login/register', reqBody).subscribe( result => {
       return result;
     });
     
@@ -45,10 +45,10 @@ export class LoginService {
     const hashedSalty:string = this.generatePassword(email, password);
     const reqBody = {'email': email, 'hashedPassword': hashedSalty}
 
-    return this.http.post(this.serverURL + '/loginattempt', reqBody).subscribe( result => {
+    return this.http.post(this.serverURL + '/login/loginattempt', reqBody).subscribe( result => {
       if(result['success'] == 'true'){
-        this.uid = result['uid'];
-        this.sessionToken = result['token'];
+        this.uid = result['userid'];
+        this.sessionToken = result['sessionToken'];
         return this.uid;
       }
       else{
@@ -61,6 +61,8 @@ export class LoginService {
   }
 
   private generatePassword(email:string, password:string):string{
+    console.log('email', email)
+    console.log('password', password);
     const md5 = new Md5();
     const salt = md5.appendStr(email).end();
     
@@ -71,8 +73,10 @@ export class LoginService {
   }
 
   public getToken():string{
-    return this.sessionToken;
+    return "SESSION TOKEN HERE";
   }
+
+  
 }
 
 

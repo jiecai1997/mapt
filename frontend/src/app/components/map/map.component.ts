@@ -10,7 +10,8 @@ import { Flight } from '@app/models/Flight';
 })
 export class MapComponent implements OnInit {
 
-  constructor(private flightsService:FlightsService) { }
+  constructor(private flightsService:FlightsService) { 
+  }
 
   ngOnInit() {
     this.getFlights();
@@ -28,6 +29,7 @@ export class MapComponent implements OnInit {
   getFlights(): void{
       this.flightsService.getFlights().subscribe(
           flightsObj => {
+              console.log('flights are', flightsObj['flights'])
               this.flights = flightsObj['flights'];
             });
   }

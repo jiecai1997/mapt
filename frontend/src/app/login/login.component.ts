@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit {
       this.router.navigate([this.username]);
     }else{
       console.log(this.email, this.password);
-      this.loginService.attemptLogin(this.username, this.password);
+      this.loginService.attemptLogin(this.email, this.password);
       this.router.navigate([this.email]); //TODO: get username to navigate to from sql
     }
   }

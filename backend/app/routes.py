@@ -10,7 +10,7 @@ from flask import jsonify
 @app.route('/user/register', methods=['POST'])
 def register_user():
 	json = request.get_json()
-
+	
 	username = json['username']
 	email = json['email']
 	password = json['hashedPassword']
@@ -87,8 +87,11 @@ def register():
 def flights():
 	if request.method == 'GET':
 		json = request.get_json()
+		print('headers')
+		print(request.headers)
 
-		username = json['userid']
+
+		# username = json['userid']
 
 		with sql.connect("app.db") as con:
 			con.row_factory = sql.Row
