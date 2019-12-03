@@ -44,19 +44,23 @@ def login_attempt():
 		db_username = urow[0]
 		db_email = urow[1]
 		db_password = urow[2]
-		cur.close()
 
-		# success
+		# success - user exists
 		if input_email == db_email and input_password == db_password:
+			session_token = username+str(randInt(0, 1000))
+			cur.execute("UPDATE user SET session = (?) WHERE email = (?)", [session_token, input_email])
 			return jsonify({
 					'success': 'true',
 					'userid': db_username,
-					'sessionToken': 'hardcoded_token'
+					'sessionToken': session_token
 				})
 
 		# fail - wrong password for user
 		else:
 			return jsonify({'success': 'false'})
+
+		cur.commit()
+		cur.close()
 
 
 @app.route('/user/addtrip', methods=['POST'])
