@@ -91,7 +91,7 @@ def flights():
 		print(request.headers)
 
 		# username = json['userid']
-		# STILL NEED TO PERFORM TOKEN VALIDATION IN ALL ROUTES, CHECK IF USER ID IS PRIVATE IF NOT NO NEED FOR VALIDATION
+		# STILL NEED TO PERFORM TOKEN VALIDATION IN ALL ROUTES, CHECK IF USER ID IS PRIVATE IF NOT
 
 		with sql.connect("app.db") as con:
 			con.row_factory = sql.Row
@@ -107,8 +107,10 @@ def flights():
 		print('here')
 
 		print(flights)
-		return jsonify({'flights': flights, 'success': 'true'})
+		# return jsonify({'flights': flights, 'success': 'true'})
+		return jsonify({'flights': [{'firstPointLat': 42, 'firstPointLong': 42, 'secondPointLat': 21, 'secondPointLong': 21, 'color':'red'}], 'success': 'true'})
 	else: # request method is a POST
+		return {}
 		
 
 

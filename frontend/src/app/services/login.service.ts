@@ -77,7 +77,8 @@ export class LoginService {
   }
 
   public getUID():number{
-    return this.uid;
+    // return this.uid;
+    return 1234;
   }
 
   

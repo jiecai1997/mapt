@@ -17,22 +17,13 @@ export class FlightsService {
   private serverURL = 'http://localhost:5000';
 
   // FIX THIS SHIT
-  getFlights(){
+  getFlights():Observable<Flight[]>{
 
-    const uid = this.loginService.getUID;
+    const uid = this.loginService.getUID();
     const httpOptions = this.createAuthOptions();
     console.log('getting flights from service');
     
-
-    return this.http.get(this.serverURL + '/flights/?uid', httpOptions).subscribe(result => {
-      if(result['success'] == 'true'){
-        return result;
-      }
-      else{
-        return 'FAILED TO FETCH FLIGHTS';
-      }
-
-    });
+    return this.http.get<Flight[]>(this.serverURL + '/flights', httpOptions);
   }
 
   getTrips():Observable<any> {
@@ -86,7 +77,7 @@ export class FlightsService {
 
   public getStats(uid:number){
     const httpOptions = this.createAuthOptions();
-    return this.http.get(this.serverURL + '/stats/?uid', httpOptions).subscribe(result => {
+    return this.http.get(this.serverURL + '/stats/?uid=' + this.loginService.getUID(), httpOptions).subscribe(result => {
       if(result['success'] == 'true'){
         return result;
       }
@@ -100,8 +91,9 @@ export class FlightsService {
 
   public getProfileInfo(){
     const httpOptions = this.createAuthOptions();
+    const uid = this.loginService.getUID();
 
-    return this.http.get(this.serverURL + '/profile/?' + this.loginService.getUID(), httpOptions).subscribe(result => {
+    return this.http.get(this.serverURL + '/profile?' + uid, httpOptions).subscribe(result => {
       if(result['success'] == 'true'){
         return result;
       }
