@@ -50,7 +50,7 @@ def login_attempt():
 		if input_email == db_email and input_password == db_password:
 			session_token = input_email+str(random.randint(0, 1000))
 			cur.execute("UPDATE user SET session = (?) WHERE email = (?)", [session_token, input_email])
-			cur.commit()
+			con.commit()
 			cur.close()
 			return jsonify({
 					'success': 'true',
