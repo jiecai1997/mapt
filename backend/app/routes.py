@@ -21,20 +21,21 @@ def register_user():
 		cur.execute("INSERT INTO user (username, email, password, public) VALUES (?,?,?,?)",(username, email, password, 1))
 		con.commit()
 		cur.close()
+
 		return jsonify({'success': True})
 
-@app.route('/trips/add', methods=['POST'])
+
+@app.route('/user/addtrip', methods=['POST'])
 def addtrip_user():
 	json = request.get_json()
 
 	uid = json['uid']
 	trip_name = json['trip_name']
-	color = json['color']
 
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
-		cur.execute("INSERT INTO trip (uid, trip_name,color) VALUES (?,?,?)",(uid, trip_name,color))
+		cur.execute("INSERT INTO trip (uid, trip_name) VALUES (?,?)",(uid, trip_name))
 		con.commit()
 		cur.close()
 		return jsonify({'success': True})

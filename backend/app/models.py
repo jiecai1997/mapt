@@ -14,6 +14,7 @@ class User(db.Model):
 	email = db.Column(db.String(50), unique=True, nullable=False)
 	password = db.Column(db.String(20), nullable=False)
 	public = db.Column(db.Boolean(), nullable=False)
+	session = db.Column(db.String(50), default=None)
 	trip_rel = db.relationship('Trip', backref=db.backref('user', lazy=True))
 
 	def __init__(self, uid, username, email, password, public):
@@ -43,7 +44,7 @@ class Trip(db.Model):
 	tid = db.Column(db.Integer, primary_key=True)
 	uid = db.Column(db.Integer, db.ForeignKey('user.uid', ondelete="CASCADE"), nullable=False)
 	trip_name = db.Column(db.String(30), default="Trip Created on " + str(datetime.now()), nullable=False)
-	color = db.Column(db.String(30),nullable=False)
+	color = db.Column(db.String(30), nullable=False)
 	flight_rel = db.relationship('Flight', backref=db.backref('flight', lazy=True))
 	detail_rel = db.relationship('Detail', backref=db.backref('trip', lazy=True))
 
