@@ -50,6 +50,8 @@ def login_attempt():
 		if input_email == db_email and input_password == db_password:
 			session_token = input_email+str(random.randint(0, 1000))
 			cur.execute("UPDATE user SET session = (?) WHERE email = (?)", [session_token, input_email])
+			cur.commit()
+			cur.close()
 			return jsonify({
 					'success': 'true',
 					'userid': db_username,
@@ -58,10 +60,37 @@ def login_attempt():
 
 		# fail - wrong password for user
 		else:
+			cur.commit()
+			cur.close()
 			return jsonify({'success': 'false'})
 
-		cur.commit()
+
+@app.route('/profile/update', methods=['POST'])
+def update_profile():
+	json = request.get_json()
+
+	session_token = request.headers.get('Authorization')
+
+	uid = json['uid']
+	username = json['username']
+	isPublic = json['isPublic']
+
+	with sql.connect("app.db") as con:
+		con.row_factory = sql.Row
+		cur = con.cursor()
+		c = cur.execute("SELECT session from user where uid = (?)", [uid])
+		urow = c.fetchone()
+
+		# you do not have permission to change this
+		if urow is None or urow[0] != session_token:
+			con.commit()
+			cur.close()
+			return jsonify({'success': 'false'})
+
+		cur.execute("UPDATE user SET username = (?), isPublic = (?) WHERE uid = (?)", [username, isPublic, uid])
+		con.commit()
 		cur.close()
+		return jsonify({'success': 'true'})
 
 
 @app.route('/user/addtrip', methods=['POST'])
