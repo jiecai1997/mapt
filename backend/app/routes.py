@@ -10,7 +10,7 @@ from flask import jsonify
 @app.route('/user/register', methods=['POST'])
 def register_user():
 	json = request.get_json()
-	
+
 	username = json['username']
 	email = json['email']
 	password = json['hashedPassword']
@@ -21,20 +21,20 @@ def register_user():
 		cur.execute("INSERT INTO user (username, email, password, public) VALUES (?,?,?,?)",(username, email, password, 1))
 		con.commit()
 		cur.close()
-
 		return jsonify({'success': True})
 
-@app.route('/user/addtrip', methods=['POST'])
+@app.route('/trips/add', methods=['POST'])
 def addtrip_user():
 	json = request.get_json()
 
 	uid = json['uid']
 	trip_name = json['trip_name']
+	color = json['color']
 
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
-		cur.execute("INSERT INTO trip (uid, trip_name) VALUES (?,?)",(uid, trip_name))
+		cur.execute("INSERT INTO trip (uid, trip_name,color) VALUES (?,?,?)",(uid, trip_name,color))
 		con.commit()
 		cur.close()
 		return jsonify({'success': True})
@@ -111,7 +111,7 @@ def flights():
 		return jsonify({'flights': [{'firstPointLat': 42, 'firstPointLong': 42, 'secondPointLat': 21, 'secondPointLong': 21, 'color':'red'}], 'success': 'true'})
 	else: # request method is a POST
 		return {}
-		
+
 
 
 
