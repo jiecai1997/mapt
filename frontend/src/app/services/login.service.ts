@@ -25,6 +25,14 @@ export class LoginService {
 
   constructor(private http:HttpClient) { }
 
+  setUID(uid: number){
+    this.uid = uid;
+  }
+
+  setSessionToken(sessionToken: string){
+    this.sessionToken = sessionToken;
+  }
+
   newUser(username:string, email:string, password:string){
     // put request to make new user, make a salt-generating function to write to db
     // write to DB salted password - see how to work with request bodies
@@ -33,10 +41,7 @@ export class LoginService {
 
     const reqBody = {'username':username, 'email': email, 'hashedPassword': hashedSalty};
 
-    return this.http.post(this.serverURL + '/user/register', reqBody).subscribe( result => {
-      return result;
-    });
-    
+    return this.http.post(this.serverURL + '/user/register', reqBody);
   }
 
   // add storing session token in service that can then be accessed by flight for verification/sending that to the backend 
@@ -47,18 +52,7 @@ export class LoginService {
 
     console.log('reqBody', reqBody);
 
-    return this.http.post(this.serverURL + '/login/loginattempt', reqBody).subscribe( result => {
-      console.log('result from loginattempt', result);
-      if(result['success'] == 'true'){
-        this.uid = result['userid'];
-        this.sessionToken = result['sessionToken'];
-        console.log('session token', this.sessionToken);
-        return this.uid;
-      }
-      else{
-        return 'UNSUCCESSFUL';
-      }
-    })
+    return this.http.post(this.serverURL + '/login/loginattempt', reqBody);
   }
 
   private generatePassword(email:string, password:string):string{

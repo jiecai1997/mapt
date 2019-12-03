@@ -95,15 +95,7 @@ export class FlightsService {
     const httpOptions = this.createAuthOptions();
     const uid = this.loginService.getUID();
 
-    return this.http.get(this.serverURL + '/profile?' + uid, httpOptions).subscribe(result => {
-      if(result['success'] == 'true'){
-        return result;
-      }
-      else{
-        console.log('GETTING PROFILE INFO FAILED');
-      }
-    })
-
+    return this.http.get(this.serverURL + '/profile?' + uid, httpOptions);
   }
 
   // made return statement for failure according to how we specified it in notepad, but do we want to take a separate course of action in

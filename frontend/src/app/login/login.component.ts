@@ -37,16 +37,29 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
-  submit() : void {
+  submitNewUser() : void {
     if(this.isCreateAccount){
-      console.log(this.username, this.email, this.password);
-      this.loginService.newUser(this.username, this.email, this.password);
-      this.router.navigate([this.username]);
-    }else{
-      console.log(this.email, this.password);
-      this.loginService.attemptLogin(this.email, this.password);
-      this.router.navigate([this.email]); //TODO: get username to navigate to from sql
+      this.loginService.newUser(this.username, this.email, this.password).subscribe(result => {
+        if(result['success'] == 'true'){
+          // account created succesfully so log them in
+          this.submitLogin();
+        } else{
+          console.log('UNSUCCESSFUL'); //TODO: deal with this case
+        }
+      });
     }
+  }
+  
+  submitLogin(): void {
+    this.loginService.attemptLogin(this.email, this.password).subscribe(result => {
+      if(result['success'] == 'true'){
+        this.loginService.setUID(result['userid']);
+        this.loginService.setSessionToken(result['sessionToken']);
+        this.router.navigate([result['username']]);
+      } else{
+        console.log('UNSUCCESSFUL'); //TODO: deal with this case
+      }
+    });
   }
 
   has_errors(): boolean {
