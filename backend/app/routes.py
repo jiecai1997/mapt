@@ -121,13 +121,16 @@ def update_profile():
 		return jsonify({'success': 'true'})
 
 
-@app.route('/user/addtrip', methods=['POST'])
+@app.route('/trips/add', methods=['POST'])
 def addtrip_user():
 	json = request.get_json()
 	session_token = request.headers.get('Authorization')
 
 	uid = json['uid']
 	trip_name = json['trip_name']
+	color = json['color']
+	flights = json['flights']
+	monthdic = {'Jan':'01', 'Feb':'02','Mar':'03', 'Apr':'04','May':'05','Jun':'06','Jul':'07','Aug':'08','Sep':'09','Oct':'10','Nov':'11','Dec':'12'}
 
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
@@ -141,11 +144,60 @@ def addtrip_user():
 			cur.close()
 			return jsonify({'success': 'false'})
 
-		cur.execute("INSERT INTO trip (uid, trip_name) VALUES (?,?)",(uid, trip_name))
+		cur.execute("INSERT INTO trip (uid, trip_name,color) VALUES (?,?,?)",(uid, trip_name,color))
+		#GET tid somehow!!!
+
+		for flight in flights:
+			arrival_iata = flight['arr']['airport']
+			arrival_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = arrival_iata").fetchone()
+			arrival_tz = arrival_airport["time_zone"]
+			arrival_lat = arrival_airport["latitude"]
+			arrival_long = arrival_airport["longitude"]
+
+			depart_iata = flight['dep']['airport']
+			depart_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = depart_iata").fetchone()
+			depart_tz = depart_airport["time_zone"]
+			depart_lat = depart_airport["latitude"]
+			depart_long = depart_airport["longitude"]
+
+			airline_iata = 'AA' #Hardcode for now
+			flight_num = 1 #Hardcode for now
+
+			depart_date = flight['dep']['date'].split("00:")[0].split(" ")
+			depart_mth = monthdic[depart_date[1]]
+			depart_day = depart_date[2]
+			depart_yr = depart_date[3]
+			depart_hr = int(flight['dep']['time'].split(':'))[0]
+			depart_min = flight['dep']['time'].split(':')[1]
+			depart_ampm = 'AM'
+			if depart_hr >= 12:
+				depart_hr-=12
+				depart_ampm = 'PM'
+			depart_datetime = depart_yr+depart_mth+depart_date+' '+str(depart_hr)+':'+depart_min+':00'+depart_ampm
+
+			arr_date = flight['arr']['date'].split("00:")[0].split(" ")
+			arr_mth = monthdic[arr_date[1]]
+			arr_day = arr_date[2]
+			arr_yr = arr_date[3]
+			arr_hr = int(flight['arr']['time'].split(':'))[0]
+			arr_min = flight['arr']['time'].split(':')[1]
+			arr_ampm = 'AM'
+			if arr_hr >= 12:
+				arr_hr-=12
+				arr_ampm = 'PM'
+			arrival_datetime = arr_yr+arr_mth+arr_date+' '+str(arr_hr)+':'+arr_min+':00'+arr_ampm
+
+			duration = 5
+			#Calculate with depart_datetime, arrival_datetime, & Timezone Data
+
+			mileage = 5
+			#Calculate with longitude & latitude
+			#https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
+
+			cur.execute("INSERT INTO flight (tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage) VALUES (?,?,?,?,?,?,?,?,?)",(tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage))
 		con.commit()
 		cur.close()
 		return jsonify({'success': True})
-
 
 @app.route('/flights', methods=['GET', 'POST'])
 def flights():
