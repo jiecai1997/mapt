@@ -79,15 +79,7 @@ export class FlightsService {
 
   public getStats(){
     const httpOptions = this.createAuthOptions();
-    return this.http.get(this.serverURL + '/stats/?uid=' + this.loginService.getUID(), httpOptions).subscribe(result => {
-      if(result['success'] == 'true'){
-        return result;
-      }
-      else{
-        console.log('result', result);
-        return 'FAILED';
-      }
-    })
+    return this.http.get(this.serverURL + '/stats/?uid=' + this.loginService.getUID(), httpOptions);
   }
 
 
@@ -95,14 +87,7 @@ export class FlightsService {
     const httpOptions = this.createAuthOptions();
     const uid = this.loginService.getUID();
 
-    return this.http.get(this.serverURL + '/profile?' + uid, httpOptions).subscribe(result => {
-      if(result['success'] == 'true'){
-        return result;
-      }
-      else{
-        console.log('GETTING PROFILE INFO FAILED');
-      }
-    })
+    return this.http.get(this.serverURL + '/profile?' + uid, httpOptions);
 
   }
 

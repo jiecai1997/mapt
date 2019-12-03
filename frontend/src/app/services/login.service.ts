@@ -72,7 +72,7 @@ export class LoginService {
   }
 
   public getToken():string{
-    return this.sessionToken;
+    return "SESSION TOKEN";
   }
 
   public getUID():number{
