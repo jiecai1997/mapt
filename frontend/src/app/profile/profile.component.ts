@@ -25,8 +25,8 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     const profile = this.flightsService.getProfileInfo();
     if(profile != null){
-      // this.origUsername = this.username = profile.username;
-      // this.origIsPublic = this.isPublic = profile.isPublic;
+      this.origUsername = this.username = profile.username;
+      this.origIsPublic = this.isPublic = profile.isPublic;
     }
 
 

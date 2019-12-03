@@ -1,6 +1,6 @@
 <mat-toolbar>
     <span>mapt.io</span>
-    <mat-tab-group backgroundColor="secondary" color="primary" [(selectedIndex)]="selectedTab">
+    <mat-tab-group *ngIf="showTabs" backgroundColor="secondary" color="primary" [(selectedIndex)]="selectedTab">
             <mat-tab label="map"></mat-tab>
             <mat-tab label="+flights"></mat-tab>
             <mat-tab label="edit"></mat-tab>
@@ -10,7 +10,7 @@
     <button mat-raised-button (click)="logout()" class="logout-button">Logout</button>
 </mat-toolbar>
 
-<mat-tab-group class="hidden-tabs" [(selectedIndex)]="selectedTab">
+<mat-tab-group *ngIf="showTabs" class="hidden-tabs" [(selectedIndex)]="selectedTab">
     <mat-tab> <app-mappage></app-mappage> </mat-tab>
     <mat-tab> <app-flightlist [isAddTrip]="true"></app-flightlist> </mat-tab>
     <mat-tab> <app-flightlist [isAddTrip]="false"></app-flightlist> </mat-tab>

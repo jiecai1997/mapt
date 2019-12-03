@@ -77,7 +77,7 @@ export class FlightsService {
   }
 
 
-  public getStats(uid:number){
+  public getStats(){
     const httpOptions = this.createAuthOptions();
     return this.http.get(this.serverURL + '/stats/?uid=' + this.loginService.getUID(), httpOptions).subscribe(result => {
       if(result['success'] == 'true'){

@@ -23,7 +23,7 @@ with sql.connect("app.db") as con:
         csv = [row for row in reader(file_handler) if any(row)]
         headers = csv.pop(0)
         for c in csv:
-            cur.execute("INSERT INTO airport (iata, name, city, country, latitude, longitude, time_zone, dst) VALUES (?,?,?,?,?,?,?,?)",(c[0], c[1], c[2], c[3], c[4], c[5], c[9], c[8]))
+            cur.execute("INSERT INTO airport (iata, name, city, country, latitude, longitude, time_zone, dst) VALUES (?,?,?,?,?,?,?,?)",(c[1], c[2], c[3], c[4], c[5], c[6], c[8], c[9]))
 
     con.commit()
     cur.close()

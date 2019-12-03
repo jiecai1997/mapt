@@ -1,9 +1,4 @@
-<h2>Statistics</h2>
-<mat-card>
-    <mat-card-subtitle>Miles flown this year</mat-card-subtitle>
-    <mat-card-content>1,234</mat-card-content>
-</mat-card>
-<mat-card>
-    <mat-card-subtitle>Time spent in the air this year</mat-card-subtitle>
-    <mat-card-content>3:16</mat-card-content>
+<mat-card *ngFor="let stat of stats">
+    <mat-card-subtitle>{{stat.title}}</mat-card-subtitle>
+    <mat-card-content>{{stat.value}}</mat-card-content>
 </mat-card>
