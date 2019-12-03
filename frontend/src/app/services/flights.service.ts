@@ -17,16 +17,22 @@ export class FlightsService {
   private serverURL = 'http://localhost:5000';
 
   // FIX THIS SHIT
-  getFlights():Observable<Flight[]> {
+  getFlights(){
 
-    // this.http.get(this.serverURL + '/list').subscribe( flightData => {
-    //   console.log('flights', flightData);
-    // });
-    // send token as header to appease security concerns
-
+    const uid = this.loginService.getUID;
     const httpOptions = this.createAuthOptions();
-    console.log('getting flights from service')
-    return this.http.get<Flight[]>(this.serverURL + '/flights', httpOptions);
+    console.log('getting flights from service');
+    
+
+    return this.http.get(this.serverURL + '/flights/?uid', httpOptions).subscribe(result => {
+      if(result['success'] == 'true'){
+        return result;
+      }
+      else{
+        return 'FAILED TO FETCH FLIGHTS';
+      }
+
+    });
   }
 
   // eventually, have the backend give us a session token for the current user, and then feed that session token as well

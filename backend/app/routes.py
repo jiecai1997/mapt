@@ -107,9 +107,9 @@ def flights():
 		print('here')
 
 		print(flights)
-		return jsonify({'flights': flights})
+		return jsonify({'flights': flights, 'success': 'true'})
 	else: # request method is a POST
-		return {}
+		return {'success': 'false'}
 
 
 
