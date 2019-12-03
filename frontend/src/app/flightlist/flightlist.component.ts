@@ -12,7 +12,7 @@ export class FlightlistComponent implements OnInit {
   @Input() isAddTrip: boolean;
   trips: Array<any> = [];
 
-  sampleAirports = ['RDU', 'SEA', 'ORD', 'BWI', 'IAD'];
+  sampleAirports = [];
   colors = ['red', 'blue', 'green'];
   lastAddedTo: number; // trip which most recently had a flight added to it
 
@@ -27,11 +27,15 @@ export class FlightlistComponent implements OnInit {
 
     if(this.isAddTrip){
       // add one trip with one flight
-      this.trips = [{tripName: 'New Trip', color: "red", flights: []}]
+      this.trips = [{tripName: 'New Trip', color: "blue", flights: []}]
       this.addFlight(0); // start with one flight
     }else{
-      //TODO: get trip data
-      this.trips = this.flightsService.getTrips();
+      // get trip data
+      this.flightsService.getTrips().subscribe(
+        tripsObj => {
+            this.trips = tripsObj['trips'];
+            console.log('trips are', this.trips)
+          });
     }
   }
 

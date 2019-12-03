@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { FlightsService } from '@app/services/flights.service';
 
 @Component({
   selector: 'app-profile',
@@ -19,11 +20,16 @@ export class ProfileComponent implements OnInit {
     Validators.required
   ]);
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private flightsService: FlightsService) { }
 
   ngOnInit() {
-    this.origUsername = 'helloworld';
-    this.isPublic = false;
+    const profile = this.flightsService.getProfileInfo();
+    if(profile != null){
+      // this.origUsername = this.username = profile.username;
+      // this.origIsPublic = this.isPublic = profile.isPublic;
+    }
+
+
     this.cancel();
   }
 

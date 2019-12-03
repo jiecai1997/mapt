@@ -1,5 +1,6 @@
 <div class="center-container">
     <mat-accordion displayMode="flat">
+        <h3 *ngIf="trips.length == 0">No existing trips - try adding one!</h3>
         <mat-expansion-panel *ngFor="let trip of trips; let tripIndex = index" [expanded]="isAddTrip && tripIndex == 0">
             <mat-expansion-panel-header>
                 <mat-panel-title>{{trip.tripName}}</mat-panel-title>

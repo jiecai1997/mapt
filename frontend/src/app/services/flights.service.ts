@@ -29,10 +29,10 @@ export class FlightsService {
     return this.http.get<Flight[]>(this.serverURL + '/flights', httpOptions);
   }
 
-  getTrips():Observable<Flight[]> {
+  getTrips():Observable<any> {
     const httpOptions = this.createAuthOptions();
     console.log('getting trips from service')
-    return this.http.get<any[]>(this.serverURL + '/trips', httpOptions);
+    return this.http.get<any>(this.serverURL + '/trips', httpOptions);
   }
 
   // eventually, have the backend give us a session token for the current user, and then feed that session token as well
@@ -92,10 +92,10 @@ export class FlightsService {
   }
 
 
-  public getProfileInfo(uid:number){
+  public getProfileInfo(){
     const httpOptions = this.createAuthOptions();
 
-    return this.http.get(this.serverURL + '/profile/?uid', httpOptions).subscribe(result => {
+    return this.http.get(this.serverURL + '/profile/?' + this.loginService.getUID(), httpOptions).subscribe(result => {
       if(result['success'] == 'true'){
         return result;
       }
@@ -108,10 +108,11 @@ export class FlightsService {
 
   // made return statement for failure according to how we specified it in notepad, but do we want to take a separate course of action in
   // the event of failure?
-  public updateProfileInfo(uid:number, isPublic:boolean, ){
+  public updateProfileInfo(username: string, isPublic:boolean){
     const httpOptions = this.createAuthOptions();
     const reqBody = {
-      'uid': uid,
+      'uid': this.loginService.getUID(),
+      'username': username,
       'isPublic': isPublic
     }
 
