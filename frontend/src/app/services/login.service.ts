@@ -33,7 +33,7 @@ export class LoginService {
 
     const reqBody = {'username':username, 'email': email, 'hashedPassword': hashedSalty};
 
-    return this.http.post(this.serverURL + '/login/register', reqBody).subscribe( result => {
+    return this.http.post(this.serverURL + '/user/register', reqBody).subscribe( result => {
       return result;
     });
     
@@ -67,9 +67,10 @@ export class LoginService {
     const salt = md5.appendStr(email).end();
     
     const salty = password + salt;
+    console.log('salty', salty);
     const hashed = md5.appendStr(salty);
 
-    return String(hashed);
+    return String(hashed.end());
   }
 
   public getToken():string{
@@ -77,8 +78,7 @@ export class LoginService {
   }
 
   public getUID():number{
-    // return this.uid;
-    return 1234;
+    return this.uid;
   }
 
   
