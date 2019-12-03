@@ -97,12 +97,23 @@ def update_profile():
 def addtrip_user():
 	json = request.get_json()
 
+	session_token = request.headers.get('Authorization')
+
 	uid = json['uid']
 	trip_name = json['trip_name']
 
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
+		c = cur.execute("SELECT session from user where uid = (?)", [uid])
+		urow = c.fetchone()
+
+		# you do not have permission to change this
+		if urow is None or urow[0] != session_token:
+			con.commit()
+			cur.close()
+			return jsonify({'success': 'false'})
+
 		cur.execute("INSERT INTO trip (uid, trip_name) VALUES (?,?)",(uid, trip_name))
 		con.commit()
 		cur.close()
