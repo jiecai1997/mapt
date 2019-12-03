@@ -29,6 +29,12 @@ export class FlightsService {
     return this.http.get<Flight[]>(this.serverURL + '/flights', httpOptions);
   }
 
+  getTrips():Observable<Flight[]> {
+    const httpOptions = this.createAuthOptions();
+    console.log('getting trips from service')
+    return this.http.get<any[]>(this.serverURL + '/trips', httpOptions);
+  }
+
   // eventually, have the backend give us a session token for the current user, and then feed that session token as well
   // as the id into the body of the request. before the request is fulfilled and the flight is added, the session token sent by
   // the frontend through the service must match the session token stored by the backend.
