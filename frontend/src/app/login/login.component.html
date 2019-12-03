@@ -62,11 +62,15 @@
                     </td></tr>
                 </table>
             </form>
-            <mat-spinner [style.display]="showSpinner ? 'block' : 'none'"></mat-spinner>
         </mat-card-content>
         <mat-card-actions>
             <button mat-raised-button (click)="isCreateAccount = !isCreateAccount" color="primary">{{isCreateAccount ? "Back" : "Create Account"}}</button>
-            <button mat-raised-button (click)="isCreateAccount ? submitNewUser() : submit()" color="primary" [disabled]="has_errors()">{{isCreateAccount ? "Create Account" : "Login"}}</button>
+            <button mat-raised-button (click)="isCreateAccount ? submitNewUser() : submitLogin()" color="primary" [disabled]="has_errors()">
+                <span class="spinner-span">
+                    {{isCreateAccount ? "Create Account" : "Login"}}
+                    <mat-spinner *ngIf="showSpinner" [diameter]="20" [color]="'accent'"></mat-spinner>
+                </span>
+            </button>
         </mat-card-actions>
     </mat-card>
 </div>

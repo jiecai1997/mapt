@@ -18,6 +18,8 @@ export class LoginComponent implements OnInit {
   username: string;
   password: string;
 
+  showSpinner: boolean = false;
+
   emailFormControl = new FormControl('', [
     Validators.required,
     Validators.email,
@@ -38,6 +40,8 @@ export class LoginComponent implements OnInit {
   }
 
   submitNewUser() : void {
+    this.showSpinner = true;
+
     if(this.isCreateAccount){
       this.loginService.newUser(this.username, this.email, this.password).subscribe(result => {
         if(result['success'] == 'true'){
@@ -46,11 +50,14 @@ export class LoginComponent implements OnInit {
         } else{
           console.log('UNSUCCESSFUL'); //TODO: deal with this case
         }
+        this.showSpinner = false;
       });
     }
   }
   
   submitLogin(): void {
+    this.showSpinner = true;
+
     this.loginService.attemptLogin(this.email, this.password).subscribe(result => {
       if(result['success'] == 'true'){
         this.loginService.setUID(result['userid']);
@@ -59,6 +66,7 @@ export class LoginComponent implements OnInit {
       } else{
         console.log('UNSUCCESSFUL'); //TODO: deal with this case
       }
+      this.showSpinner = false;
     });
   }
 
