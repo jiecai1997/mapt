@@ -17,15 +17,12 @@ export class FlightsService {
   private serverURL = 'http://localhost:5000';
 
   // FIX THIS SHIT
-  getFlights():Observable<Flight[]> {
+  getFlights():Observable<Flight[]>{
 
-    // this.http.get(this.serverURL + '/list').subscribe( flightData => {
-    //   console.log('flights', flightData);
-    // });
-    // send token as header to appease security concerns
-
+    const uid = this.loginService.getUID();
     const httpOptions = this.createAuthOptions();
-    console.log('getting flights from service')
+    console.log('getting flights from service');
+    
     return this.http.get<Flight[]>(this.serverURL + '/flights', httpOptions);
   }
 
@@ -94,8 +91,9 @@ export class FlightsService {
 
   public getProfileInfo(){
     const httpOptions = this.createAuthOptions();
+    const uid = this.loginService.getUID();
 
-    return this.http.get(this.serverURL + '/profile/?' + this.loginService.getUID(), httpOptions).subscribe(result => {
+    return this.http.get(this.serverURL + '/profile?' + uid, httpOptions).subscribe(result => {
       if(result['success'] == 'true'){
         return result;
       }
