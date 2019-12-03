@@ -16,6 +16,7 @@ export class FlightsService {
 
   private serverURL = 'http://localhost:5000';
 
+  // FIX THIS SHIT
   getFlights():Observable<Flight[]> {
 
     // this.http.get(this.serverURL + '/list').subscribe( flightData => {
@@ -43,11 +44,11 @@ export class FlightsService {
 
     return this.http.post(this.serverURL + '/trips/add', reqBody, httpOptions).subscribe(result => {
       if(result['success'] == 'true'){
-        return 'Trip added successfully';
+        return true;
       }
       else{
         console.log(result['error']);
-        return 'Add trip failed';
+        return false;
       }
     })
 
@@ -71,23 +72,24 @@ export class FlightsService {
   }
 
 
-  public getStats(userID:string){
+  public getStats(uid:number){
     const httpOptions = this.createAuthOptions();
-    return this.http.get(this.serverURL + '/stats/?userID', httpOptions).subscribe(result => {
+    return this.http.get(this.serverURL + '/stats/?uid', httpOptions).subscribe(result => {
       if(result['success'] == 'true'){
         return result;
       }
       else{
-        console.log('GETTING STATS FAILED');
+        console.log('result', result);
+        return 'FAILED';
       }
     })
   }
 
 
-  public getProfileInfo(userID:string){
+  public getProfileInfo(uid:number){
     const httpOptions = this.createAuthOptions();
 
-    return this.http.get(this.serverURL + '/profile/?userID', httpOptions).subscribe(result => {
+    return this.http.get(this.serverURL + '/profile/?uid', httpOptions).subscribe(result => {
       if(result['success'] == 'true'){
         return result;
       }
@@ -100,10 +102,10 @@ export class FlightsService {
 
   // made return statement for failure according to how we specified it in notepad, but do we want to take a separate course of action in
   // the event of failure?
-  public updateProfileInfo(username:string, isPublic:boolean, ){
+  public updateProfileInfo(uid:number, isPublic:boolean, ){
     const httpOptions = this.createAuthOptions();
     const reqBody = {
-      'username': username,
+      'uid': uid,
       'isPublic': isPublic
     }
 

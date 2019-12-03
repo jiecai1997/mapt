@@ -5,4 +5,5 @@ export class Flight{
     secondPointLat:number;
     secondPointLong:number;
     opacity:number;
+    color:string;
 }
