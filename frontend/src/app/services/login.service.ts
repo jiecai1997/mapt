@@ -76,6 +76,10 @@ export class LoginService {
     return "SESSION TOKEN HERE";
   }
 
+  public getUID():number{
+    return this.uid;
+  }
+
   
 }
 
