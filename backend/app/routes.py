@@ -5,12 +5,13 @@ from app.models import User
 from flask_login import login_user, current_user, logout_user, login_required
 import sqlite3 as sql
 from flask import jsonify
+import random
 
 # json routes
 @app.route('/user/register', methods=['POST'])
 def register_user():
 	json = request.get_json()
-	
+
 	username = json['username']
 	email = json['email']
 	password = json['hashedPassword']
@@ -22,66 +23,181 @@ def register_user():
 		con.commit()
 		cur.close()
 
-		return jsonify({'success': True})
+		return jsonify({'success': 'true'}) # TODO: ADD ERROR CHECKING
 
-@app.route('/user/addtrip', methods=['POST'])
-def addtrip_user():
+@app.route('/login/loginattempt', methods=['POST'])
+def login_attempt():
 	json = request.get_json()
 
-	uid = json['uid']
-	trip_name = json['trip_name']
+	input_email = json['email']
+	input_password = json['hashedPassword']
 
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
-		cur.execute("INSERT INTO trip (uid, trip_name) VALUES (?,?)",(uid, trip_name))
+		c = cur.execute("SELECT username, email, password from user where email = (?)", [input_email])
+		urow = c.fetchone()
+
+		# fail - no user exists
+		if urow is None:
+			return jsonify({'success': 'false'})
+
+		db_username = urow[0]
+		db_email = urow[1]
+		db_password = urow[2]
+
+		# success - user exists
+		if input_email == db_email and input_password == db_password:
+			session_token = input_email+str(random.randint(0, 1000))
+			cur.execute("UPDATE user SET session = (?) WHERE email = (?)", [session_token, input_email])
+			cur.commit()
+			cur.close()
+			return jsonify({
+					'success': 'true',
+					'userid': db_username,
+					'sessionToken': session_token
+				})
+
+		# fail - wrong password for user
+		else:
+			cur.commit()
+			cur.close()
+			return jsonify({'success': 'false'}) # TODO: ERROR CHECKING
+
+
+@app.route('/profile/<int:uid>', methods=['POST'])
+def display_profile(uid):
+	session_token = request.headers.get('Authorization')
+
+	with sql.connect("app.db") as con:
+		con.row_factory = sql.Row
+		cur = con.cursor()
+		c = cur.execute("SELECT session, username, public from user where uid = (?)", [uid])
+		urow = c.fetchone()
+
+		# you do not have permission to change this
+		if urow is None or urow[0] != session_token:
+			con.commit()
+			cur.close()
+			return jsonify({'success': 'false'})
+
+		# success - user exists
+		username = urow[1]
+		isPublic = urow[2]
+
+		cur.commit()
+		cur.close()
+		return jsonify({
+					'success': 'true',
+					'username': username,
+					'isPublic': isPublic
+				})
+
+
+@app.route('/profile/update', methods=['POST'])
+def update_profile():
+	json = request.get_json()
+	session_token = request.headers.get('Authorization')
+
+	uid = json['uid']
+	username = json['username']
+	isPublic = json['isPublic']
+
+	with sql.connect("app.db") as con:
+		con.row_factory = sql.Row
+		cur = con.cursor()
+		c = cur.execute("SELECT session from user where uid = (?)", [uid])
+		urow = c.fetchone()
+
+		# you do not have permission to change this
+		if urow is None or urow[0] != session_token:
+			con.commit()
+			cur.close()
+			return jsonify({'success': 'false'})
+
+		cur.execute("UPDATE user SET username = (?), isPublic = (?) WHERE uid = (?)", [username, isPublic, uid])
+		con.commit()
+		cur.close()
+		return jsonify({'success': 'true'})
+
+
+@app.route('/trips/add', methods=['POST'])
+def addtrip_user():
+	json = request.get_json()
+	session_token = request.headers.get('Authorization')
+
+	uid = json['uid']
+	trip_name = json['trip_name']
+	color = json['color']
+	flights = json['flights']
+	monthdic = {'Jan':'01', 'Feb':'02','Mar':'03', 'Apr':'04','May':'05','Jun':'06','Jul':'07','Aug':'08','Sep':'09','Oct':'10','Nov':'11','Dec':'12'}
+
+	with sql.connect("app.db") as con:
+		con.row_factory = sql.Row
+		cur = con.cursor()
+		c = cur.execute("SELECT session from user where uid = (?)", [uid])
+		urow = c.fetchone()
+
+		# you do not have permission to change this
+		if urow is None or urow[0] != session_token:
+			con.commit()
+			cur.close()
+			return jsonify({'success': 'false'})
+
+		cur.execute("INSERT INTO trip (uid, trip_name,color) VALUES (?,?,?)",(uid, trip_name,color))
+		#GET tid somehow!!!
+
+		for flight in flights:
+			arrival_iata = flight['arr']['airport']
+			arrival_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = arrival_iata").fetchone()
+			arrival_tz = arrival_airport["time_zone"]
+			arrival_lat = arrival_airport["latitude"]
+			arrival_long = arrival_airport["longitude"]
+
+			depart_iata = flight['dep']['airport']
+			depart_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = depart_iata").fetchone()
+			depart_tz = depart_airport["time_zone"]
+			depart_lat = depart_airport["latitude"]
+			depart_long = depart_airport["longitude"]
+
+			airline_iata = 'AA' #Hardcode for now
+			flight_num = 1 #Hardcode for now
+
+			depart_date = flight['dep']['date'].split("00:")[0].split(" ")
+			depart_mth = monthdic[depart_date[1]]
+			depart_day = depart_date[2]
+			depart_yr = depart_date[3]
+			depart_hr = int(flight['dep']['time'].split(':'))[0]
+			depart_min = flight['dep']['time'].split(':')[1]
+			depart_ampm = 'AM'
+			if depart_hr >= 12:
+				depart_hr-=12
+				depart_ampm = 'PM'
+			depart_datetime = depart_yr+depart_mth+depart_date+' '+str(depart_hr)+':'+depart_min+':00'+depart_ampm
+
+			arr_date = flight['arr']['date'].split("00:")[0].split(" ")
+			arr_mth = monthdic[arr_date[1]]
+			arr_day = arr_date[2]
+			arr_yr = arr_date[3]
+			arr_hr = int(flight['arr']['time'].split(':'))[0]
+			arr_min = flight['arr']['time'].split(':')[1]
+			arr_ampm = 'AM'
+			if arr_hr >= 12:
+				arr_hr-=12
+				arr_ampm = 'PM'
+			arrival_datetime = arr_yr+arr_mth+arr_date+' '+str(arr_hr)+':'+arr_min+':00'+arr_ampm
+
+			duration = 5
+			#Calculate with depart_datetime, arrival_datetime, & Timezone Data
+
+			mileage = 5
+			#Calculate with longitude & latitude
+			#https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
+
+			cur.execute("INSERT INTO flight (tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage) VALUES (?,?,?,?,?,?,?,?,?)",(tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage))
 		con.commit()
 		cur.close()
 		return jsonify({'success': True})
-
-@app.route('/')
-def home():
-    return render_template('home.html')
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-	error = None
-	if current_user.is_authenticated:
-		return redirect(url_for('home'))
-	form = LoginForm()
-	if form.validate_on_submit():
-		user = User.query.filter_by(email=form.email.data).first()
-		if user and bcrypt.check_password_hash(user.password, form.password.data):
-			session['logged_in'] = True
-			return redirect(url_for('home'))
-		else:
-			error = 'Invalid username or password'
-	return render_template('login.html', title='Login', form=form, error=error)
-
-@app.route("/logout")
-def logout():
-    session['logged_in'] = False
-    return redirect(url_for('home'))
-
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-	form = RegisterForm(request.form)
-	if request.method == 'POST' and form.validate():
-		username = form.username.data
-		email = form.email.data
-		hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-		print(username)
-		print(email)
-		with sql.connect("app.db") as con:
-			con.row_factory = sql.Row
-			cur = con.cursor()
-			# TODO display page properly if constraint is violated
-			cur.execute("INSERT INTO user (username, email, password, public) VALUES (?,?,?,?)",(username, email, hashed_password, 1))
-			con.commit()
-			cur.close()
-			flash('Thanks for registering')
-			return redirect('/list')
-	return render_template('register.html', title='Register', form=form)
 
 @app.route('/flights', methods=['GET', 'POST'])
 def flights():
@@ -90,8 +206,8 @@ def flights():
 		print('headers')
 		print(request.headers)
 
-
 		# username = json['userid']
+		# STILL NEED TO PERFORM TOKEN VALIDATION IN ALL ROUTES, CHECK IF USER ID IS PRIVATE IF NOT
 
 		with sql.connect("app.db") as con:
 			con.row_factory = sql.Row
@@ -107,34 +223,11 @@ def flights():
 		print('here')
 
 		print(flights)
-		return jsonify({'flights': flights})
+		# return jsonify({'flights': flights, 'success': 'true'})
+		return jsonify({'flights': [{'firstPointLat': 42, 'firstPointLong': 42, 'secondPointLat': 21, 'secondPointLong': 21, 'color':'red'}], 'success': 'true'})
 	else: # request method is a POST
 		return {}
 
-
-
-@app.route('/manual', methods=['GET', 'POST'])
-def manual():
-	form = FlightsForm(request.form)
-	if request.method == 'POST' and form.validate():
-		tid = form.tid.data
-		airline_iata = form.airline_iata.data
-		flight_num = form.flight_num.data
-		depart_iata = form.depart_iata.data
-		arrival_iata = form.arrival_iata.data
-		depart_datetime = form.depart_datetime.data
-		arrival_datetime = form.arrival_datetime.data
-		duration = form.duration.data
-		mileage = form.mileage.data
-		with sql.connect("app.db") as con:
-			con.row_factory = sql.Row
-			cur = con.cursor()
-			cur.execute("INSERT INTO flight (tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage) VALUES (?,?,?,?,?,?,?,?,?)",(tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage))
-			con.commit()
-			cur.close()
-			flash('You Added A Flight!')
-			return redirect('/list')
-	return render_template('flights.html', title="Add a Flight", form=FlightsForm())
 
 @app.route('/trips', methods=['GET', 'POST'])
 def trips():
