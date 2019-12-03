@@ -23,7 +23,7 @@ def register_user():
 		con.commit()
 		cur.close()
 
-		return jsonify({'success': 'true'})
+		return jsonify({'success': 'true'}) # TODO: ADD ERROR CHECKING
 
 @app.route('/login/loginattempt', methods=['POST'])
 def login_attempt():
@@ -50,6 +50,8 @@ def login_attempt():
 		if input_email == db_email and input_password == db_password:
 			session_token = input_email+str(random.randint(0, 1000))
 			cur.execute("UPDATE user SET session = (?) WHERE email = (?)", [session_token, input_email])
+			cur.commit()
+			cur.close()
 			return jsonify({
 					'success': 'true',
 					'userid': db_username,
@@ -58,15 +60,71 @@ def login_attempt():
 
 		# fail - wrong password for user
 		else:
+			cur.commit()
+			cur.close()
+			return jsonify({'success': 'false'}) # TODO: ERROR CHECKING
+
+
+@app.route('/profile/<int:uid>', methods=['POST'])
+def display_profile(uid):
+	session_token = request.headers.get('Authorization')
+
+	with sql.connect("app.db") as con:
+		con.row_factory = sql.Row
+		cur = con.cursor()
+		c = cur.execute("SELECT session, username, public from user where uid = (?)", [uid])
+		urow = c.fetchone()
+
+		# you do not have permission to change this
+		if urow is None or urow[0] != session_token:
+			con.commit()
+			cur.close()
 			return jsonify({'success': 'false'})
+
+		# success - user exists
+		username = urow[1]
+		isPublic = urow[2]
 
 		cur.commit()
 		cur.close()
+		return jsonify({
+					'success': 'true',
+					'username': username,
+					'isPublic': isPublic
+				})
+
+
+@app.route('/profile/update', methods=['POST'])
+def update_profile():
+	json = request.get_json()
+	session_token = request.headers.get('Authorization')
+
+	uid = json['uid']
+	username = json['username']
+	isPublic = json['isPublic']
+
+	with sql.connect("app.db") as con:
+		con.row_factory = sql.Row
+		cur = con.cursor()
+		c = cur.execute("SELECT session from user where uid = (?)", [uid])
+		urow = c.fetchone()
+
+		# you do not have permission to change this
+		if urow is None or urow[0] != session_token:
+			con.commit()
+			cur.close()
+			return jsonify({'success': 'false'})
+
+		cur.execute("UPDATE user SET username = (?), isPublic = (?) WHERE uid = (?)", [username, isPublic, uid])
+		con.commit()
+		cur.close()
+		return jsonify({'success': 'true'})
 
 
 @app.route('/user/addtrip', methods=['POST'])
 def addtrip_user():
 	json = request.get_json()
+	session_token = request.headers.get('Authorization')
 
 	uid = json['uid']
 	trip_name = json['trip_name']
@@ -74,20 +132,19 @@ def addtrip_user():
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
+		c = cur.execute("SELECT session from user where uid = (?)", [uid])
+		urow = c.fetchone()
+
+		# you do not have permission to change this
+		if urow is None or urow[0] != session_token:
+			con.commit()
+			cur.close()
+			return jsonify({'success': 'false'})
+
 		cur.execute("INSERT INTO trip (uid, trip_name) VALUES (?,?)",(uid, trip_name))
 		con.commit()
 		cur.close()
 		return jsonify({'success': True})
-
-@app.route('/')
-def home():
-    return render_template('home.html')
-
-
-@app.route("/logout")
-def logout():
-    session['logged_in'] = False
-    return redirect(url_for('home'))
 
 
 @app.route('/flights', methods=['GET', 'POST'])
@@ -119,31 +176,6 @@ def flights():
 	else: # request method is a POST
 		return {}
 
-
-
-
-@app.route('/manual', methods=['GET', 'POST'])
-def manual():
-	form = FlightsForm(request.form)
-	if request.method == 'POST' and form.validate():
-		tid = form.tid.data
-		airline_iata = form.airline_iata.data
-		flight_num = form.flight_num.data
-		depart_iata = form.depart_iata.data
-		arrival_iata = form.arrival_iata.data
-		depart_datetime = form.depart_datetime.data
-		arrival_datetime = form.arrival_datetime.data
-		duration = form.duration.data
-		mileage = form.mileage.data
-		with sql.connect("app.db") as con:
-			con.row_factory = sql.Row
-			cur = con.cursor()
-			cur.execute("INSERT INTO flight (tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage) VALUES (?,?,?,?,?,?,?,?,?)",(tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage))
-			con.commit()
-			cur.close()
-			flash('You Added A Flight!')
-			return redirect('/list')
-	return render_template('flights.html', title="Add a Flight", form=FlightsForm())
 
 @app.route('/trips', methods=['GET', 'POST'])
 def trips():
