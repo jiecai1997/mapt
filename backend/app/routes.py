@@ -5,6 +5,7 @@ from app.models import User
 from flask_login import login_user, current_user, logout_user, login_required
 import sqlite3 as sql
 from flask import jsonify
+import random
 
 # json routes
 @app.route('/user/register', methods=['POST'])
@@ -47,7 +48,7 @@ def login_attempt():
 
 		# success - user exists
 		if input_email == db_email and input_password == db_password:
-			session_token = username+str(randInt(0, 1000))
+			session_token = input_email+str(random.randint(0, 1000))
 			cur.execute("UPDATE user SET session = (?) WHERE email = (?)", [session_token, input_email])
 			return jsonify({
 					'success': 'true',
