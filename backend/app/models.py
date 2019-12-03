@@ -43,6 +43,7 @@ class Trip(db.Model):
 	tid = db.Column(db.Integer, primary_key=True)
 	uid = db.Column(db.Integer, db.ForeignKey('user.uid', ondelete="CASCADE"), nullable=False)
 	trip_name = db.Column(db.String(30), default="Trip Created on " + str(datetime.now()), nullable=False)
+	color = db.Column(db.String(30),nullable=False)
 	flight_rel = db.relationship('Flight', backref=db.backref('flight', lazy=True))
 	detail_rel = db.relationship('Detail', backref=db.backref('trip', lazy=True))
 

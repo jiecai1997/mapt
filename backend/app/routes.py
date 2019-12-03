@@ -10,7 +10,7 @@ from flask import jsonify
 @app.route('/user/register', methods=['POST'])
 def register_user():
 	json = request.get_json()
-	
+
 	username = json['username']
 	email = json['email']
 	password = json['hashedPassword']
@@ -58,18 +58,18 @@ def login_attempt():
 		else:
 			return jsonify({'success': 'false'})
 
-
-@app.route('/user/addtrip', methods=['POST'])
+@app.route('/trips/add', methods=['POST'])
 def addtrip_user():
 	json = request.get_json()
 
 	uid = json['uid']
 	trip_name = json['trip_name']
+	color = json['color']
 
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
-		cur.execute("INSERT INTO trip (uid, trip_name) VALUES (?,?)",(uid, trip_name))
+		cur.execute("INSERT INTO trip (uid, trip_name,color) VALUES (?,?,?)",(uid, trip_name,color))
 		con.commit()
 		cur.close()
 		return jsonify({'success': True})
@@ -125,8 +125,8 @@ def flights():
 		print('headers')
 		print(request.headers)
 
-
 		# username = json['userid']
+		# STILL NEED TO PERFORM TOKEN VALIDATION IN ALL ROUTES, CHECK IF USER ID IS PRIVATE IF NOT
 
 		with sql.connect("app.db") as con:
 			con.row_factory = sql.Row
@@ -142,9 +142,11 @@ def flights():
 		print('here')
 
 		print(flights)
-		return jsonify({'flights': flights})
+		# return jsonify({'flights': flights, 'success': 'true'})
+		return jsonify({'flights': [{'firstPointLat': 42, 'firstPointLong': 42, 'secondPointLat': 21, 'secondPointLong': 21, 'color':'red'}], 'success': 'true'})
 	else: # request method is a POST
 		return {}
+
 
 
 
