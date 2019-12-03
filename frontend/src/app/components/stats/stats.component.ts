@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FlightsService } from '@app/services/flights.service';
 
 @Component({
   selector: 'app-stats',
@@ -6,10 +7,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./stats.component.css']
 })
 export class StatsComponent implements OnInit {
+  stats: Array<any> = [];
 
-  constructor() { }
+  constructor(private flightsService: FlightsService) { }
 
   ngOnInit() {
+    this.stats = []//TODO: this.flightsService.getStats();
   }
 
 }

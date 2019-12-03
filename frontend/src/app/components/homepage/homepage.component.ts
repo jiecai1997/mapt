@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./homepage.component.css']
 })
 export class HomepageComponent implements OnInit {
+  showTabs: boolean = true; // TODO: calculate this value
 
   constructor(private router: Router) { }
 
