@@ -2,14 +2,14 @@
     <mat-accordion displayMode="flat">
         <mat-expansion-panel *ngFor="let trip of trips; let tripIndex = index" [expanded]="isAddTrip && tripIndex == 0">
             <mat-expansion-panel-header>
-                <mat-panel-title>{{trip.name}}</mat-panel-title>
+                <mat-panel-title>{{trip.tripName}}</mat-panel-title>
             </mat-expansion-panel-header>
         
             <mat-divider></mat-divider>
             <table cellspacing="0" class="tripname-container"><tr>
                 <td>
                     <mat-form-field>
-                        <input matInput placeholder="Trip Name" [(ngModel)]="trip.name">
+                        <input matInput placeholder="Trip Name" [(ngModel)]="trip.tripName">
                     </mat-form-field>
                 </td>
 
@@ -108,7 +108,7 @@
             </mat-expansion-panel> <!-- end of inner (flight) panel -->
 
             <div class="button-row">
-                <button mat-raised-button (click)="saveTrip()" color="primary">Save Trip</button>
+                <button mat-raised-button (click)="saveTrip(tripIndex)" color="primary">Save Trip</button>
                 <button mat-mini-fab (click)="addFlight(tripIndex)" class="add-button"><mat-icon>add</mat-icon></button>
             </div>
         </mat-expansion-panel> <!-- end of outer (trip) panel-->
