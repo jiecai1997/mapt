@@ -35,6 +35,12 @@ export class FlightsService {
     });
   }
 
+  getTrips():Observable<Flight[]> {
+    const httpOptions = this.createAuthOptions();
+    console.log('getting trips from service')
+    return this.http.get<any[]>(this.serverURL + '/trips', httpOptions);
+  }
+
   // eventually, have the backend give us a session token for the current user, and then feed that session token as well
   // as the id into the body of the request. before the request is fulfilled and the flight is added, the session token sent by
   // the frontend through the service must match the session token stored by the backend.
@@ -42,8 +48,8 @@ export class FlightsService {
   // 
   // we also need to think about color - will that get fed in from the frontend? Color string that can be sent w requestBody,
   // have that as a column - will need that in save trip as well
-  addTrip(uid:number, tripName:string, color:string, flights:Flight[]){
-    const reqBody = {'userID': uid, 'tripName': tripName, 'color': color, 'flights': flights};
+  addTrip(userID:string, tripName:string, color:string, flights:any[]){
+    const reqBody = {'userID': this.loginService.getUID(), 'tripName': tripName, 'color': color, 'flights': flights};
     console.log('reqBody', reqBody);
 
     const httpOptions = this.createAuthOptions();
@@ -61,8 +67,8 @@ export class FlightsService {
   }
 
   // anything to change here? Similar to add right? FIGURE OUT A WAY TO GET SESSIONTOKEN INTO THE HEADERS?
-  updateTrip(uid:number, tripID:string, tripName:string, color:string, flights:Flight[]){
-    const reqBody = {'userID': uid, 'tripID': tripID, 'tripName': tripName, 'color': color, 'flights': flights};
+  updateTrip(tripID:string, tripName:string, color:string, flights:any[]){
+    const reqBody = {'userID': this.loginService.getUID(), 'tripID': tripID, 'tripName': tripName, 'color': color, 'flights': flights};
 
     const httpOptions = this.createAuthOptions();
 

@@ -1,4 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import { FlightsService } from '@app/services/flights.service';
+
 
 @Component({
   selector: 'app-flightlist',
@@ -13,7 +16,7 @@ export class FlightlistComponent implements OnInit {
   colors = ['red', 'blue', 'green'];
   lastAddedTo: number; // trip which most recently had a flight added to it
 
-  constructor() {}
+  constructor(private router: Router, private flightsService: FlightsService) {}
 
   ngOnInit() {
     this.initialize();
@@ -24,22 +27,11 @@ export class FlightlistComponent implements OnInit {
 
     if(this.isAddTrip){
       // add one trip with one flight
-      this.trips = [{name: 'New Trip', color: "red", flights: []}]
+      this.trips = [{tripName: 'New Trip', color: "red", flights: []}]
       this.addFlight(0); // start with one flight
     }else{
       //TODO: get trip data
-      this.trips = [
-        {color: "red", name: "Wedding", flights: [{
-          arr: {airport: "RDU", date: new Date('9/10/19'), time: "17:50"},
-          dep: {airport: "PHL", date: new Date('9/10/19'), time: "16:10"}
-        }]},
-        {color: "blue", name: "Graduation", flights: [
-          {arr: {airport: "IAD", date: new Date('6/8/19'), time: "11:50"},
-          dep: {airport: "SEA", date: new Date('6/8/19'), time: "14:10"}},
-          {arr: {airport: "SEA", date: new Date('6/11/19'), time: "8:35"},
-          dep: {airport: "IAD", date: new Date('6/11/19'), time: "16:30"}}
-        ]},
-      ];
+      this.trips = this.flightsService.getTrips();
     }
   }
 
@@ -73,8 +65,9 @@ export class FlightlistComponent implements OnInit {
     this.trips[tripIndex].flights.splice(flightIndex, 1);
   }
 
-  saveTrip(): void {
-    console.log(this.trips);
-    this.initialize();
+  saveTrip(tripIndex): void {
+    const trip = this.trips[tripIndex];
+    this.flightsService.updateTrip(trip.tripID, trip.tripName, trip.color, trip.flights);
+    this.router.navigate([])
   }
 }
