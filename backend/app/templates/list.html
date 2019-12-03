@@ -28,6 +28,7 @@
             <td>TID</td>
             <td>UID</td>
             <td>Trip Name</td>
+            <td>Color</td>
          </thead>
 
          {% for row in tripsrows %}
@@ -35,6 +36,7 @@
                <td>{{row["tid"]}}</td>
                <td>{{row["uid"]}}</td>
                <td>{{row["trip_name"]}}</td>
+               <td>{{row["color"]}}</td>
             </tr>
          {% endfor %}
       </table>

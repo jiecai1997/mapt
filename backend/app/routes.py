@@ -10,7 +10,7 @@ from flask import jsonify
 @app.route('/user/register', methods=['POST'])
 def register_user():
 	json = request.get_json()
-	
+
 	username = json['username']
 	email = json['email']
 	password = json['hashedPassword']
@@ -22,7 +22,46 @@ def register_user():
 		con.commit()
 		cur.close()
 
-		return jsonify({'success': True})
+		return jsonify({'success': 'true'})
+
+@app.route('/login/loginattempt', methods=['POST'])
+def login_attempt():
+	json = request.get_json()
+
+	input_email = json['email']
+	input_password = json['hashedPassword']
+
+	with sql.connect("app.db") as con:
+		con.row_factory = sql.Row
+		cur = con.cursor()
+		c = cur.execute("SELECT username, email, password from user where email = (?)", [input_email])
+		urow = c.fetchone()
+
+		# fail - no user exists
+		if urow is None:
+			return jsonify({'success': 'false'})
+
+		db_username = urow[0]
+		db_email = urow[1]
+		db_password = urow[2]
+
+		# success - user exists
+		if input_email == db_email and input_password == db_password:
+			session_token = username+str(randInt(0, 1000))
+			cur.execute("UPDATE user SET session = (?) WHERE email = (?)", [session_token, input_email])
+			return jsonify({
+					'success': 'true',
+					'userid': db_username,
+					'sessionToken': session_token
+				})
+
+		# fail - wrong password for user
+		else:
+			return jsonify({'success': 'false'})
+
+		cur.commit()
+		cur.close()
+
 
 @app.route('/user/addtrip', methods=['POST'])
 def addtrip_user():
@@ -43,45 +82,12 @@ def addtrip_user():
 def home():
     return render_template('home.html')
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-	error = None
-	if current_user.is_authenticated:
-		return redirect(url_for('home'))
-	form = LoginForm()
-	if form.validate_on_submit():
-		user = User.query.filter_by(email=form.email.data).first()
-		if user and bcrypt.check_password_hash(user.password, form.password.data):
-			session['logged_in'] = True
-			return redirect(url_for('home'))
-		else:
-			error = 'Invalid username or password'
-	return render_template('login.html', title='Login', form=form, error=error)
 
 @app.route("/logout")
 def logout():
     session['logged_in'] = False
     return redirect(url_for('home'))
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-	form = RegisterForm(request.form)
-	if request.method == 'POST' and form.validate():
-		username = form.username.data
-		email = form.email.data
-		hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-		print(username)
-		print(email)
-		with sql.connect("app.db") as con:
-			con.row_factory = sql.Row
-			cur = con.cursor()
-			# TODO display page properly if constraint is violated
-			cur.execute("INSERT INTO user (username, email, password, public) VALUES (?,?,?,?)",(username, email, hashed_password, 1))
-			con.commit()
-			cur.close()
-			flash('Thanks for registering')
-			return redirect('/list')
-	return render_template('register.html', title='Register', form=form)
 
 @app.route('/flights', methods=['GET', 'POST'])
 def flights():
@@ -111,7 +117,7 @@ def flights():
 		return jsonify({'flights': [{'firstPointLat': 42, 'firstPointLong': 42, 'secondPointLat': 21, 'secondPointLong': 21, 'color':'red'}], 'success': 'true'})
 	else: # request method is a POST
 		return {}
-		
+
 
 
 
