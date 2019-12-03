@@ -64,25 +64,6 @@ def logout():
     session['logged_in'] = False
     return redirect(url_for('home'))
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-	form = RegisterForm(request.form)
-	if request.method == 'POST' and form.validate():
-		username = form.username.data
-		email = form.email.data
-		hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-		print(username)
-		print(email)
-		with sql.connect("app.db") as con:
-			con.row_factory = sql.Row
-			cur = con.cursor()
-			# TODO display page properly if constraint is violated
-			cur.execute("INSERT INTO user (username, email, password, public) VALUES (?,?,?,?)",(username, email, hashed_password, 1))
-			con.commit()
-			cur.close()
-			flash('Thanks for registering')
-			return redirect('/list')
-	return render_template('register.html', title='Register', form=form)
 
 @app.route('/flights', methods=['GET', 'POST'])
 def flights():
