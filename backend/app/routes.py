@@ -22,7 +22,45 @@ def register_user():
 		con.commit()
 		cur.close()
 
+<<<<<<< HEAD
 		return jsonify({'success': True})
+=======
+		return jsonify({'success': 'true'})
+
+@app.route('/login/loginattempt', methods=['POST'])
+def login_attempt():
+	json = request.get_json()
+
+	input_email = json['email']
+	input_password = json['hashedPassword']
+
+	with sql.connect("app.db") as con:
+		con.row_factory = sql.Row
+		cur = con.cursor()
+		c = cur.execute("SELECT username, email, password from user where email = (?)", [input_email])	
+		urow = c.fetchone()
+
+		# fail - no user exists
+		if urow is None:
+			return jsonify({'success': 'false'})
+
+		db_username = urow[0]
+		db_email = urow[1]
+		db_password = urow[2]
+		cur.close()
+
+		# success
+		if input_email == db_email and input_password == db_password:
+			return jsonify({
+					'success': 'true', 
+					'userid': db_username, 
+					'sessionToken': 'hardcoded_token'
+				})
+
+		# fail - wrong password for user
+		else:
+			return jsonify({'success': 'false'})
+>>>>>>> 10f19cd5a34e56d99c4018b72152aaf1fb6b6bc8
 
 
 @app.route('/user/addtrip', methods=['POST'])
