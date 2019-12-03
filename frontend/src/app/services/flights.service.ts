@@ -17,18 +17,20 @@ export class FlightsService {
   private serverURL = 'http://localhost:5000';
 
   // FIX THIS SHIT
-  getFlights():Observable<Flight[]>{
+  getFlights(){
+
+    const sessionToken = this.loginService.getToken();
+    console.log('token check', sessionToken);
 
     const uid = this.loginService.getUID();
     const httpOptions = this.createAuthOptions();
-    console.log('getting flights from service');
-    
-    return this.http.get<Flight[]>(this.serverURL + '/flights', httpOptions);
+
+    return this.http.get(this.serverURL + '/flights', httpOptions);
+  
   }
 
   getTrips():Observable<any> {
     const httpOptions = this.createAuthOptions();
-    console.log('getting trips from service')
     return this.http.get<any>(this.serverURL + '/trips', httpOptions);
   }
 
@@ -60,8 +62,6 @@ export class FlightsService {
   // anything to change here? Similar to add right? FIGURE OUT A WAY TO GET SESSIONTOKEN INTO THE HEADERS?
   updateTrip(tripID:string, tripName:string, color:string, flights:any[]){
     const reqBody = {'userID': this.loginService.getUID(), 'tripID': tripID, 'tripName': tripName, 'color': color, 'flights': flights};
-    console.log('reqBody', reqBody);
-
 
     const httpOptions = this.createAuthOptions();
 

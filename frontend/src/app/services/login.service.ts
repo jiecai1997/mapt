@@ -45,36 +45,34 @@ export class LoginService {
     const hashedSalty:string = this.generatePassword(email, password);
     const reqBody = {'email': email, 'hashedPassword': hashedSalty}
 
+    console.log('reqBody', reqBody);
+
     return this.http.post(this.serverURL + '/login/loginattempt', reqBody).subscribe( result => {
+      console.log('result from loginattempt', result);
       if(result['success'] == 'true'){
         this.uid = result['userid'];
         this.sessionToken = result['sessionToken'];
+        console.log('session token', this.sessionToken);
         return this.uid;
       }
       else{
         return 'UNSUCCESSFUL';
       }
-
     })
-    
-
   }
 
   private generatePassword(email:string, password:string):string{
-    console.log('email', email)
-    console.log('password', password);
     const md5 = new Md5();
     const salt = md5.appendStr(email).end();
     
     const salty = password + salt;
-    console.log('salty', salty);
     const hashed = md5.appendStr(salty);
 
     return String(hashed.end());
   }
 
   public getToken():string{
-    return "SESSION TOKEN HERE";
+    return this.sessionToken;
   }
 
   public getUID():number{
