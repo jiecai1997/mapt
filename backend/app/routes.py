@@ -22,9 +22,6 @@ def register_user():
 		con.commit()
 		cur.close()
 
-<<<<<<< HEAD
-		return jsonify({'success': True})
-=======
 		return jsonify({'success': 'true'})
 
 @app.route('/login/loginattempt', methods=['POST'])
@@ -37,7 +34,7 @@ def login_attempt():
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
-		c = cur.execute("SELECT username, email, password from user where email = (?)", [input_email])	
+		c = cur.execute("SELECT username, email, password from user where email = (?)", [input_email])
 		urow = c.fetchone()
 
 		# fail - no user exists
@@ -52,15 +49,14 @@ def login_attempt():
 		# success
 		if input_email == db_email and input_password == db_password:
 			return jsonify({
-					'success': 'true', 
-					'userid': db_username, 
+					'success': 'true',
+					'userid': db_username,
 					'sessionToken': 'hardcoded_token'
 				})
 
 		# fail - wrong password for user
 		else:
 			return jsonify({'success': 'false'})
->>>>>>> 10f19cd5a34e56d99c4018b72152aaf1fb6b6bc8
 
 
 @app.route('/user/addtrip', methods=['POST'])
@@ -82,20 +78,6 @@ def addtrip_user():
 def home():
     return render_template('home.html')
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-	error = None
-	if current_user.is_authenticated:
-		return redirect(url_for('home'))
-	form = LoginForm()
-	if form.validate_on_submit():
-		user = User.query.filter_by(email=form.email.data).first()
-		if user and bcrypt.check_password_hash(user.password, form.password.data):
-			session['logged_in'] = True
-			return redirect(url_for('home'))
-		else:
-			error = 'Invalid username or password'
-	return render_template('login.html', title='Login', form=form, error=error)
 
 @app.route("/logout")
 def logout():
