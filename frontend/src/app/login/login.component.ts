@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginService } from '@app/services/login.service';
+import { LocalStorageModule } from 'angular-local-storage';
 
 
 @Component({
@@ -67,9 +68,12 @@ export class LoginComponent implements OnInit {
 
     this.loginService.attemptLogin(this.email, this.password).subscribe(result => {
       if(result['success'] == 'true'){
-        this.loginService.setUID(result['userid']);
+        this.loginService.setUID(parseInt(result['userid']));
         this.loginService.setSessionToken(result['sessionToken']);
-        this.router.navigate([result['username']]);
+
+        console.log('got here');
+        console.log('result', result);
+        this.router.navigate([result['userid']]);
       } else{
         console.log('UNSUCCESSFUL'); //TODO: deal with this case
         this.error = 'username or password is incorrect';

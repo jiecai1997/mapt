@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of, BehaviorSubject } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Md5 } from 'ts-md5/dist/md5';
+import { LocalStorageModule } from 'angular-local-storage';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class LoginService {
 
 
   private uid:number;
-  private sessionToken:string;
+  private sessionToken:string = 'SESSIONTOKEN';
 
   private serverURL = 'http://localhost:5000';
 
@@ -27,10 +28,12 @@ export class LoginService {
 
   setUID(uid: number){
     this.uid = uid;
+    localStorage.setItem('userid', uid.toString());
   }
 
   setSessionToken(sessionToken: string){
     this.sessionToken = sessionToken;
+    localStorage.setItem('sessionToken', sessionToken);
   }
 
   newUser(username:string, email:string, password:string){
@@ -66,10 +69,14 @@ export class LoginService {
   }
 
   public getToken():string{
-    return this.sessionToken;
+    const sessionToken = localStorage.getItem("sessionToken");
+    this.sessionToken = sessionToken;
+    return sessionToken;
   }
 
   public getUID():number{
+    const userID = localStorage.getItem("userid");
+    this.uid = parseInt(userID);
     return this.uid;
   }
 

@@ -35,16 +35,17 @@ def login_attempt():
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
-		c = cur.execute("SELECT username, email, password from user where email = (?)", [input_email])
+		c = cur.execute("SELECT uid, username, email, password from user where email = (?)", [input_email])
 		urow = c.fetchone()
 
 		# fail - no user exists
 		if urow is None:
-			return jsonify({'success': 'false'})
-
-		db_username = urow[0]
-		db_email = urow[1]
-		db_password = urow[2]
+			return jsonify({'success': 'false', 'reason': 'urow was None'})
+		
+		db_uid = urow[0]
+		db_username = urow[1]
+		db_email = urow[2]
+		db_password = urow[3]
 
 		# success - user exists
 		if input_email == db_email and input_password == db_password:
@@ -54,15 +55,16 @@ def login_attempt():
 			cur.close()
 			return jsonify({
 					'success': 'true',
-					'userid': db_username,
-					'sessionToken': session_token
+					'userid': db_uid,
+					'sessionToken': session_token,
+					'username': db_username
 				})
 
 		# fail - wrong password for user
 		else:
 			cur.commit()
 			cur.close()
-			return jsonify({'success': 'false'}) # TODO: ERROR CHECKING
+			return jsonify({'success': 'false', 'reason': 'wrong password'}) # TODO: ERROR CHECKING
 
 
 @app.route('/profile/<int:uid>', methods=['POST'])
@@ -243,7 +245,7 @@ def trips():
 			cur.close()
 			flash('You Added A Trip!')
 			return redirect('/list')
-	return render_template('trips.html', title="Add a Trip", form=TripsForm())
+	return {'trips':[]}
 
 @app.route('/list')
 def list():

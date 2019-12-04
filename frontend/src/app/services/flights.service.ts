@@ -62,15 +62,7 @@ export class FlightsService {
 
   public getStats(){
     const httpOptions = this.createAuthOptions();
-    return this.http.get(this.serverURL + '/stats/?uid=' + this.loginService.getUID(), httpOptions).subscribe(result => {
-      if(result['success'] == 'true'){
-        return result;
-      }
-      else{
-        console.log('result', result);
-        return 'FAILED';
-      }
-    })
+    return this.http.get(this.serverURL + '/stats/?uid=' + this.loginService.getUID(), httpOptions);
   }
 
 
@@ -78,7 +70,8 @@ export class FlightsService {
     const httpOptions = this.createAuthOptions();
     const uid = this.loginService.getUID();
 
-    return this.http.get(this.serverURL + '/profile?' + uid, httpOptions);
+    return this.http.get(this.serverURL + '/profile/' + uid, httpOptions);
+
   }
 
   // made return statement for failure according to how we specified it in notepad, but do we want to take a separate course of action in

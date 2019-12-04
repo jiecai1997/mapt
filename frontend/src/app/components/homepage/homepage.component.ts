@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LoginService } from '@app/services/login.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,12 +10,14 @@ import { Router } from '@angular/router';
 export class HomepageComponent implements OnInit {
   showTabs: boolean = true; // TODO: calculate this value
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private loginService: LoginService) { }
 
   ngOnInit() {
   }
 
   logout(): void {
+    this.loginService.setSessionToken('SESSIONTOKEN');
+    this.loginService.setUID(0);
     this.router.navigate([''])
   }
 }
