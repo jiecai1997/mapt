@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginService } from '@app/services/login.service';
+import { LocalStorageModule } from 'angular-local-storage';
 
 
 @Component({
@@ -17,6 +18,8 @@ export class LoginComponent implements OnInit {
   email: string;
   username: string;
   password: string;
+
+  showSpinner: boolean = false;
 
   emailFormControl = new FormControl('', [
     Validators.required,
@@ -37,16 +40,38 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
-  submit() : void {
+  submitNewUser() : void {
+    this.showSpinner = true;
+
     if(this.isCreateAccount){
-      console.log(this.username, this.email, this.password);
-      this.loginService.newUser(this.username, this.email, this.password);
-      this.router.navigate([this.username]);
-    }else{
-      console.log(this.email, this.password);
-      this.loginService.attemptLogin(this.email, this.password);
-      this.router.navigate([this.email]); //TODO: get username to navigate to from sql
+      this.loginService.newUser(this.username, this.email, this.password).subscribe(result => {
+        if(result['success'] == 'true'){
+          // account created succesfully so log them in
+          this.submitLogin();
+        } else{
+          console.log('UNSUCCESSFUL'); //TODO: deal with this case
+        }
+        this.showSpinner = false;
+      });
     }
+  }
+  
+  submitLogin(): void {
+    this.showSpinner = true;
+
+    this.loginService.attemptLogin(this.email, this.password).subscribe(result => {
+      if(result['success'] == 'true'){
+        this.loginService.setUID(parseInt(result['userid']));
+        this.loginService.setSessionToken(result['sessionToken']);
+
+        console.log('got here');
+        console.log('result', result);
+        this.router.navigate([result['userid']]);
+      } else{
+        console.log('UNSUCCESSFUL'); //TODO: deal with this case
+      }
+      this.showSpinner = false;
+    });
   }
 
   has_errors(): boolean {

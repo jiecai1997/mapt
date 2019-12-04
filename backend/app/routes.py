@@ -40,8 +40,8 @@ def login_attempt():
 
 		# fail - no user exists
 		if urow is None:
-			return jsonify({'success': 'false'})
-
+			return jsonify({'success': 'false', 'reason': 'urow was None'})
+		
 		db_username = urow[0]
 		db_email = urow[1]
 		db_password = urow[2]
@@ -52,17 +52,19 @@ def login_attempt():
 			cur.execute("UPDATE user SET session = (?) WHERE email = (?)", [session_token, input_email])
 			con.commit()
 			cur.close()
+			# HARDCODED VALUE HERE NEEDS TO BE FIXED
 			return jsonify({
 					'success': 'true',
-					'userid': db_username,
-					'sessionToken': session_token
+					'userid': 1234,
+					'sessionToken': session_token,
+					'username': db_username
 				})
 
 		# fail - wrong password for user
 		else:
 			cur.commit()
 			cur.close()
-			return jsonify({'success': 'false'}) # TODO: ERROR CHECKING
+			return jsonify({'success': 'false', 'reason': 'wrong password'}) # TODO: ERROR CHECKING
 
 
 @app.route('/profile/<int:uid>', methods=['POST'])
@@ -243,7 +245,7 @@ def trips():
 			cur.close()
 			flash('You Added A Trip!')
 			return redirect('/list')
-	return render_template('trips.html', title="Add a Trip", form=TripsForm())
+	return {'trips':[]}
 
 @app.route('/list')
 def list():

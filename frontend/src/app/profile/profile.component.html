@@ -32,10 +32,18 @@
                     </td></tr>
                 </table>
             </form>
-            <mat-spinner [style.display]="showSpinner ? 'block' : 'none'"></mat-spinner>
         </mat-card-content>
         <mat-card-actions>
-            <button mat-raised-button (click)="save()" color="primary" [disabled]="!data_changed() || has_errors()" style="position:absolute; left:10%; bottom: 5%;">Save Changes</button>
+            <button mat-raised-button
+                (click)="save()"
+                color="primary"
+                [disabled]="!data_changed() || has_errors()"
+                style="position:absolute; left:10%; bottom: 5%;">
+                <span class="spinner-span">
+                    Save Changes
+                    <mat-spinner *ngIf="showSpinner" [diameter]="20" [color]="'accent'"></mat-spinner>
+                </span>
+            </button>
             <button mat-raised-button (click)="cancel()" color="primary" [disabled]="!data_changed()" style="position:absolute; right:7%; bottom: 5%;">Cancel</button>
         </mat-card-actions>
     </mat-card>

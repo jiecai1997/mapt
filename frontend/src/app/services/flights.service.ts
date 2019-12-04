@@ -41,22 +41,13 @@ export class FlightsService {
   // 
   // we also need to think about color - will that get fed in from the frontend? Color string that can be sent w requestBody,
   // have that as a column - will need that in save trip as well
-  addTrip(userID:string, tripName:string, color:string, flights:any[]){
+  addTrip(tripName:string, color:string, flights:any[]){
     const reqBody = {'userID': this.loginService.getUID(), 'tripName': tripName, 'color': color, 'flights': flights};
     console.log('reqBody', reqBody);
 
     const httpOptions = this.createAuthOptions();
 
-    return this.http.post(this.serverURL + '/trips/add', reqBody, httpOptions).subscribe(result => {
-      if(result['success'] == 'true'){
-        return true;
-      }
-      else{
-        console.log(result['error']);
-        return false;
-      }
-    })
-
+    return this.http.post(this.serverURL + '/trips/add', reqBody, httpOptions);
   }
 
   // anything to change here? Similar to add right? FIGURE OUT A WAY TO GET SESSIONTOKEN INTO THE HEADERS?
@@ -65,15 +56,7 @@ export class FlightsService {
 
     const httpOptions = this.createAuthOptions();
 
-    return this.http.put(this.serverURL + '/trips/update', reqBody, httpOptions).subscribe(result => {
-      if(result['success'] == 'true'){
-        return 'Success';
-      }
-      else{
-        return 'Modifying trip failed';
-      }
-    })
-
+    return this.http.put(this.serverURL + '/trips/update', reqBody, httpOptions);
   }
 
 
@@ -87,7 +70,7 @@ export class FlightsService {
     const httpOptions = this.createAuthOptions();
     const uid = this.loginService.getUID();
 
-    return this.http.get(this.serverURL + '/profile?' + uid, httpOptions);
+    return this.http.get(this.serverURL + '/profile/' + uid, httpOptions);
 
   }
 
@@ -101,16 +84,7 @@ export class FlightsService {
       'isPublic': isPublic
     }
 
-    return this.http.post(this.serverURL + '/profile/update', reqBody, httpOptions).subscribe(result => {
-      if(result['success'] == 'true'){
-        return result;
-      }
-      else{
-        console.log('FAILED TO UPDATE ACCOUNT INFO')
-        return result;
-      }
-    })
-
+    return this.http.post(this.serverURL + '/profile/update', reqBody, httpOptions);
   }
 
 
