@@ -56,6 +56,7 @@ export class LoginComponent implements OnInit {
           }
           this.showSpinner = false;
         }, error => {
+          console.log('error', error);
           this.error = 'account creation failed - please try again';
           this.showSpinner = false;
         });
@@ -79,6 +80,7 @@ export class LoginComponent implements OnInit {
       }
       this.showSpinner = false;
     }, error => {
+      console.log('error', error);
       this.error = 'login failed - please try again';
       this.showSpinner = false;
     });
