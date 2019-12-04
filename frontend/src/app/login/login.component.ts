@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginService } from '@app/services/login.service';
-import { LocalStorageModule } from 'angular-local-storage';
 
 
 @Component({
@@ -68,7 +67,6 @@ export class LoginComponent implements OnInit {
 
     this.loginService.attemptLogin(this.email, this.password).subscribe(result => {
       if(result['success'] == 'true'){
-        this.loginService.setUID(parseInt(result['userid']));
         this.loginService.setSessionToken(result['sessionToken']);
 
         console.log('got here');
