@@ -35,16 +35,17 @@ def login_attempt():
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
-		c = cur.execute("SELECT username, email, password from user where email = (?)", [input_email])
+		c = cur.execute("SELECT uid, username, email, password from user where email = (?)", [input_email])
 		urow = c.fetchone()
 
 		# fail - no user exists
 		if urow is None:
 			return jsonify({'success': 'false', 'reason': 'urow was None'})
 		
-		db_username = urow[0]
-		db_email = urow[1]
-		db_password = urow[2]
+		db_uid = urow[0]
+		db_username = urow[1]
+		db_email = urow[2]
+		db_password = urow[3]
 
 		# success - user exists
 		if input_email == db_email and input_password == db_password:
@@ -52,10 +53,9 @@ def login_attempt():
 			cur.execute("UPDATE user SET session = (?) WHERE email = (?)", [session_token, input_email])
 			con.commit()
 			cur.close()
-			# HARDCODED VALUE HERE NEEDS TO BE FIXED
 			return jsonify({
 					'success': 'true',
-					'userid': 1234,
+					'userid': db_uid,
 					'sessionToken': session_token,
 					'username': db_username
 				})
