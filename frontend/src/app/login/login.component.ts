@@ -18,6 +18,7 @@ export class LoginComponent implements OnInit {
   username: string;
   password: string;
 
+  error: string = '';
   showSpinner: boolean = false;
 
   emailFormControl = new FormControl('', [
@@ -43,15 +44,21 @@ export class LoginComponent implements OnInit {
     this.showSpinner = true;
 
     if(this.isCreateAccount){
-      this.loginService.newUser(this.username, this.email, this.password).subscribe(result => {
-        if(result['success'] == 'true'){
-          // account created succesfully so log them in
-          this.submitLogin();
-        } else{
-          console.log('UNSUCCESSFUL'); //TODO: deal with this case
-        }
-        this.showSpinner = false;
-      });
+      this.loginService.newUser(this.username, this.email, this.password).subscribe(
+        result => {
+          if(result['success'] == 'true'){
+            // account created succesfully so log them in
+            this.submitLogin();
+          } else{
+            console.log('account creation unsuccessful'); //TODO: deal with this case
+            this.error = 'username already taken';
+            this.username = undefined;
+          }
+          this.showSpinner = false;
+        }, error => {
+          this.error = 'account creation failed - please try again';
+          this.showSpinner = false;
+        });
     }
   }
   
@@ -65,7 +72,12 @@ export class LoginComponent implements OnInit {
         this.router.navigate([result['username']]);
       } else{
         console.log('UNSUCCESSFUL'); //TODO: deal with this case
+        this.error = 'username or password is incorrect';
+        this.email = this.username = this.password = undefined;
       }
+      this.showSpinner = false;
+    }, error => {
+      this.error = 'login failed - please try again';
       this.showSpinner = false;
     });
   }
