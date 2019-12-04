@@ -16,7 +16,7 @@ export class HomepageComponent implements OnInit {
   }
 
   logout(): void {
-    this.loginService.setSessionToken('');
+    this.loginService.setSessionToken('SESSIONTOKEN');
     this.loginService.setUID(0);
     this.router.navigate([''])
   }
