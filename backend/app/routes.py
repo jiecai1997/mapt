@@ -41,7 +41,7 @@ def login_attempt():
 		# fail - no user exists
 		if urow is None:
 			return jsonify({'success': 'false', 'reason': 'urow was None'})
-		
+
 		db_uid = urow[0]
 		db_username = urow[1]
 		db_email = urow[2]
@@ -279,13 +279,17 @@ def update():
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
-		cur.execute("INSERT INTO user(uid, username, email, password, public) VALUES(1, 'llama', 'llama@gmail.com', 'llamallamallama', 1)")
-		cur.execute("INSERT INTO user(uid, username, email, password, public) VALUES(2, 'alpaca', 'alpaca@gmail.com', 'alpacaalpacaalpaca', 1)")
-		cur.execute("INSERT INTO trip(tid, uid, trip_name) VALUES(1,1,'llama')")
+		#cur.execute("INSERT INTO user(uid, username, email, password, public) VALUES(1, 'llama', 'llama@gmail.com', 'llamallamallama', 1)")
+		#cur.execute("INSERT INTO user(uid, username, email, password, public) VALUES(2, 'alpaca', 'alpaca@gmail.com', 'alpacaalpacaalpaca', 1)")
+		cur.execute("INSERT INTO trip(tid, uid, trip_name,color) VALUES(1,1,'llama','blue')")
 		cur.execute("INSERT INTO airline(iata, name) VALUES('SQ', 'Singapore Airlines')")
 		con.commit()
 		cur.close()
 	return render_template('home.html')
+
+@app.route('/')
+def home():
+    return render_template('home.html')
 
 if __name__ == '__main__':
    app.run(debug = True)
