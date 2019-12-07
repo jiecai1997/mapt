@@ -15,7 +15,6 @@ export class MapComponent implements OnInit {
 
   ngOnInit() {
     this.getFlights();
-    // this.flightsService.addTrip(35, 36, 'testTrip', this.flights);
 
   }
 
@@ -27,13 +26,12 @@ export class MapComponent implements OnInit {
   flights:Flight[]
 
   getFlights(): void{
-    
-    const flights = 'flights';
-
     this.flightsService.getFlights().subscribe(result => {
         this.flights = result['flights'];
+        console.log('flights', this.flights);
     })
-  }
+    }
+  
 
   //  ---------------------------------------------------------------------------------------------
   // -------------------------------------- STYLING OPTIONS --------------------------------------

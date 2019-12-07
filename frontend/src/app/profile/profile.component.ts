@@ -20,22 +20,36 @@ export class ProfileComponent implements OnInit {
     Validators.required
   ]);
 
+  showSpinner: boolean = false;
+
   constructor(private router: Router, private flightsService: FlightsService) { }
 
   ngOnInit() {
-    const profile = this.flightsService.getProfileInfo();
-    if(profile != null){
-      // this.origUsername = this.username = profile.username;
-      // this.origIsPublic = this.isPublic = profile.isPublic;
-    }
-
-
-    this.cancel();
+    this.flightsService.getProfileInfo().subscribe(result => {
+      if(result['success'] == 'true'){
+        this.origUsername = this.username = result['username'];
+        this.origIsPublic = this.isPublic = result['isPublic'];
+      }
+      else{
+        console.log('GETTING PROFILE INFO FAILED'); //TODO: deal with this case
+      }
+    });
   }
 
   save(): void {
     console.log(this.username, this.isPublic);
-    this.router.navigate([this.username]);
+    this.showSpinner = true;
+    
+    this.flightsService.updateProfileInfo(this.username, this.isPublic).subscribe(result => {
+      if(result['success'] == 'true'){
+        this.router.navigate([this.username]);
+      }
+      else{
+        console.log('FAILED TO UPDATE ACCOUNT INFO'); //TODO: deal with this case
+        this.cancel();
+      }
+      this.showSpinner = false;
+    })
   }
 
   cancel(): void {

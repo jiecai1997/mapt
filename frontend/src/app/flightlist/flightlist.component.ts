@@ -16,6 +16,8 @@ export class FlightlistComponent implements OnInit {
   colors = ['red', 'blue', 'green'];
   lastAddedTo: number; // trip which most recently had a flight added to it
 
+  showSpinner: boolean = false;
+
   constructor(private router: Router, private flightsService: FlightsService) {}
 
   ngOnInit() {
@@ -70,8 +72,29 @@ export class FlightlistComponent implements OnInit {
   }
 
   saveTrip(tripIndex): void {
+    this.showSpinner = true;
     const trip = this.trips[tripIndex];
-    this.flightsService.updateTrip(trip.tripID, trip.tripName, trip.color, trip.flights);
-    this.router.navigate([])
+
+    if(this.isAddTrip){
+      // add trip
+      this.flightsService.addTrip(trip.tripName, trip.color, trip.flights).subscribe(result => {
+        if(result['success'] == 'true'){
+          this.router.navigate(['']);
+        } else{
+          console.log(result['error']); //TODO: deal with this case
+        }
+        this.showSpinner = false;
+      })
+    }else{
+      // update trip
+      this.flightsService.updateTrip(trip.tripID, trip.tripName, trip.color, trip.flights).subscribe(result => {
+        if(result['success'] == 'true'){
+          this.router.navigate(['']);
+        } else{
+          console.log('Modifying trip failed'); //TODO: deal with this case
+        }
+        this.showSpinner = false;
+      })
+    }
   }
 }

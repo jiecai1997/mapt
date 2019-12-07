@@ -18,6 +18,9 @@ export class LoginComponent implements OnInit {
   username: string;
   password: string;
 
+  error: string = '';
+  showSpinner: boolean = false;
+
   emailFormControl = new FormControl('', [
     Validators.required,
     Validators.email,
@@ -37,16 +40,50 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
-  submit() : void {
+  submitNewUser() : void {
+    this.showSpinner = true;
+
     if(this.isCreateAccount){
-      console.log(this.username, this.email, this.password);
-      this.loginService.newUser(this.username, this.email, this.password);
-      this.router.navigate([this.username]);
-    }else{
-      console.log(this.email, this.password);
-      this.loginService.attemptLogin(this.email, this.password);
-      this.router.navigate([this.email]); //TODO: get username to navigate to from sql
+      this.loginService.newUser(this.username, this.email, this.password).subscribe(
+        result => {
+          if(result['success'] == 'true'){
+            // account created succesfully so log them in
+            this.submitLogin();
+          } else{
+            console.log('account creation unsuccessful'); //TODO: deal with this case
+            this.error = 'username already taken';
+            this.username = undefined;
+          }
+          this.showSpinner = false;
+        }, error => {
+          console.log('error', error);
+          this.error = 'account creation failed - please try again';
+          this.showSpinner = false;
+        });
     }
+  }
+  
+  submitLogin(): void {
+    this.showSpinner = true;
+
+    this.loginService.attemptLogin(this.email, this.password).subscribe(result => {
+      if(result['success'] == 'true'){
+        this.loginService.setSessionToken(result['sessionToken']);
+
+        console.log('got here');
+        console.log('result', result);
+        this.router.navigate([result['userid']]);
+      } else{
+        console.log('UNSUCCESSFUL'); //TODO: deal with this case
+        this.error = 'username or password is incorrect';
+        this.email = this.username = this.password = undefined;
+      }
+      this.showSpinner = false;
+    }, error => {
+      console.log('error', error);
+      this.error = 'login failed - please try again';
+      this.showSpinner = false;
+    });
   }
 
   has_errors(): boolean {

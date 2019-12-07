@@ -1,7 +1,7 @@
 <agm-map [latitude]="lat" [longitude]="lng" [styles]="styles" [streetViewControl]="false" [zoom]="3" [minZoom]="2" [scaleControl]="false">
 
   
-  <agm-polyline *ngFor="let flight of flights" [strokeColor]="'red'" [geodesic] = "true" [strokeWeight]="2" [strokeOpacity]="1">
+  <agm-polyline *ngFor="let flight of flights" [strokeColor]="flight.color" [geodesic] = "true" [strokeWeight]="2" [strokeOpacity]="1">
         <agm-polyline-point [latitude]="flight.firstPointLat" [longitude]="flight.firstPointLong" ></agm-polyline-point>
         <agm-polyline-point [latitude]="flight.secondPointLat" [longitude]="flight.secondPointLong" ></agm-polyline-point>
   </agm-polyline> 

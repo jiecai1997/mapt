@@ -14,6 +14,16 @@ mat-card {
     margin: 5px;
 }
 
+.mat-spinner {
+    margin-left: 5px;
+}
+
+.spinner-span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .form-card-container, .center-container {
     display: flex;
     justify-content: center;
@@ -27,4 +37,8 @@ mat-card {
 
 .form-card-container .mat-card {
     padding: 30px;
+}
+
+.warn-text {
+    color: #f44336; /* mat theme warn color */
 }

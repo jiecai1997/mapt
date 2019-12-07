@@ -17,18 +17,20 @@ export class FlightsService {
   private serverURL = 'http://localhost:5000';
 
   // FIX THIS SHIT
-  getFlights():Observable<Flight[]>{
+  getFlights(){
+
+    const sessionToken = this.loginService.getToken();
+    console.log('token check', sessionToken);
 
     const uid = this.loginService.getUID();
     const httpOptions = this.createAuthOptions();
-    console.log('getting flights from service');
-    
-    return this.http.get<Flight[]>(this.serverURL + '/flights', httpOptions);
+
+    return this.http.get(this.serverURL + '/flights', httpOptions);
+  
   }
 
   getTrips():Observable<any> {
     const httpOptions = this.createAuthOptions();
-    console.log('getting trips from service')
     return this.http.get<any>(this.serverURL + '/trips', httpOptions);
   }
 
@@ -39,22 +41,13 @@ export class FlightsService {
   // 
   // we also need to think about color - will that get fed in from the frontend? Color string that can be sent w requestBody,
   // have that as a column - will need that in save trip as well
-  addTrip(userID:string, tripName:string, color:string, flights:any[]){
+  addTrip(tripName:string, color:string, flights:any[]){
     const reqBody = {'userID': this.loginService.getUID(), 'tripName': tripName, 'color': color, 'flights': flights};
     console.log('reqBody', reqBody);
 
     const httpOptions = this.createAuthOptions();
 
-    return this.http.post(this.serverURL + '/trips/add', reqBody, httpOptions).subscribe(result => {
-      if(result['success'] == 'true'){
-        return true;
-      }
-      else{
-        console.log(result['error']);
-        return false;
-      }
-    })
-
+    return this.http.post(this.serverURL + '/trips/add', reqBody, httpOptions);
   }
 
   // anything to change here? Similar to add right? FIGURE OUT A WAY TO GET SESSIONTOKEN INTO THE HEADERS?
@@ -63,29 +56,13 @@ export class FlightsService {
 
     const httpOptions = this.createAuthOptions();
 
-    return this.http.put(this.serverURL + '/trips/update', reqBody, httpOptions).subscribe(result => {
-      if(result['success'] == 'true'){
-        return 'Success';
-      }
-      else{
-        return 'Modifying trip failed';
-      }
-    })
-
+    return this.http.put(this.serverURL + '/trips/update', reqBody, httpOptions);
   }
 
 
-  public getStats(uid:number){
+  public getStats(){
     const httpOptions = this.createAuthOptions();
-    return this.http.get(this.serverURL + '/stats/?uid=' + this.loginService.getUID(), httpOptions).subscribe(result => {
-      if(result['success'] == 'true'){
-        return result;
-      }
-      else{
-        console.log('result', result);
-        return 'FAILED';
-      }
-    })
+    return this.http.get(this.serverURL + '/stats/?uid=' + this.loginService.getUID(), httpOptions);
   }
 
 
@@ -93,14 +70,7 @@ export class FlightsService {
     const httpOptions = this.createAuthOptions();
     const uid = this.loginService.getUID();
 
-    return this.http.get(this.serverURL + '/profile?' + uid, httpOptions).subscribe(result => {
-      if(result['success'] == 'true'){
-        return result;
-      }
-      else{
-        console.log('GETTING PROFILE INFO FAILED');
-      }
-    })
+    return this.http.get(this.serverURL + '/profile/' + uid, httpOptions);
 
   }
 
@@ -114,16 +84,7 @@ export class FlightsService {
       'isPublic': isPublic
     }
 
-    return this.http.post(this.serverURL + '/profile/update', reqBody, httpOptions).subscribe(result => {
-      if(result['success'] == 'true'){
-        return result;
-      }
-      else{
-        console.log('FAILED TO UPDATE ACCOUNT INFO')
-        return result;
-      }
-    })
-
+    return this.http.post(this.serverURL + '/profile/update', reqBody, httpOptions);
   }
 
 
