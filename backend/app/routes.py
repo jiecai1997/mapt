@@ -121,6 +121,9 @@ def update_profile():
 		return jsonify({'success': 'true'})
 
 
+@app.route('/stats/<int:uid>')
+
+
 @app.route('/user/addtrip', methods=['POST'])
 def addtrip_user():
 	json = request.get_json()
