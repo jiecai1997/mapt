@@ -118,19 +118,38 @@ def update_profile():
 			return jsonify({'success': 'false'})
 
 		cur.execute("UPDATE user SET username = (?), isPublic = (?) WHERE uid = (?)", [username, isPublic, uid])
+		result = cur.fetchall
 		con.commit()
 		cur.close()
-		return jsonify({'success': 'true'})
+
+		trip_stats = []
+		for row in result:
+  			trip_stats.append(row)
+
+		return jsonify({'success': 'true', 'stats': trip_stats})
 
 
-<<<<<<< HEAD
-@app.route('/stats/<int:uid>')
+@app.route('/stats/<int:uid>', methods=['GET'])
+def getstats_user():
+	with sql.connect("app.db") as con:
+		con.row_factory = sql.Row
+		cur = con.cursor()
+		c = cur.execute("SELECT session from user where uid = (?)", [uid])
+		urow = c.fetchone()
+
+		# you do not have permission to change this
+		if urow is None or urow[0] != session_token:
+			con.commit()
+			cur.close()
+			return jsonify({'success': 'false'})
+
+		stats_per_trip = cur.execute("SELECT trip_name, SUM(mileage), SUM(duration) FROM Trip NATURAL JOIN Flight WHERE uid = (?) GROUP BY tid",(uid))
+		con.commit()
+		cur.close()
+		return jsonify({'success': 'false'})
 
 
-@app.route('/user/addtrip', methods=['POST'])
-=======
 @app.route('/trips/add', methods=['POST'])
->>>>>>> 600a9a87b80c60a47815b1ea425ba5b16f6d0e99
 def addtrip_user():
 	json = request.get_json()
 	session_token = request.headers.get('Authorization')
