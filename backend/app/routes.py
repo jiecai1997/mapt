@@ -6,6 +6,8 @@ from flask_login import login_user, current_user, logout_user, login_required
 import sqlite3 as sql
 from flask import jsonify
 import random
+from datetime import datetime
+import math
 
 # json routes
 @app.route('/user/register', methods=['POST'])
@@ -160,6 +162,19 @@ def addtrip_user():
 	flights = json['flights']
 	monthdic = {'Jan':'01', 'Feb':'02','Mar':'03', 'Apr':'04','May':'05','Jun':'06','Jul':'07','Aug':'08','Sep':'09','Oct':'10','Nov':'11','Dec':'12'}
 
+	def deg2rad(deg):
+		return abs(deg * (math.pi/180))
+
+	def LatLonToMiles(lat1,lon1,lat2,lon2):
+		R = 3958.8 #Radius of the earth in miles
+		dLat = deg2rad(lat2-lat1)  #deg2rad below
+		dLon = deg2rad(lon2-lon1)
+		a = math.sin(dLat/2) * math.sin(dLat/2) + math.cos(deg2rad(lat1)) * math.cos(deg2rad(lat2)) * math.sin(dLon/2) * math.sin(dLon/2)
+		c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+		d = R * c #Distance in miles
+		return int(d)
+
+
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
@@ -173,7 +188,7 @@ def addtrip_user():
 			return jsonify({'success': 'false'})
 
 		cur.execute("INSERT INTO trip (uid, trip_name,color) VALUES (?,?,?)",(uid, trip_name,color))
-		#GET tid somehow!!!
+		tid = cur.execute("SELECT last_insert_rowid()")
 
 		for flight in flights:
 			arrival_iata = flight['arr']['airport']
@@ -196,31 +211,34 @@ def addtrip_user():
 			depart_day = depart_date[2]
 			depart_yr = depart_date[3]
 			depart_hr = int(flight['dep']['time'].split(':'))[0]
+			int_depart_hr = depart_hr
 			depart_min = flight['dep']['time'].split(':')[1]
 			depart_ampm = 'AM'
 			if depart_hr >= 12:
 				depart_hr-=12
 				depart_ampm = 'PM'
 			depart_datetime = depart_yr+depart_mth+depart_date+' '+str(depart_hr)+':'+depart_min+':00'+depart_ampm
+			dt_depart_datetime = datetime(int(depart_yr),int(depart_mth),int(depart_day),int_depart_hr,int(depart_min))
 
 			arr_date = flight['arr']['date'].split("00:")[0].split(" ")
 			arr_mth = monthdic[arr_date[1]]
 			arr_day = arr_date[2]
 			arr_yr = arr_date[3]
 			arr_hr = int(flight['arr']['time'].split(':'))[0]
+			int_arr_hr = arr_hr
 			arr_min = flight['arr']['time'].split(':')[1]
 			arr_ampm = 'AM'
 			if arr_hr >= 12:
 				arr_hr-=12
 				arr_ampm = 'PM'
 			arrival_datetime = arr_yr+arr_mth+arr_date+' '+str(arr_hr)+':'+arr_min+':00'+arr_ampm
+			dt_arr_datetime = datetime(int(arr_yr),int(arr_mth),int(arr_day),int_arr_hr,int(arr_min))
 
-			duration = 5
-			#Calculate with depart_datetime, arrival_datetime, & Timezone Data
+			duration = (dt_arr_datetime-dt_depart_datetime).seconds//60
+			offset_mins = -(int(arrival_tz)-int(depart_tz))*60
+			duration += offset_mins
 
-			mileage = 5
-			#Calculate with longitude & latitude
-			#https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula
+			mileage = LatLonToMiles(depart_lat,depart_long,arrival_lat,arrival_long)
 
 			cur.execute("INSERT INTO flight (tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage) VALUES (?,?,?,?,?,?,?,?,?)",(tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage))
 		con.commit()
