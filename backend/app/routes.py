@@ -148,8 +148,8 @@ def update_profile():
 			cur.close()
 			return jsonify({'success': 'false'})
 
-		cur.execute("UPDATE user SET username = (?), isPublic = (?) WHERE uid = (?)", [username, isPublic, uid])
-		result = cur.fetchall
+		cur.execute("UPDATE user SET username = (?), public = (?) WHERE uid = (?)", [username, isPublic, uid])
+		result = cur.fetchall()
 		con.commit()
 		cur.close()
 
