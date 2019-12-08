@@ -192,13 +192,13 @@ def addtrip_user():
 
 		for flight in flights:
 			arrival_iata = flight['arr']['airport']
-			arrival_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = arrival_iata").fetchone()
+			arrival_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[arrival_iata]).fetchone()
 			arrival_tz = arrival_airport["time_zone"]
 			arrival_lat = arrival_airport["latitude"]
 			arrival_long = arrival_airport["longitude"]
 
 			depart_iata = flight['dep']['airport']
-			depart_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = depart_iata").fetchone()
+			depart_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[depart_iata]).fetchone()
 			depart_tz = depart_airport["time_zone"]
 			depart_lat = depart_airport["latitude"]
 			depart_long = depart_airport["longitude"]
