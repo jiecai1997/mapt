@@ -177,7 +177,10 @@ def getstats_user(uid):
 
 		trip_stats = []
 		for row in result:
-			trip_stats.append(row)
+			d={}
+			d['title']=row['mileage']
+			d['value']=row['duration']
+			trip_stats.append(d)
 
 		return jsonify({'success': 'true', 'stats': trip_stats})
 
@@ -336,7 +339,7 @@ def gettrips_user(uid):
 			ret.append(d)
 		con.commit()
 		cur.close()
-		return jsonify({'success': True,'trips': ret})
+		return jsonify({'success': 'true','trips': ret})
 
 
 @app.route('/trips/update', methods=['POST'])
