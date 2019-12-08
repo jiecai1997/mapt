@@ -11,23 +11,33 @@ import math
 import json
 
 # json routes
-@app.route('/user/register', methods=['POST'])
+@app.route('/login/register', methods=['POST'])
 def register_user():
 	json = request.get_json()
 
 	username = json['username']
 	email = json['email']
 	password = json['hashedPassword']
+	is_public = json['public']
 
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
-		cur.execute("INSERT INTO user (username, email, password, public) VALUES (?,?,?,?)",(username, email, password, 1))
+
+		# CHECK - if username or password already exists
+		c = cur.execute("SELECT * FROM user WHERE username=(?) OR email=(?)", (username, email))
+		urow = c.fetchone()
+
+		# FAILURE - username or password already exists
+		if urow:
+			cur.close()
+			return jsonify({'success': 'false', 'reason': 'username exists OR email exists'})
+
+		# SUCCESS - no duplicate entries, add user to database
+		cur.execute("INSERT INTO user (username, email, password, public) VALUES (?,?,?,?)",(username, email, password, is_public))
 		con.commit()
 		cur.close()
-
-		return jsonify({'success': 'true'}) # TODO: ADD ERROR CHECKING
-		#TODO: not hardcoded public
+		return jsonify({'success': 'true'})
 
 @app.route('/login/loginattempt', methods=['POST'])
 def login_attempt():
@@ -44,7 +54,7 @@ def login_attempt():
 
 		# fail - no user exists
 		if urow is None:
-			return jsonify({'success': 'false', 'reason': 'urow was None'})
+			return jsonify({'success': 'false', 'reason': 'no user exists with this email'})
 
 		db_uid = urow[0]
 		db_username = urow[1]
@@ -66,9 +76,26 @@ def login_attempt():
 
 		# fail - wrong password for user
 		else:
-			cur.commit()
 			cur.close()
 			return jsonify({'success': 'false', 'reason': 'wrong password'}) # TODO: ERROR CHECKING
+
+# check if a user is logged in
+@app.route('/login/verify/<int:uid>', methods=['GET'])
+def verify_user(uid):
+	input_token = request.headers.get('Authorization')
+	with sql.connect("app.db") as con:
+		con.row_factory = sql.Row
+		cur = con.cursor()
+		c = cur.execute("SELECT session from user where uid = (?)", [uid])
+		urow = c.fetchone()
+		cur.close()
+
+		# SUCCESS - if login token for user stored in database = header token
+		if urow[0] == input_token:
+			return jsonify({'loggedIn': 'true'})
+		# FAILURE - if login token for user stored in database != header token
+		else:
+			return jsonify({'loggedIn': 'false'})
 
 
 @app.route('/profile/<int:uid>', methods=['POST'])
@@ -279,16 +306,14 @@ def flights():
 
 @app.route('/flights/<int:uid>', methods=['GET'])
 def get_flights(uid):
-	r = request.get_json()
+	input_token = request.headers.get('Authorization')
 
 	# FAIL - if none or invalid input token
-	if 'sessionToken' not in r or r['sessionToken'] is None:
+	if input_token is None:
 		return jsonify({
 			'success': 'false',
 			'reason': 'none or invalid session token'
 		})
-
-	input_token = r['sessionToken']
 
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
@@ -299,6 +324,7 @@ def get_flights(uid):
 		requested_public = urow[1]
 		# FAIL - if current user token != requested user token and requested user profile is private
 		if input_token != requested_token and requested_public == 0:
+			cur.close()
 			return jsonify({
 				'success': 'false',
 				'reason': 'account is private'
@@ -399,18 +425,13 @@ def update():
 		# add user
 		cur.execute(
 			'''
-			UPDATE user SET public = 1 WHERE uid = 2
+			INSERT INTO
+			user(uid, username, email, password, public, session)
+			VALUES(4, 'alpaca', 'alpaca@gmail.com', 'llamallamallama', 1, 'alpaca1')
 			'''
 		)
 
 		'''
-		cur.execute(
-			INSERT INTO
-			user(uid, username, email, password, public)
-			VALUES(2, 'llama', 'llama@gmail.com', 'llamallamallama', 0)
-		)
-
-
 		# add trip
 		cur.execute(
 			INSERT INTO

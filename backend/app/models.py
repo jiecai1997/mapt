@@ -17,12 +17,13 @@ class User(db.Model):
 	session = db.Column(db.String(50), default=None)
 	trip_rel = db.relationship('Trip', backref=db.backref('user', lazy=True))
 
-	def __init__(self, uid, username, email, password, public):
+	def __init__(self, uid, username, email, password, public, session):
 		self.uid = uid
 		self.username = username
 		self.email = email
 		self.password = password
 		self.public = public
+		self.session = session
 
 	def is_authenticated(self):
 		return True
