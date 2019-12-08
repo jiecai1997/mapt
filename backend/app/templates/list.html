@@ -9,6 +9,7 @@
             <td>Username</td>
             <td>Password</td>
             <td>Public</td>
+            <td>Session Token</td>
          </thead>
 
          {% for row in userrows %}
@@ -18,6 +19,7 @@
                <td>{{row["username"]}}</td>
                <td>{{row['password']}}</td>
                <td>{{row['public']}}</td>
+               <td>{{row['session']}}</td>
             </tr>
          {% endfor %}
       </table>

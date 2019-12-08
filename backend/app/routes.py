@@ -251,12 +251,20 @@ def addtrip_user():
 			print(flight)
 			arrival_iata = flight['arrivalAirport']
 			arrival_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[arrival_iata]).fetchone()
+			if not arrival_airport:
+				con.commit()
+				cur.close()
+				return jsonify({'success':'false','reason':'arrival airport does not exist'})
 			arrival_tz = arrival_airport["time_zone"]
 			arrival_lat = arrival_airport["latitude"]
 			arrival_long = arrival_airport["longitude"]
 
 			depart_iata = flight['departAirport']
 			depart_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[depart_iata]).fetchone()
+			if not depart_airport:
+				con.commit()
+				cur.close()
+				return jsonify({'success':'false','reason':'departure airport does not exist'})
 			depart_tz = depart_airport["time_zone"]
 			depart_lat = depart_airport["latitude"]
 			depart_long = depart_airport["longitude"]
