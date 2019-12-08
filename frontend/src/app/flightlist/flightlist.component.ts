@@ -38,6 +38,28 @@ export class FlightlistComponent implements OnInit {
       this.flightsService.getTrips().subscribe(
         tripsObj => {
             this.trips = tripsObj['trips'];
+            // MAKING ARRIVAL AND DEPARTURE INFO MATERIAL-FRIENDLY
+            this.trips.forEach(x => {
+              let flights = x['flights'];
+              flights.forEach(flight => {
+
+                let originalArrDate = flight['arrival_date'];
+                let originalArrYear = originalArrDate.substring(0,4);
+                let originalArrMonth = originalArrDate.substring(4,6);
+                let originalArrDay = originalArrDate.substring(6,8);
+
+                flight['arrival_date'] = new Date(originalArrYear, originalArrMonth, originalArrDay)
+
+                let originalDeptDate = flight['depart_date'];
+                let originalDeptYear = originalDeptDate.substring(0,4);
+                let originalDeptMonth = originalDeptDate.substring(4,6);
+                let originalDeptDay = originalDeptDate.substring(6,8);
+
+                flight['depart_date'] = new Date(originalDeptYear, originalDeptMonth, originalDeptDay)
+
+              })
+            })
+
             console.log('trips are', this.trips)
           });
     }

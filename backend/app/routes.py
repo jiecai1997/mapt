@@ -405,12 +405,39 @@ def gettrips_user(uid):
 				flightdic['departAirport']= depart_iata
 				depart_datetime_split = depart_datetime.split(" ")
 				flightdic['depart_date'] = depart_datetime_split[0]
-				flightdic['depart_time'] = depart_datetime_split[1] + " " + depart_datetime_split[2]
+
+				deptTimeString = depart_datetime_split[1]
+				deptHour = int(deptTimeString.split(":")[0])
+				deptMinute = deptTimeString.split(":")[1]
+				if(depart_datetime_split[2] == "PM"):
+					deptHour += 12
+				
+				if(deptHour < 10):
+					deptHour = "0" + str(deptHour)
+				else:
+					deptHour = str(deptHour)
+				
+				deptMilitaryTimeString = deptHour + ":" + deptMinute
+				flightdic['depart_time'] = deptMilitaryTimeString
 
 				flightdic['arrivalAirport']= arrival_iata
 				arrival_datetime_split = arrival_datetime.split(" ")
 				flightdic['arrival_date'] = arrival_datetime_split[0]
-				flightdic['arrival_time'] = arrival_datetime_split[1] + " " + arrival_datetime_split[2]
+
+				arrTimeString = arrival_datetime_split[1]
+				arrHour = int(arrTimeString.split(":")[0])
+				arrMinute = arrTimeString.split(":")[1]
+				if(arrival_datetime_split[2] == "PM"):
+					arrHour += 12
+				
+				if(arrHour < 10):
+					arrHour = "0" + str(arrHour)
+				else:
+					arrHour = str(arrHour)
+
+				arrMilitaryTimeString = arrHour + ":" + arrMinute
+				flightdic['arrival_time'] = arrMilitaryTimeString
+
 
 				d['flights'].append(flightdic)
 			ret.append(d)

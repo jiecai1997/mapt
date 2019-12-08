@@ -97,6 +97,13 @@ export class FlightsService {
     return this.http.post(this.serverURL + '/profile/update', reqBody, httpOptions);
   }
 
+  public verifyLogin(){
+    const httpOptions = this.createAuthOptions();
+    const uid = this.loginService.getUID()
+
+    return this.http.get(this.serverURL + '/login/verify/' + uid, httpOptions);
+  }
+
 
   private createAuthOptions(){
 
