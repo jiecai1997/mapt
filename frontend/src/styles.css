@@ -38,3 +38,7 @@ mat-card {
 .form-card-container .mat-card {
     padding: 30px;
 }
+
+.warn-text {
+    color: #f44336; /* mat theme warn color */
+}

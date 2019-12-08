@@ -20,7 +20,7 @@ export class LoginService {
 
 
   private uid:number;
-  private sessionToken:string;
+  private sessionToken:string = 'SESSIONTOKEN';
 
   private serverURL = 'http://localhost:5000';
 

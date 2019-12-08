@@ -27,10 +27,10 @@ with sql.connect("app.db") as con:
     cur.execute("INSERT INTO Detail VALUES(0, 1, 'IAD', 'Lots of cool museums to go to!')")
 
 
-    cur.execute("INSERT INTO Airline VALUES ('AS', 'Alaska Airlines')")
-    cur.execute("INSERT INTO Airport VALUES ('BWI','Baltimore/Washington International Thurgood Marshall Airport','Baltimore','United States',39.1754,-76.668297,'America/New_York','A')")
-    cur.execute("INSERT INTO Airport VALUES ('SEA','Seattle Tacoma International Airport','Seattle','United States',47.449001,-122.308998,'America/Los_Angeles','A')")
-    cur.execute("INSERT INTO Airport VALUES ('RDU','Raleigh Durham International Airport','Raleigh-durham','United States',35.87760162,-78.78749847,'America/New_York','A')")
+# cur.execute("INSERT INTO Airline VALUES ('AS', 'Alaska Airlines')")
+# cur.execute("INSERT INTO Airport VALUES ('BWI','Baltimore/Washington International Thurgood Marshall Airport','Baltimore','United States',39.1754,-76.668297,'America/New_York','A')")
+# cur.execute("INSERT INTO Airport VALUES ('SEA','Seattle Tacoma International Airport','Seattle','United States',47.449001,-122.308998,'America/Los_Angeles','A')")
+# cur.execute("INSERT INTO Airport VALUES ('RDU','Raleigh Durham International Airport','Raleigh-durham','United States',35.87760162,-78.78749847,'America/New_York','A')")
 
     con.commit()
     cur.close()

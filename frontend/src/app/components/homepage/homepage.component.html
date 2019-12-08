@@ -1,18 +1,18 @@
 <mat-toolbar>
     <span>mapt.io</span>
-    <mat-tab-group *ngIf="showTabs" backgroundColor="secondary" color="primary" [(selectedIndex)]="selectedTab">
+    <mat-tab-group backgroundColor="secondary" color="primary" [(selectedIndex)]="selectedTab">
             <mat-tab label="map"></mat-tab>
-            <mat-tab label="+flights"></mat-tab>
-            <mat-tab label="edit"></mat-tab>
-            <mat-tab label="profile"></mat-tab>
+            <mat-tab *ngIf="loggedIn" label="+flights"></mat-tab>
+            <mat-tab *ngIf="loggedIn" label="edit"></mat-tab>
+            <mat-tab *ngIf="loggedIn" label="profile"></mat-tab>
     </mat-tab-group>
 
-    <button mat-raised-button (click)="logout()" class="logout-button">Logout</button>
+    <button mat-raised-button (click)="logout()" class="logout-button">{{loggedIn ? 'Logout' : 'Login'}}</button>
 </mat-toolbar>
 
-<mat-tab-group *ngIf="showTabs" class="hidden-tabs" [(selectedIndex)]="selectedTab">
+<mat-tab-group class="hidden-tabs" [(selectedIndex)]="selectedTab">
     <mat-tab> <app-mappage></app-mappage> </mat-tab>
-    <mat-tab> <app-flightlist [isAddTrip]="true"></app-flightlist> </mat-tab>
-    <mat-tab> <app-flightlist [isAddTrip]="false"></app-flightlist> </mat-tab>
-    <mat-tab> <app-profile></app-profile> </mat-tab>
+    <mat-tab *ngIf="loggedIn"> <app-flightlist [isAddTrip]="true"></app-flightlist> </mat-tab>
+    <mat-tab *ngIf="loggedIn"> <app-flightlist [isAddTrip]="false"></app-flightlist> </mat-tab>
+    <mat-tab *ngIf="loggedIn"> <app-profile></app-profile> </mat-tab>
 </mat-tab-group>

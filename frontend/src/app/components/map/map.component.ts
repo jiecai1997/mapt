@@ -28,6 +28,7 @@ export class MapComponent implements OnInit {
   getFlights(): void{
     this.flightsService.getFlights().subscribe(result => {
         this.flights = result['flights'];
+        console.log('flights', this.flights);
     })
     }
   
