@@ -313,20 +313,23 @@ def gettrips_user(uid):
 			for flight in flightrows:
 				depart_iata = flight['depart_iata']
 				depart_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[depart_iata]).fetchone()
-				depart_lat = depart_airport["latitude"]
-				depart_long = depart_airport["longitude"]
+
+
+				depart_datetime = depart_airport['depart_datetime']
 
 				arrival_iata = flight['arrival_iata']
 				arrival_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[arrival_iata]).fetchone()
-				arrival_lat = arrival_airport["latitude"]
-				arrival_long = arrival_airport["longitude"]
+				arrival_datetime = arrival_airport['arrival_datetime']
+
+
 
 				flightdic = {}
 				flightdic['color']=row['color']
-				flight['firstPointLat']= depart_lat
-				flight['firstPointLong']= depart_long
-				flight['secondPointLat']= arrival_lat
-				flight['secondPointLong']= arrival_long
+				flightdic['departAirport']= depart_iata
+				flightdic['depart_datetime'] = depart_datetime
+				flightdic['arrivalAirport']= arrival_iata
+				flightdic['arrival_datetime'] = arrival_datetime
+
 				d['flights'].append(flightdic)
 			ret.append(d)
 		con.commit()
