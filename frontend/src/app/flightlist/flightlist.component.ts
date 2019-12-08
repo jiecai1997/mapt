@@ -64,7 +64,7 @@ export class FlightlistComponent implements OnInit {
 
   getFlightDescription(flight: any, index: number): string {
     if(flight.dep.airport && flight.arr.airport){
-      return `${flight.dep.airport} \u2794 ${flight.arr.airport}`; // DEP -> ARR
+      return `${flight.departAirport} \u2794 ${flight.arrivalAirport}`; // DEP -> ARR
     }
     return `Flight ${index + 1}`;
   }

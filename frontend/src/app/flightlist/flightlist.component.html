@@ -50,7 +50,7 @@
                     <tr> <!-- airport -->
                         <td>
                             <mat-form-field>
-                                <input matInput type="text" placeholder="Departure Airport" [matAutocomplete]="depAuto" [(ngModel)]="flight.dep.airport">
+                                <input matInput type="text" placeholder="Departure Airport" [matAutocomplete]="depAuto" [(ngModel)]="flight.departAirport">
                                 <mat-autocomplete #depAuto="matAutocomplete">
                                     <mat-option *ngFor="let airport of getAirportSuggestions(flight, true)" [value]="airport">
                                         {{airport}}
@@ -60,7 +60,7 @@
                         </td>
                         <td>
                             <mat-form-field>
-                                <input matInput type="text" placeholder="Arrival Airport" [matAutocomplete]="arrAuto" [(ngModel)]="flight.arr.airport">
+                                <input matInput type="text" placeholder="Arrival Airport" [matAutocomplete]="arrAuto" [(ngModel)]="flight.arrivalAirport">
                                 <mat-autocomplete #arrAuto="matAutocomplete">
                                     <mat-option *ngFor="let airport of getAirportSuggestions(flight, false)" [value]="airport">
                                         {{airport}}

@@ -32,6 +32,9 @@ export class FlightsService {
   getTrips() {
     const uid = this.loginService.getUID();
     const httpOptions = this.createAuthOptions();
+    this.http.get(this.serverURL + '/trips/' + uid, httpOptions).subscribe(result => {
+      console.log('trip result from service', result);
+    })
 
     return this.http.get(this.serverURL + '/trips/' + uid, httpOptions);
   }
