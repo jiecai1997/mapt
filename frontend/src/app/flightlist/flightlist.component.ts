@@ -31,7 +31,7 @@ export class FlightlistComponent implements OnInit {
 
     if(this.isAddTrip){
       // add one trip with one flight
-      this.trips = [{tripName: 'New Trip', color: "blue", flights: []}]
+      this.trips = [{tripName: '', color: '', flights: []}]
       this.addFlight(0); // start with one flight
     }else{
       // get trip data
@@ -54,8 +54,8 @@ export class FlightlistComponent implements OnInit {
   }
 
   getAirportSuggestions(flight: any, isDep: boolean): any {
-    const depAirport = (flight.departAirport || '').toLowerCase(),
-          arrAirport = (flight.arrivalAirport || '').toLowerCase();
+    const depAirport = (flight.dep.airport || '').toLowerCase(),
+          arrAirport = (flight.arr.airport || '').toLowerCase();
 
     var find: any, exclude: any;
     if(isDep){
@@ -105,5 +105,21 @@ export class FlightlistComponent implements OnInit {
         this.showSpinner = false;
       })
     }
+  }
+
+  hasErrors(trip: any): boolean{
+    console.log(trip);
+    var hasFlightError = false;
+    trip.flights.forEach(flight => {
+      hasFlightError = hasFlightError || 
+        flight.dep.airport == undefined || flight.dep.airport == null ||
+        flight.arr.airport == undefined || flight.arr.airport == null ||
+        flight.dep.date == undefined || flight.dep.date == null ||
+        flight.arr.date == undefined || flight.arr.date == null ||
+        flight.dep.time == undefined || flight.dep.time == null || 
+        flight.arr.time == undefined || flight.arr.time == null
+    });
+
+    return hasFlightError || trip.tripName == '' || trip.color == '';
   }
 }

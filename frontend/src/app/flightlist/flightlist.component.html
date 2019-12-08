@@ -10,15 +10,15 @@
             <table cellspacing="0" class="tripname-container"><tr>
                 <td>
                     <mat-form-field>
-                        <input matInput placeholder="Trip Name" [(ngModel)]="trip.tripName">
+                        <input matInput placeholder="Trip Name" [(ngModel)]="trip.tripName" required>
                     </mat-form-field>
                 </td>
 
                 <td>
                     <mat-form-field>
-                        <input matInput type="text" placeholder="Display Color" [matAutocomplete]="colorAuto" [(ngModel)]="trip.color">
+                        <input matInput type="text" placeholder="Display Color" [matAutocomplete]="colorAuto" [(ngModel)]="trip.color" required>
                         <mat-autocomplete #colorAuto="matAutocomplete">
-                            <mat-option *ngFor="let color of getColorSuggestions(trip.color)" [value]="color" [style.background-color]="color.name">
+                            <mat-option *ngFor="let color of getColorSuggestions(trip.color)" [value]="color.name" [style.background-color]="color.name">
                                 <span [style.color]="color.grayscale < 0.6 ? 'white' : 'black'">{{color.name}}</span>
                             </mat-option>
                         </mat-autocomplete>
@@ -50,7 +50,12 @@
                     <tr> <!-- airport -->
                         <td>
                             <mat-form-field>
-                                <input matInput type="text" placeholder="Departure Airport" [matAutocomplete]="depAuto" [(ngModel)]="flight.departAirport">
+                                <input matInput
+                                    type="text"
+                                    placeholder="Departure Airport"
+                                    [matAutocomplete]="depAuto"
+                                    [(ngModel)]="flight.dep.airport"
+                                    required>
                                 <mat-autocomplete #depAuto="matAutocomplete">
                                     <mat-option *ngFor="let airport of getAirportSuggestions(flight, true)" [value]="airport">
                                         {{airport}}
@@ -60,7 +65,12 @@
                         </td>
                         <td>
                             <mat-form-field>
-                                <input matInput type="text" placeholder="Arrival Airport" [matAutocomplete]="arrAuto" [(ngModel)]="flight.arrivalAirport">
+                                <input matInput
+                                    type="text"
+                                    placeholder="Arrival Airport"
+                                    [matAutocomplete]="arrAuto"
+                                    [(ngModel)]="flight.arr.airport"
+                                    required>
                                 <mat-autocomplete #arrAuto="matAutocomplete">
                                     <mat-option *ngFor="let airport of getAirportSuggestions(flight, false)" [value]="airport">
                                         {{airport}}
@@ -76,7 +86,8 @@
                                 <input matInput 
                                     [matDatepicker]="depPicker" 
                                     placeholder="Departure Date" 
-                                    [(ngModel)]="flight.depart_date">
+                                    [(ngModel)]="flight.dep.date"
+                                    required>
                                 <mat-datepicker-toggle matSuffix [for]="depPicker"></mat-datepicker-toggle>
                                 <mat-datepicker #depPicker></mat-datepicker>
                             </mat-form-field>
@@ -86,7 +97,8 @@
                                 <input matInput 
                                     [matDatepicker]="arrPicker" 
                                     placeholder="Arrival Date" 
-                                    [(ngModel)]="flight.arrival_date">
+                                    [(ngModel)]="flight.arr.date"
+                                    required>
                                 <mat-datepicker-toggle matSuffix [for]="arrPicker"></mat-datepicker-toggle>
                                 <mat-datepicker #arrPicker></mat-datepicker>
                             </mat-form-field>   
@@ -96,12 +108,12 @@
                     <tr> <!-- time -->
                         <td>
                             <mat-form-field>
-                                <input matInput type="time" placeholder="Departure Time" [(ngModel)]="flight.depart_time">
+                                <input matInput type="time" placeholder="Departure Time" [(ngModel)]="flight.dep.time" required>
                             </mat-form-field>
                         </td>
                         <td>
                             <mat-form-field>
-                                <input matInput type="time" placeholder="Arrival Time" [(ngModel)]="flight.arrival_time">
+                                <input matInput type="time" placeholder="Arrival Time" [(ngModel)]="flight.arr.time" required>
                             </mat-form-field>
                         </td>
                     </tr>
@@ -109,7 +121,7 @@
             </mat-expansion-panel> <!-- end of inner (flight) panel -->
 
             <div class="button-row">
-                <button mat-raised-button (click)="saveTrip(tripIndex)" color="primary">
+                <button mat-raised-button (click)="saveTrip(tripIndex)" color="primary" [disabled]="hasErrors(trip)">
                     <span class="spinner-span">
                         Save Trip
                         <mat-spinner *ngIf="showSpinner" [diameter]="20" [color]="'accent'"></mat-spinner>
