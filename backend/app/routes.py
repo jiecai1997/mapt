@@ -231,7 +231,12 @@ def addtrip_user():
 			cur.close()
 			return jsonify({'success': 'false'})
 
-		tid = cur.execute("INSERT INTO trip (uid, trip_name,color) VALUES (?,?,?)",(uid, trip_name,color))
+		## TODO: HOPE THIS WORKS???? MORE TESTING FOR ERROR SHOWING
+		try:
+			tid = cur.execute("INSERT INTO trip (uid, trip_name,color) VALUES (?,?,?)",(uid, trip_name,color))
+		except sql.Error as e:
+			return jsonify({'success': 'false', 'error': e})
+
 		tid = tid.lastrowid
 
 		for flight in flights:
