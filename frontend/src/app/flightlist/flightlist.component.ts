@@ -131,6 +131,7 @@ export class FlightlistComponent implements OnInit {
           });
         } else{
           console.log('Modifying trip failed'); //TODO: deal with this case
+          console.log(result['reason']);
         }
         this.showSpinner = false;
       })
