@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FlightsService } from '@app/services/flights.service';
+import { LoginService } from '@app/services/login.service';
+
 
 @Component({
   selector: 'app-profile',
@@ -22,7 +24,7 @@ export class ProfileComponent implements OnInit {
 
   showSpinner: boolean = false;
 
-  constructor(private router: Router, private flightsService: FlightsService) { }
+  constructor(private router: Router, private flightsService: FlightsService, private loginService:LoginService) { }
 
   ngOnInit() {
     this.flightsService.getProfileInfo().subscribe(result => {
@@ -42,7 +44,8 @@ export class ProfileComponent implements OnInit {
     
     this.flightsService.updateProfileInfo(this.username, this.isPublic).subscribe(result => {
       if(result['success'] == 'true'){
-        this.router.navigate([this.username]);
+        const uid = this.loginService.getUID().toString()
+        this.router.navigate([uid]);
       }
       else{
         console.log('FAILED TO UPDATE ACCOUNT INFO'); //TODO: deal with this case
