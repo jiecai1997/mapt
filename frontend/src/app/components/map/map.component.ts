@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FlightsService } from '@app/services/flights.service';
 import { Flight } from '@app/models/Flight';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-map',
@@ -10,7 +11,7 @@ import { Flight } from '@app/models/Flight';
 })
 export class MapComponent implements OnInit {
 
-  constructor(private flightsService:FlightsService) { 
+  constructor(private router:Router, private flightsService:FlightsService) { 
   }
 
   ngOnInit() {
@@ -27,8 +28,12 @@ export class MapComponent implements OnInit {
 
   getFlights(): void{
     this.flightsService.getFlights().subscribe(result => {
-        this.flights = result['flights'];
-        console.log('flights', this.flights);
+        if(result['success'] == 'true'){
+            this.flights = result['flights'];
+            console.log('flights', this.flights);
+        }else{
+            this.router.navigate([''])
+        }
     })
     }
   

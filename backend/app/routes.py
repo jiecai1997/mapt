@@ -184,20 +184,24 @@ def update_profile():
 		cur = con.cursor()
 		c = cur.execute("SELECT session from user where uid = (?)", [uid])
 		urow = c.fetchone()
-		con.commit()
-		cur.close()
 
 		# you do not have permission to change this
 		if not urow:
+			con.commit()
+			cur.close()
 			return jsonify({'success': 'false', 'reason': 'You do not have permission'})
 
 		session_token = request.headers.get('Authorization')
 		if urow[0] != session_token:
+			con.commit()
+			cur.close()
 			return jsonify({'success': 'false', 'reason': 'You do not have permission'})
 
 		c1 = cur.execute("SELECT * from user where username = (?) and uid != (?)", [username, uid])
 		urow1 = c.fetchone()
 		if urow1:
+			con.commit()
+			cur.close()
 			return jsonify({'success': 'false', 'reason': 'This username is taken'})
 
 		cur.execute("UPDATE user SET username = (?), public = (?) WHERE uid = (?)", [username, isPublic, uid])
@@ -239,10 +243,10 @@ def getstats_user(uid):
 		trip_stats = []
 		for row in result:
 			d1={}
-			d1['title']='mileage'
+			d1['title']='Total mileage'
 			d1['value']=str(row["mileage"] or 0) + ' miles'
 			d2={}
-			d2['title']='duration'
+			d2['title']='Total duration'
 			minutes = row['duration'] or 0
 			hours = minutes/60
 			minutesRemaining = minutes % 60
@@ -305,11 +309,12 @@ def addtrip_user():
 		tid = tid.lastrowid
 
 		for flight in flights:
-			print('flight')
-			print(flight)
+
 			arrival_iata = flight['arrivalAirport']
 			arrival_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[arrival_iata]).fetchone()
 			if not arrival_airport:
+				cur.execute("DELETE FROM trip WHERE tid = (?)",[tid])
+				cur.execute("DELETE FROM flight WHERE tid = (?)",[tid])
 				con.commit()
 				cur.close()
 				return jsonify({'success':'false','reason':'The arrival airport does not exist'})
@@ -320,6 +325,8 @@ def addtrip_user():
 			depart_iata = flight['departAirport']
 			depart_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[depart_iata]).fetchone()
 			if not depart_airport:
+				cur.execute("DELETE FROM trip WHERE tid = (?)",[tid])
+				cur.execute("DELETE FROM flight WHERE tid = (?)",[tid])
 				con.commit()
 				cur.close()
 				return jsonify({'success':'false','reason':'The departure airport does not exist'})
@@ -327,14 +334,26 @@ def addtrip_user():
 			depart_lat = depart_airport["latitude"]
 			depart_long = depart_airport["longitude"]
 
-			airline_iata = flight['airline']
-			flight_num = flight['number']
-			print('flight')
-			print(flight)
+			if 'airline' in flight and flight['airline']!="":
+				airline = flight['airline']
+				airlinerow = cur.execute("SELECT * FROM airline WHERE airline.name = (?)",[airline]).fetchone()
+				if not airlinerow:
+					cur.execute("DELETE FROM trip WHERE tid = (?)",[tid])
+					cur.execute("DELETE FROM flight WHERE tid = (?)",[tid])
+					con.commit()
+					cur.close()
+					return jsonify({'success':'false','reason':'The airline does not exist, use the dropdown provided'})
+				else:
+					airline_iata=airlinerow['iata']
+			else:
+				airline_iata = None
+
+			if 'number' in flight:
+				flight_num = flight['number']
+			else:
+				flight_num = None
 
 			depart_date = flight['depart_date'].split("T")[0].split("-")
-			print('depart_date')
-			print(depart_date)
 			depart_mth = depart_date[1]
 			depart_day = depart_date[2]
 			depart_yr = depart_date[0]
@@ -362,11 +381,25 @@ def addtrip_user():
 			arrival_datetime = arr_yr+arr_mth+arr_day+' '+str(arr_hr)+':'+arr_min+':00 '+arr_ampm
 			dt_arr_datetime = datetime(int(arr_yr),int(arr_mth),int(arr_day),int_arr_hr,int(arr_min))
 
-			duration = (dt_arr_datetime-dt_depart_datetime).seconds//60
+			duration = (dt_arr_datetime-dt_depart_datetime).total_seconds()//60
 			offset_mins = int((float(depart_tz)-float(arrival_tz))*60)
 			duration += offset_mins
+			duration = int(duration)
+
+			if duration <= 0:
+				cur.execute("DELETE FROM trip WHERE tid = (?)",[tid])
+				cur.execute("DELETE FROM flight WHERE tid = (?)",[tid])
+				con.commit()
+				cur.close()
+				return jsonify({'success':'false','reason':'Arrival date/time is before departure date/time'})
 
 			mileage = LatLonToMiles(depart_lat,depart_long,arrival_lat,arrival_long)
+			if mileage == 0:
+				cur.execute("DELETE FROM trip WHERE tid = (?)",[tid])
+				cur.execute("DELETE FROM flight WHERE tid = (?)",[tid])
+				con.commit()
+				cur.close()
+				return jsonify({'success':'false','reason':'The departure and arrival airports are the same'})
 
 			cur.execute("INSERT INTO flight (tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage) VALUES (?,?,?,?,?,?,?,?,?)",(tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage))
 		con.commit()
@@ -416,8 +449,11 @@ def gettrips_user(uid):
 
 				flightdic = {}
 
-				flightdic['airline']=flight['airline']
-				flightdic['number']=flight['number']
+				if flight['airline_iata']:
+					flightdic['airline'] = cur.execute("SELECT name FROM airline WHERE iata = (?)",[flight['airline_iata']]).fetchone()['name']
+				else:
+					flightdic['airline'] = None
+				flightdic['number']=flight['flight_num']
 
 				flightdic['color']=row['color']
 
@@ -522,11 +558,12 @@ def updatetrip_user():
 		tid = tid.lastrowid
 
 		for flight in flights:
-			print('flight')
-			print(flight)
+
 			arrival_iata = flight['arrivalAirport']
 			arrival_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[arrival_iata]).fetchone()
 			if not arrival_airport:
+				cur.execute("DELETE FROM trip WHERE tid = (?)",[tid])
+				cur.execute("DELETE FROM flight WHERE tid = (?)",[tid])
 				con.commit()
 				cur.close()
 				return jsonify({'success':'false','reason':'The arrival airport does not exist'})
@@ -537,6 +574,8 @@ def updatetrip_user():
 			depart_iata = flight['departAirport']
 			depart_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[depart_iata]).fetchone()
 			if not depart_airport:
+				cur.execute("DELETE FROM trip WHERE tid = (?)",[tid])
+				cur.execute("DELETE FROM flight WHERE tid = (?)",[tid])
 				con.commit()
 				cur.close()
 				return jsonify({'success':'false','reason':'The departure airport does not exist'})
@@ -544,15 +583,26 @@ def updatetrip_user():
 			depart_lat = depart_airport["latitude"]
 			depart_long = depart_airport["longitude"]
 
-			airline_iata = flight['airline']
-			flight_num = flight['number']
+			if 'airline' in flight and flight['airline']!="":
+				airline = flight['airline']
+				airlinerow = cur.execute("SELECT * FROM airline WHERE airline.name = (?)",[airline]).fetchone()
+				if not airlinerow:
+					cur.execute("DELETE FROM trip WHERE tid = (?)",[tid])
+					cur.execute("DELETE FROM flight WHERE tid = (?)",[tid])
+					con.commit()
+					cur.close()
+					return jsonify({'success':'false','reason':'The airline does not exist, use the dropdown provided'})
+				else:
+					airline_iata=airlinerow['iata']
+			else:
+				airline_iata = None
 
-			print('flight')
-			print(flight)
+			if 'number' in flight:
+				flight_num = flight['number']
+			else:
+				flight_num = None
 
 			depart_date = flight['depart_date'].split("T")[0].split("-")
-			print('depart_date')
-			print(depart_date)
 			depart_mth = depart_date[1]
 			depart_day = depart_date[2]
 			depart_yr = depart_date[0]
@@ -580,11 +630,25 @@ def updatetrip_user():
 			arrival_datetime = arr_yr+arr_mth+arr_day+' '+str(arr_hr)+':'+arr_min+':00 '+arr_ampm
 			dt_arr_datetime = datetime(int(arr_yr),int(arr_mth),int(arr_day),int_arr_hr,int(arr_min))
 
-			duration = (dt_arr_datetime-dt_depart_datetime).seconds//60
+			duration = (dt_arr_datetime-dt_depart_datetime).total_seconds()//60
 			offset_mins = int((float(depart_tz)-float(arrival_tz))*60)
 			duration += offset_mins
+			duration = int(duration)
+
+			if duration <= 0:
+				cur.execute("DELETE FROM trip WHERE tid = (?)",[tid])
+				cur.execute("DELETE FROM flight WHERE tid = (?)",[tid])
+				con.commit()
+				cur.close()
+				return jsonify({'success':'false','reason':'Arrival date/time is before departure date/time'})
 
 			mileage = LatLonToMiles(depart_lat,depart_long,arrival_lat,arrival_long)
+			if mileage == 0:
+				cur.execute("DELETE FROM trip WHERE tid = (?)",[tid])
+				cur.execute("DELETE FROM flight WHERE tid = (?)",[tid])
+				con.commit()
+				cur.close()
+				return jsonify({'success':'false','reason':'The departure and arrival airports are the same'})
 
 			cur.execute("INSERT INTO flight (tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage) VALUES (?,?,?,?,?,?,?,?,?)",(tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage))
 		con.commit()
