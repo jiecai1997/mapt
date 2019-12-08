@@ -45,7 +45,9 @@ export class ProfileComponent implements OnInit {
     this.flightsService.updateProfileInfo(this.username, this.isPublic).subscribe(result => {
       if(result['success'] == 'true'){
         const uid = this.loginService.getUID().toString()
-        this.router.navigate([uid]);
+        this.router.navigateByUrl('').then(() => {
+          this.router.navigate([uid]);
+        });
       }
       else{
         console.log('FAILED TO UPDATE ACCOUNT INFO'); //TODO: deal with this case
