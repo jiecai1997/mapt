@@ -339,7 +339,8 @@ def updatetrip_user():
 	session_token = request.headers.get('Authorization')
 
 	uid = json['uid']
-	tid = json['trip_name']
+	trip_name = json['trip_name']
+	tid = json['tripID']
 	color = json['color']
 	flights = json['flights']
 	monthdic = {'01':'Jan', '02':'Feb','03':'Mar', '04':'Apr','05':'May','06':'Jun','07':'Jul','08':'Aug','09':'Sep','10':'Oct','11':'Nov','12':'Dec'}
@@ -369,6 +370,8 @@ def updatetrip_user():
 			cur.close()
 			return jsonify({'success': 'false'})
 
+		cur.execute("DELETE FROM trip WHERE tid = (?)",[tid])
+		cur.execute("DELETE FROM flight WHERE tid = (?)",[tid])
 		tid = cur.execute("INSERT INTO trip (uid, trip_name,color) VALUES (?,?,?)",(uid, trip_name,color))
 		tid = tid.lastrowid
 
