@@ -98,7 +98,7 @@ def verify_user(uid):
 			return jsonify({'loggedIn': 'false'})
 
 
-@app.route('/profile/<int:uid>', methods=['POST'])
+@app.route('/profile/<int:uid>', methods=['GET'])
 def display_profile(uid):
 	session_token = request.headers.get('Authorization')
 
@@ -118,7 +118,7 @@ def display_profile(uid):
 		username = urow[1]
 		isPublic = urow[2]
 
-		cur.commit()
+		con.commit()
 		cur.close()
 		return jsonify({
 					'success': 'true',
