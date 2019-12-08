@@ -170,17 +170,24 @@ def getstats_user(uid):
 			cur.close()
 			return jsonify({'success': 'false'})
 
-		stats_per_trip = cur.execute("SELECT trip_name, SUM(mileage), SUM(duration) FROM Trip NATURAL JOIN Flight WHERE uid = (?) GROUP BY tid",[uid])
+		stats_per_trip = cur.execute("SELECT SUM(mileage) as mileage, SUM(duration) as duration FROM Trip NATURAL JOIN Flight WHERE uid = (?)",[uid])
 		result = cur.fetchall()
 		con.commit()
 		cur.close()
 
 		trip_stats = []
 		for row in result:
-			d={}
-			d['title']=row['mileage']
-			d['value']=row['duration']
-			trip_stats.append(d)
+			d1={}
+			d1['title']='mileage'
+			d1['value']=row['mileage']
+			d2={}
+			d2['title']='duration'
+			minutes = row['duration']
+			hours = minutes/60
+			minutesRemaining = minutes % 60
+			d2['value']=str(int(hours)) + " hours and " + str(minutesRemaining) + " minutes"
+			trip_stats.append(d1)
+			trip_stats.append(d2)
 
 		return jsonify({'success': 'true', 'stats': trip_stats})
 
