@@ -13,7 +13,6 @@ import json
 @app.route('/airports/<string:substring>', methods=['GET'])
 def get_airport(substring):
 	substring += '%'
-	print(substring)
 	input_token = request.headers.get('Authorization')
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
@@ -29,6 +28,25 @@ def get_airport(substring):
 				break
 		cur.close()
 		return jsonify({'success': 'true', 'airports': ret})
+
+@app.route('/airlines/<string:substring>', methods=['GET'])
+def get_airline(substring):
+	substring += '%'
+	input_token = request.headers.get('Authorization')
+	with sql.connect("app.db") as con:
+		con.row_factory = sql.Row
+		cur = con.cursor()
+		c = cur.execute("SELECT iata from airline where iata LIKE (?)", [substring])
+		urow = c.fetchall()
+		ret = []
+		i = 0
+		for row in urow:
+			ret.append(row['iata'])
+			i+=1
+			if i == 15:
+				break
+		cur.close()
+		return jsonify({'success': 'true', 'airlines': ret})
 
 # json routes
 @app.route('/login/register', methods=['POST'])
