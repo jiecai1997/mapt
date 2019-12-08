@@ -187,7 +187,10 @@ def getstats_user(uid):
 
 		trip_stats = []
 		for row in result:
-			trip_stats.append(row)
+			d={}
+			d['title']=row['mileage']
+			d['value']=row['duration']
+			trip_stats.append(d)
 
 		return jsonify({'success': 'true', 'stats': trip_stats})
 
@@ -232,13 +235,15 @@ def addtrip_user():
 		tid = tid.lastrowid
 
 		for flight in flights:
-			arrival_iata = flight['arr']['airport']
+			print('flight')
+			print(flight)
+			arrival_iata = flight['arrivalAirport']
 			arrival_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[arrival_iata]).fetchone()
 			arrival_tz = arrival_airport["time_zone"]
 			arrival_lat = arrival_airport["latitude"]
 			arrival_long = arrival_airport["longitude"]
 
-			depart_iata = flight['dep']['airport']
+			depart_iata = flight['departAirport']
 			depart_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[depart_iata]).fetchone()
 			depart_tz = depart_airport["time_zone"]
 			depart_lat = depart_airport["latitude"]
@@ -250,15 +255,15 @@ def addtrip_user():
 			print('flight')
 			print(flight)
 
-			depart_date = flight['dep']['date'].split("T")[0].split("-")
+			depart_date = flight['depart_date'].split("T")[0].split("-")
 			print('depart_date')
 			print(depart_date)
 			depart_mth = depart_date[1]
 			depart_day = depart_date[2]
 			depart_yr = depart_date[0]
-			depart_hr = int(flight['dep']['time'].split(':')[0])
+			depart_hr = int(flight['depart_time'].split(':')[0])
 			int_depart_hr = depart_hr
-			depart_min = flight['dep']['time'].split(':')[1]
+			depart_min = flight['depart_time'].split(':')[1]
 			depart_ampm = 'AM'
 			if depart_hr >= 12:
 				depart_hr-=12
@@ -266,13 +271,13 @@ def addtrip_user():
 			depart_datetime = depart_yr+depart_mth+depart_day+' '+str(depart_hr)+':'+depart_min+':00 '+depart_ampm
 			dt_depart_datetime = datetime(int(depart_yr),int(depart_mth),int(depart_day),int_depart_hr,int(depart_min))
 
-			arr_date = flight['arr']['date'].split("T")[0].split("-")
+			arr_date = flight['arrival_date'].split("T")[0].split("-")
 			arr_mth = arr_date[1]
 			arr_day = arr_date[2]
 			arr_yr = arr_date[0]
-			arr_hr = int(flight['arr']['time'].split(':')[0])
+			arr_hr = int(flight['arrival_time'].split(':')[0])
 			int_arr_hr = arr_hr
-			arr_min = flight['arr']['time'].split(':')[1]
+			arr_min = flight['arrival_time'].split(':')[1]
 			arr_ampm = 'AM'
 			if arr_hr >= 12:
 				arr_hr-=12
@@ -346,7 +351,7 @@ def gettrips_user(uid):
 			ret.append(d)
 		con.commit()
 		cur.close()
-		return jsonify({'success': True,'trips': ret})
+		return jsonify({'success': 'true','trips': ret})
 
 
 @app.route('/trips/update', methods=['POST'])
@@ -392,13 +397,15 @@ def updatetrip_user():
 		tid = tid.lastrowid
 
 		for flight in flights:
-			arrival_iata = flight['arr']['airport']
+			print('flight')
+			print(flight)
+			arrival_iata = flight['arrivalAirport']
 			arrival_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[arrival_iata]).fetchone()
 			arrival_tz = arrival_airport["time_zone"]
 			arrival_lat = arrival_airport["latitude"]
 			arrival_long = arrival_airport["longitude"]
 
-			depart_iata = flight['dep']['airport']
+			depart_iata = flight['departAirport']
 			depart_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[depart_iata]).fetchone()
 			depart_tz = depart_airport["time_zone"]
 			depart_lat = depart_airport["latitude"]
@@ -410,15 +417,15 @@ def updatetrip_user():
 			print('flight')
 			print(flight)
 
-			depart_date = flight['dep']['date'].split("T")[0].split("-")
+			depart_date = flight['depart_date'].split("T")[0].split("-")
 			print('depart_date')
 			print(depart_date)
 			depart_mth = depart_date[1]
 			depart_day = depart_date[2]
 			depart_yr = depart_date[0]
-			depart_hr = int(flight['dep']['time'].split(':')[0])
+			depart_hr = int(flight['depart_time'].split(':')[0])
 			int_depart_hr = depart_hr
-			depart_min = flight['dep']['time'].split(':')[1]
+			depart_min = flight['depart_time'].split(':')[1]
 			depart_ampm = 'AM'
 			if depart_hr >= 12:
 				depart_hr-=12
@@ -426,13 +433,13 @@ def updatetrip_user():
 			depart_datetime = depart_yr+depart_mth+depart_day+' '+str(depart_hr)+':'+depart_min+':00 '+depart_ampm
 			dt_depart_datetime = datetime(int(depart_yr),int(depart_mth),int(depart_day),int_depart_hr,int(depart_min))
 
-			arr_date = flight['arr']['date'].split("T")[0].split("-")
+			arr_date = flight['arrival_date'].split("T")[0].split("-")
 			arr_mth = arr_date[1]
 			arr_day = arr_date[2]
 			arr_yr = arr_date[0]
-			arr_hr = int(flight['arr']['time'].split(':')[0])
+			arr_hr = int(flight['arrival_time'].split(':')[0])
 			int_arr_hr = arr_hr
-			arr_min = flight['arr']['time'].split(':')[1]
+			arr_min = flight['arrival_time'].split(':')[1]
 			arr_ampm = 'AM'
 			if arr_hr >= 12:
 				arr_hr-=12
