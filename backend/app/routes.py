@@ -149,15 +149,9 @@ def update_profile():
 			return jsonify({'success': 'false'})
 
 		cur.execute("UPDATE user SET username = (?), public = (?) WHERE uid = (?)", [username, isPublic, uid])
-		result = cur.fetchall()
 		con.commit()
 		cur.close()
-
-		trip_stats = []
-		for row in result:
-  			trip_stats.append(row)
-
-		return jsonify({'success': 'true', 'stats': trip_stats})
+		return jsonify({'success': 'true'})
 
 
 @app.route('/stats/<int:uid>', methods=['GET'])
@@ -177,9 +171,15 @@ def getstats_user(uid):
 			return jsonify({'success': 'false'})
 
 		stats_per_trip = cur.execute("SELECT trip_name, SUM(mileage), SUM(duration) FROM Trip NATURAL JOIN Flight WHERE uid = (?) GROUP BY tid",[uid])
+		result = cur.fetchall()
 		con.commit()
 		cur.close()
-		return jsonify({'stats': [{'title': 'stat1', 'value':1000}, {'title': 'stat2', 'value':2000}]})
+
+		trip_stats = []
+		for row in result:
+			trip_stats.append(row)
+
+		return jsonify({'success': 'true', 'stats': trip_stats})
 
 
 @app.route('/trips/add', methods=['POST'])
