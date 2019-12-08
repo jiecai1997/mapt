@@ -61,6 +61,18 @@
                                 </mat-error>
                         </mat-form-field>
                     </td></tr>
+
+                    <!-- public -->
+                    <tr><td>
+                        <mat-form-field>
+                            <mat-slide-toggle matInput
+                                name="ispublic"
+                                color="accent"
+                                [(ngModel)] = "isPublic">
+                                {{isPublic ? "Account status: public" : "Account status: private"}}
+                            </mat-slide-toggle>
+                        </mat-form-field>
+                    </td></tr>
                 </table>
             </form>
         </mat-card-content>
