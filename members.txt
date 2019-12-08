@@ -1,0 +1,7 @@
+Mapt Member Contributions -- since Milestone2 to the Final Project
+
+Jie Cai:
+Ethan Holland:
+Jaiveer Katariya:
+Eric Tay:
+Kelly Zhang: Finished debugging and setting up the backend db models and seeding. Created the session tokens for user privacy and login verification and integrated them into the routes. Created the statistics route, worked on login with Jie and Airports with Eric. Implemented the various error checking for display in the frontend. Worked with Ethan and Jaiveer to debug errors and bring the frontend and backend together.
