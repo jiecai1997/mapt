@@ -8,6 +8,7 @@ from flask import jsonify
 import random
 from datetime import datetime
 import math
+import json
 
 # json routes
 @app.route('/user/register', methods=['POST'])
@@ -246,6 +247,7 @@ def addtrip_user():
 		cur.close()
 		return jsonify({'success': True})
 
+# DEPRECATED, refer to flights/uid
 @app.route('/flights', methods=['GET', 'POST'])
 def flights():
 	if request.method == 'GET':
@@ -275,25 +277,25 @@ def flights():
 	else: # request method is a POST
 		return {}
 
-#TODO @jie: flights uid
 @app.route('/flights/<int:uid>', methods=['GET'])
-def get_flights(requested_uid):
-	json = request.get_json()
-	input_token = json['sessionToken']
+def get_flights(uid):
+	r = request.get_json()
 
-	# FAIL - if no input token
-	if input_token is None:
+	# FAIL - if none or invalid input token
+	if 'sessionToken' not in r or r['sessionToken'] is None:
 		return jsonify({
 			'success': 'false',
-			'reason': 'invalid session token'
+			'reason': 'none or invalid session token'
 		})
+
+	input_token = r['sessionToken']
 
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
-		c = cur.execute("SELECT session, public from user where uid = (?)", [requested_uid])
+		c = cur.execute("SELECT session, public from user where uid = (?)", [uid])
 		urow = c.fetchone()
-		requsted_token = urow[0]
+		requested_token = urow[0]
 		requested_public = urow[1]
 		# FAIL - if current user token != requested user token and requested user profile is private
 		if input_token != requested_token and requested_public == 0:
@@ -302,8 +304,47 @@ def get_flights(requested_uid):
 				'reason': 'account is private'
 			})
 
-		# OTHERWISE, TODO - get all flights from requested user
-		return jsonify({'status':'success, flights': 'TBD'})
+		# OTHERWISE SUCCESS, TODO - get all flights from requested user
+		c = cur.execute(
+			'''
+			SELECT 
+				t.color
+				, depart_a.latitude
+				, depart_a.longitude
+				, arrival_a.latitude
+				, arrival_a.longitude
+			FROM flight f JOIN trip t ON f.tid = t.tid 
+			JOIN airport depart_a ON f.depart_iata = depart_a.iata
+			JOIN airport arrival_a ON f.arrival_iata = arrival_a.iata
+			WHERE t.uid = (?)
+			'''
+			, [uid]
+		)
+		flights = c.fetchall()
+		cur.close()
+		flights_arr = []
+
+		for flight in flights:
+
+			color = flight[0]
+			depart_lat = flight[1]
+			depart_long = flight[2]
+			arrival_lat = flight[3]
+			arrival_long = flight[4]
+	
+			flights_arr.append({
+				'color':color
+				, 'firstPointLat':depart_lat 
+				, 'firstPointLong':depart_long
+				, 'secondPointLat':arrival_lat
+				, 'secondPointLong':arrival_long
+			})
+
+		return jsonify({
+			'success': 'true',
+			'flights': flights_arr
+		})
+
 
 @app.route('/trips', methods=['GET', 'POST'])
 def trips():
@@ -356,44 +397,59 @@ def update():
 		cur = con.cursor()
 
 		# add user
+		cur.execute(
+			'''
+			UPDATE user SET public = 1 WHERE uid = 2
+			'''
+		)
+
 		'''
 		cur.execute(
 			INSERT INTO
 			user(uid, username, email, password, public)
-			VALUES(1, 'llama', 'llama@gmail.com', 'llamallamallama', 1)
+			VALUES(2, 'llama', 'llama@gmail.com', 'llamallamallama', 0)
 		)
-		'''
 
 
 		# add trip
-		'''
 		cur.execute(
 			INSERT INTO
 			trip(tid, uid, trip_name, color)
-			VALUES(1,1,'llama', 'red')
+			VALUES(17,2,'llama', 'red')
+
 		)
-		'''
+		cur.execute(
+
+			INSERT INTO
+			trip(tid, uid, trip_name, color)
+			VALUES(18,2,'alpaca', 'purple')
+		)
 
 		# add flight
-		'''
 		cur.execute(
 			INSERT INTO
 			flight(fid, tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage)
-			VALUES(2,1,'DL',695, 'EWR', 'SFO', '2007-02-01 10:00:00', '2007-02-01 12:00:00', 180, 600)
+			VALUES(3,17,'DL',695, 'EWR', 'SFO', '2007-02-01 10:00:00', '2007-02-01 12:00:00', 180, 600)
 		)
-		'''
+		cur.execute(
+			INSERT INTO
+			flight(fid, tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage)
+			VALUES(4,17,'DL',659, 'SFO', 'EWR', '2007-03-01 10:00:00', '2007-03-01 12:00:00', 180, 600)
+		)
+		cur.execute(
+			INSERT INTO
+			flight(fid, tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage)
+			VALUES(5,18,'DL',849, 'SFO', 'EWR', '2007-03-01 10:00:00', '2007-03-01 12:00:00', 180, 600)
+		)
 
-		#add airpot
-		'''
+		#add airport
 		cur.execute(
 			INSERT INTO
 			airport(iata, name, city, country, latitude, longitude, time_zone, dst)
 			VALUES ('EWR', 'Newark Airport', 'Newark', 'USA', 96, 96, 'EST', 'EST')
 		)
-		'''
 
 		# add airline
-		'''
 		cur.execute(
 			INSERT INTO
 			airline(iata, name)
