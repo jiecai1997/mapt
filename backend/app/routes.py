@@ -161,7 +161,9 @@ def update_profile():
 
 
 @app.route('/stats/<int:uid>', methods=['GET'])
-def getstats_user():
+def getstats_user(uid):
+	json = request.get_json()
+	session_token = request.headers.get('Authorization')
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
@@ -174,10 +176,10 @@ def getstats_user():
 			cur.close()
 			return jsonify({'success': 'false'})
 
-		stats_per_trip = cur.execute("SELECT trip_name, SUM(mileage), SUM(duration) FROM Trip NATURAL JOIN Flight WHERE uid = (?) GROUP BY tid",(uid))
+		stats_per_trip = cur.execute("SELECT trip_name, SUM(mileage), SUM(duration) FROM Trip NATURAL JOIN Flight WHERE uid = (?) GROUP BY tid",[uid])
 		con.commit()
 		cur.close()
-		return jsonify({'success': 'false'})
+		return jsonify({'stats': [{'title': 'stat1', 'value':1000}, {'title': 'stat2', 'value':2000}]})
 
 
 @app.route('/trips/add', methods=['POST'])
@@ -189,7 +191,7 @@ def addtrip_user():
 	trip_name = json['trip_name']
 	color = json['color']
 	flights = json['flights']
-	monthdic = {'Jan':'01', 'Feb':'02','Mar':'03', 'Apr':'04','May':'05','Jun':'06','Jul':'07','Aug':'08','Sep':'09','Oct':'10','Nov':'11','Dec':'12'}
+	monthdic = {'01':'Jan', '02':'Feb','03':'Mar', '04':'Apr','05':'May','06':'Jun','07':'Jul','08':'Aug','09':'Sep','10':'Oct','11':'Nov','12':'Dec'}
 
 	def deg2rad(deg):
 		return abs(deg * (math.pi/180))
@@ -235,10 +237,15 @@ def addtrip_user():
 			airline_iata = 'AA' #Hardcode for now
 			flight_num = 1 #Hardcode for now
 
-			depart_date = flight['dep']['date'].split("00:00:00")[0].split(" ")
-			depart_mth = monthdic[depart_date[1]]
+			print('flight')
+			print(flight)
+			
+			depart_date = flight['dep']['date'].split("T")[0].split("-")
+			print('depart_date')
+			print(depart_date)
+			depart_mth = depart_date[1]
 			depart_day = depart_date[2]
-			depart_yr = depart_date[3]
+			depart_yr = depart_date[0]
 			depart_hr = int(flight['dep']['time'].split(':')[0])
 			int_depart_hr = depart_hr
 			depart_min = flight['dep']['time'].split(':')[1]
@@ -249,10 +256,10 @@ def addtrip_user():
 			depart_datetime = depart_yr+depart_mth+depart_day+' '+str(depart_hr)+':'+depart_min+':00 '+depart_ampm
 			dt_depart_datetime = datetime(int(depart_yr),int(depart_mth),int(depart_day),int_depart_hr,int(depart_min))
 
-			arr_date = flight['arr']['date'].split("00:00:00")[0].split(" ")
-			arr_mth = monthdic[arr_date[1]]
+			arr_date = flight['arr']['date'].split("T")[0].split("-")
+			arr_mth = arr_date[1]
 			arr_day = arr_date[2]
-			arr_yr = arr_date[3]
+			arr_yr = arr_date[0]
 			arr_hr = int(flight['arr']['time'].split(':')[0])
 			int_arr_hr = arr_hr
 			arr_min = flight['arr']['time'].split(':')[1]
@@ -272,7 +279,7 @@ def addtrip_user():
 			cur.execute("INSERT INTO flight (tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage) VALUES (?,?,?,?,?,?,?,?,?)",(tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage))
 		con.commit()
 		cur.close()
-		return jsonify({'success': True})
+		return jsonify({'success': 'true'})
 
 @app.route('/trips', methods=['POST'])
 def get_user_trips():

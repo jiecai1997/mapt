@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { FlightsService } from '@app/services/flights.service';
+import { LoginService } from '@app/services/login.service';
+
 
 
 @Component({
@@ -18,7 +20,7 @@ export class FlightlistComponent implements OnInit {
 
   showSpinner: boolean = false;
 
-  constructor(private router: Router, private flightsService: FlightsService) {}
+  constructor(private router: Router, private flightsService: FlightsService, private loginService:LoginService) {}
 
   ngOnInit() {
     this.initialize();
@@ -79,6 +81,7 @@ export class FlightlistComponent implements OnInit {
       // add trip
       this.flightsService.addTrip(trip.tripName, trip.color, trip.flights).subscribe(result => {
         if(result['success'] == 'true'){
+          const uid = this.loginService.getUID.toString();
           this.router.navigate(['']);
         } else{
           console.log(result['error']); //TODO: deal with this case

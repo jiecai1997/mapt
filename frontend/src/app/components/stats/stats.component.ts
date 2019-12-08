@@ -12,7 +12,9 @@ export class StatsComponent implements OnInit {
   constructor(private flightsService: FlightsService) { }
 
   ngOnInit() {
-    this.stats = []//TODO: this.flightsService.getStats();
+    this.flightsService.getStats().subscribe(result => {
+      this.stats = result['stats'];
+    });
   }
 
 }

@@ -42,9 +42,9 @@ export class LoginService {
     
     const hashedSalty:string = this.generatePassword(email, password);
 
-    const reqBody = {'username':username, 'email': email, 'hashedPassword': hashedSalty};
+    const reqBody = {'username':username, 'email': email, 'hashedPassword': hashedSalty, 'public': 0};
 
-    return this.http.post(this.serverURL + '/user/register', reqBody);
+    return this.http.post(this.serverURL + '/login/register', reqBody);
   }
 
   // add storing session token in service that can then be accessed by flight for verification/sending that to the backend 
