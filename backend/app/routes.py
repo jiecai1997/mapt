@@ -230,6 +230,35 @@ def flights():
 	else: # request method is a POST
 		return {}
 
+#TODO @jie: flights uid
+@app.route('/flights/<int:uid>', methods=['GET'])
+def get_flights(requested_uid):
+	json = request.get_json()
+	input_token = json['sessionToken']
+
+	# FAIL - if no input token
+	if input_token is None:
+		return jsonify({
+			'success': 'false',
+			'reason': 'invalid session token'
+		})
+
+	with sql.connect("app.db") as con:
+		con.row_factory = sql.Row
+		cur = con.cursor()
+		c = cur.execute("SELECT session, public from user where uid = (?)", [requested_uid])
+		urow = c.fetchone()
+		requsted_token = urow[0]
+		requested_public = urow[1]
+		# FAIL - if current user token != requested user token and requested user profile is private
+		if input_token != requested_token and requested_public == 0:
+			return jsonify({
+				'success': 'false',
+				'reason': 'account is private'
+			})
+
+		# OTHERWISE, TODO - get all flights from requested user
+		return jsonify({'status':'success, flights TBD'})
 
 @app.route('/trips', methods=['GET', 'POST'])
 def trips():
@@ -274,15 +303,59 @@ def list():
 	return render_template("list.html",userrows = userrows,tripsrows = tripsrows,
     airlinesrows = airlinesrows, airportsrows = airportsrows, flightsrows = flightsrows)
 
+# janky updates here!!!
 @app.route('/update')
 def update():
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
-		cur.execute("INSERT INTO user(uid, username, email, password, public) VALUES(1, 'llama', 'llama@gmail.com', 'llamallamallama', 1)")
-		cur.execute("INSERT INTO user(uid, username, email, password, public) VALUES(2, 'alpaca', 'alpaca@gmail.com', 'alpacaalpacaalpaca', 1)")
-		cur.execute("INSERT INTO trip(tid, uid, trip_name) VALUES(1,1,'llama')")
-		cur.execute("INSERT INTO airline(iata, name) VALUES('SQ', 'Singapore Airlines')")
+
+		# add user
+		'''
+		cur.execute(	
+			INSERT INTO 
+			user(uid, username, email, password, public) 
+			VALUES(1, 'llama', 'llama@gmail.com', 'llamallamallama', 1)
+		)
+		'''
+
+
+		# add trip
+		'''
+		cur.execute(
+			INSERT INTO 
+			trip(tid, uid, trip_name, color)
+			VALUES(1,1,'llama', 'red')
+		)
+		'''
+
+		# add flight
+		cur.execute(
+			'''
+			INSERT INTO 
+			flight(fid, tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage)
+			VALUES(2,1,'DL',695, 'EWR', 'SFO', '2007-02-01 10:00:00', '2007-02-01 12:00:00', 180, 600)
+			'''
+		)
+		
+		#add airpot
+		'''
+		cur.execute(
+			INSERT INTO 
+			airport(iata, name, city, country, latitude, longitude, time_zone, dst)
+			VALUES ('EWR', 'Newark Airport', 'Newark', 'USA', 96, 96, 'EST', 'EST')
+		)
+		'''
+
+		# add airline
+		'''
+		cur.execute(
+			INSERT INTO
+			airline(iata, name)
+			VALUES('DL', 'Delta Airlines')
+		)
+		'''
+
 		con.commit()
 		cur.close()
 	return render_template('home.html')
