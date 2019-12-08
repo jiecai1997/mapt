@@ -63,15 +63,13 @@
                     </td></tr>
 
                     <!-- public -->
-                    <tr><td>
-                        <mat-form-field>
-                            <mat-slide-toggle matInput
-                                name="ispublic"
-                                color="accent"
-                                [(ngModel)] = "isPublic">
-                                {{isPublic ? "Account status: public" : "Account status: private"}}
-                            </mat-slide-toggle>
-                        </mat-form-field>
+                    <tr *ngIf="isCreateAccount"><td>
+                        <mat-slide-toggle matInput
+                            name="ispublic"
+                            color="primary"
+                            [(ngModel)] = "isPublic">
+                            Public Account
+                        </mat-slide-toggle>
                     </td></tr>
                 </table>
             </form>
