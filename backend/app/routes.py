@@ -167,9 +167,9 @@ def addtrip_user():
 
 	def LatLonToMiles(lat1,lon1,lat2,lon2):
 		R = 3958.8 #Radius of the earth in miles
-		dLat = deg2rad(lat2-lat1)  #deg2rad below
+		dLat = deg2rad(lat2-lat1)
 		dLon = deg2rad(lon2-lon1)
-		a = math.sin(dLat/2) * math.sin(dLat/2) + math.cos(deg2rad(lat1)) * math.cos(deg2rad(lat2)) * math.sin(dLon/2) * math.sin(dLon/2)
+		a = math.sin(dLat/2)**2 + math.cos(deg2rad(lat1)) * math.cos(deg2rad(lat2)) * math.sin(dLon/2)**2
 		c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
 		d = R * c #Distance in miles
 		return int(d)
@@ -206,36 +206,36 @@ def addtrip_user():
 			airline_iata = 'AA' #Hardcode for now
 			flight_num = 1 #Hardcode for now
 
-			depart_date = flight['dep']['date'].split("00:")[0].split(" ")
+			depart_date = flight['dep']['date'].split("00:00:00")[0].split(" ")
 			depart_mth = monthdic[depart_date[1]]
 			depart_day = depart_date[2]
 			depart_yr = depart_date[3]
-			depart_hr = int(flight['dep']['time'].split(':'))[0]
+			depart_hr = int(flight['dep']['time'].split(':')[0])
 			int_depart_hr = depart_hr
 			depart_min = flight['dep']['time'].split(':')[1]
 			depart_ampm = 'AM'
 			if depart_hr >= 12:
 				depart_hr-=12
 				depart_ampm = 'PM'
-			depart_datetime = depart_yr+depart_mth+depart_date+' '+str(depart_hr)+':'+depart_min+':00'+depart_ampm
+			depart_datetime = depart_yr+depart_mth+depart_day+' '+str(depart_hr)+':'+depart_min+':00 '+depart_ampm
 			dt_depart_datetime = datetime(int(depart_yr),int(depart_mth),int(depart_day),int_depart_hr,int(depart_min))
 
-			arr_date = flight['arr']['date'].split("00:")[0].split(" ")
+			arr_date = flight['arr']['date'].split("00:00:00")[0].split(" ")
 			arr_mth = monthdic[arr_date[1]]
 			arr_day = arr_date[2]
 			arr_yr = arr_date[3]
-			arr_hr = int(flight['arr']['time'].split(':'))[0]
+			arr_hr = int(flight['arr']['time'].split(':')[0])
 			int_arr_hr = arr_hr
 			arr_min = flight['arr']['time'].split(':')[1]
 			arr_ampm = 'AM'
 			if arr_hr >= 12:
 				arr_hr-=12
 				arr_ampm = 'PM'
-			arrival_datetime = arr_yr+arr_mth+arr_date+' '+str(arr_hr)+':'+arr_min+':00'+arr_ampm
+			arrival_datetime = arr_yr+arr_mth+arr_day+' '+str(arr_hr)+':'+arr_min+':00 '+arr_ampm
 			dt_arr_datetime = datetime(int(arr_yr),int(arr_mth),int(arr_day),int_arr_hr,int(arr_min))
 
 			duration = (dt_arr_datetime-dt_depart_datetime).seconds//60
-			offset_mins = -(int(arrival_tz)-int(depart_tz))*60
+			offset_mins = int((float(depart_tz)-float(arrival_tz))*60)
 			duration += offset_mins
 
 			mileage = LatLonToMiles(depart_lat,depart_long,arrival_lat,arrival_long)
