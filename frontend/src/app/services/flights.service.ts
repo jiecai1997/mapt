@@ -16,7 +16,7 @@ export class FlightsService {
 
   private serverURL = 'http://localhost:5000';
 
-  // FIX THIS SHIT
+
   getFlights(){
 
     const sessionToken = this.loginService.getToken();
@@ -29,9 +29,11 @@ export class FlightsService {
   
   }
 
-  getTrips():Observable<any> {
+  getTrips() {
+    const uid = this.loginService.getUID();
     const httpOptions = this.createAuthOptions();
-    return this.http.get<any>(this.serverURL + '/trips', httpOptions);
+
+    return this.http.get(this.serverURL + '/trips/' + uid, httpOptions);
   }
 
   // eventually, have the backend give us a session token for the current user, and then feed that session token as well
