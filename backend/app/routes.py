@@ -254,6 +254,8 @@ def addtrip_user():
 	trip_name = json['trip_name']
 	color = json['color']
 	flights = json['flights']
+	airline = json['airline']
+	flight_number = json['number']
 	monthdic = {'01':'Jan', '02':'Feb','03':'Mar', '04':'Apr','05':'May','06':'Jun','07':'Jul','08':'Aug','09':'Sep','10':'Oct','11':'Nov','12':'Dec'}
 
 	def deg2rad(deg):
@@ -314,8 +316,8 @@ def addtrip_user():
 			depart_lat = depart_airport["latitude"]
 			depart_long = depart_airport["longitude"]
 
-			airline_iata = 'AA' #Hardcode for now
-			flight_num = 1 #Hardcode for now
+			airline_iata = airline #Hardcode for now
+			flight_num = flight_number #Hardcode for now
 
 			print('flight')
 			print(flight)
@@ -429,6 +431,8 @@ def updatetrip_user():
 	tid = json['tripID']
 	color = json['color']
 	flights = json['flights']
+	airline = json['airline']
+	flight_number = json['number']
 	monthdic = {'01':'Jan', '02':'Feb','03':'Mar', '04':'Apr','05':'May','06':'Jun','07':'Jul','08':'Aug','09':'Sep','10':'Oct','11':'Nov','12':'Dec'}
 
 	def deg2rad(deg):
@@ -476,8 +480,8 @@ def updatetrip_user():
 			depart_lat = depart_airport["latitude"]
 			depart_long = depart_airport["longitude"]
 
-			airline_iata = 'AA' #Hardcode for now
-			flight_num = 1 #Hardcode for now
+			airline_iata = airline #Hardcode for now
+			flight_num = flight_number #Hardcode for now
 
 			print('flight')
 			print(flight)
