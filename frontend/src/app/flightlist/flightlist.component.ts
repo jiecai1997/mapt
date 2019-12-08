@@ -85,11 +85,14 @@ export class FlightlistComponent implements OnInit {
     if(this.isAddTrip){
       // add trip
       this.flightsService.addTrip(trip.tripName, trip.color, trip.flights).subscribe(result => {
+
         if(result['success'] == 'true'){
           const uid = this.loginService.getUID().toString();
-          console.log('uid to navigate to after add trip', uid);
-          this.router.navigate([uid]);
-        } else{
+          this.router.navigateByUrl('').then(() => {
+            this.router.navigate([uid]);
+          });
+
+          } else{
           console.log(result['error']); //TODO: deal with this case
         }
         this.showSpinner = false;
@@ -98,7 +101,10 @@ export class FlightlistComponent implements OnInit {
       // update trip
       this.flightsService.updateTrip(trip.tripID, trip.tripName, trip.color, trip.flights).subscribe(result => {
         if(result['success'] == 'true'){
-          this.router.navigate(['']);
+          const uid = this.loginService.getUID().toString();
+          this.router.navigateByUrl('').then(() => {
+            this.router.navigate([uid]);
+          });
         } else{
           console.log('Modifying trip failed'); //TODO: deal with this case
         }
