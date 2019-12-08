@@ -239,7 +239,7 @@ def addtrip_user():
 
 			print('flight')
 			print(flight)
-			
+
 			depart_date = flight['dep']['date'].split("T")[0].split("-")
 			print('depart_date')
 			print(depart_date)
@@ -281,11 +281,31 @@ def addtrip_user():
 		cur.close()
 		return jsonify({'success': 'true'})
 
-@app.route('/trips', methods=['POST'])
-def get_user_trips():
+@app.route('/stats/<int:uid>', methods=['GET'])
+def getstats_user(uid):
 	json = request.get_json()
 	session_token = request.headers.get('Authorization')
-	uid = json['userID']
+	with sql.connect("app.db") as con:
+		con.row_factory = sql.Row
+		cur = con.cursor()
+		c = cur.execute("SELECT session from user where uid = (?)", [uid])
+		urow = c.fetchone()
+
+		# you do not have permission to change this
+		if urow is None or urow[0] != session_token:
+			con.commit()
+			cur.close()
+			return jsonify({'success': 'false'})
+
+		stats_per_trip = cur.execute("SELECT trip_name, SUM(mileage), SUM(duration) FROM Trip NATURAL JOIN Flight WHERE uid = (?) GROUP BY tid",[uid])
+		con.commit()
+		cur.close()
+		return jsonify({'stats': [{'title': 'stat1', 'value':1000}, {'title': 'stat2', 'value':2000}]})
+
+@app.route('/trips/<int:uid>', methods=['GET'])
+def gettrips_user(uid):
+	json = request.get_json()
+	session_token = request.headers.get('Authorization')
 
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
