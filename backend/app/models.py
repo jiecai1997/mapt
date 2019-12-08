@@ -52,8 +52,6 @@ class Trip(db.Model):
 	def __repr__(self):
 		return '<Trip {}>'.format(self.tid)
 
-	## TODO: validate that the trip names are unique per user
-
 
 class Airline(db.Model):
 	iata = db.Column(db.String(2), primary_key=True)

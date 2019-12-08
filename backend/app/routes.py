@@ -231,12 +231,14 @@ def addtrip_user():
 			cur.close()
 			return jsonify({'success': 'false'})
 
-		## TODO: HOPE THIS WORKS???? MORE TESTING FOR ERROR SHOWING
-		try:
-			tid = cur.execute("INSERT INTO trip (uid, trip_name,color) VALUES (?,?,?)",(uid, trip_name,color))
-		except sql.Error as e:
-			return jsonify({'success': 'false', 'error': e})
+		c1 = cur.execute("SELECT * from trip where uid = (?) and trip_name = (?)", [uid, trip_name])
+		urow1 = c.fetchone()
+		if urow1:
+			con.commit()
+			cur.close()
+			return jsonify({'success': 'false', 'reason': 'trip name already taken'})
 
+		tid = cur.execute("INSERT INTO trip (uid, trip_name,color) VALUES (?,?,?)",(uid, trip_name,color))
 		tid = tid.lastrowid
 
 		for flight in flights:
