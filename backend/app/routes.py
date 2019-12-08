@@ -13,7 +13,6 @@ import json
 @app.route('/airports/<string:substring>', methods=['GET'])
 def get_airport(substring):
 	substring += '%'
-	input_token = request.headers.get('Authorization')
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
@@ -32,7 +31,6 @@ def get_airport(substring):
 @app.route('/airlines/<string:substring>', methods=['GET'])
 def get_airline(substring):
 	substring += '%'
-	input_token = request.headers.get('Authorization')
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
@@ -130,7 +128,6 @@ def login_attempt():
 # check if a user is logged in
 @app.route('/login/verify/<int:uid>', methods=['GET'])
 def verify_user(uid):
-	input_token = request.headers.get('Authorization')
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
@@ -138,36 +135,38 @@ def verify_user(uid):
 		urow = c.fetchone()
 		cur.close()
 
+		# FAILURE - if login token for user stored in database != header token
+		if not urow:
+			return jsonify({'loggedIn': 'false', 'reason': 'You do not have permission'})
+
 		# SUCCESS - if login token for user stored in database = header token
+		input_token = request.headers.get('Authorization')
 		if urow[0] == input_token:
 			return jsonify({'loggedIn': 'true'})
-		# FAILURE - if login token for user stored in database != header token
-		else:
-			return jsonify({'loggedIn': 'false', 'reason': 'You do not have permission'})
+
 
 
 @app.route('/profile/<int:uid>', methods=['GET'])
 def display_profile(uid):
-	session_token = request.headers.get('Authorization')
-
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
 		c = cur.execute("SELECT session, username, public from user where uid = (?)", [uid])
 		urow = c.fetchone()
+		con.commit()
+		cur.close()
 
 		# you do not have permission to change this
-		if urow is None or urow[0] != session_token:
-			con.commit()
-			cur.close()
+		if not urow:
 			return jsonify({'success': 'false', 'reason': 'You do not have permission'})
 
+		session_token = request.headers.get('Authorization')
+		if urow[0] != session_token:
+			return jsonify({'success': 'false', 'reason': 'You do not have permission'})
 		# success - user exists
 		username = urow[1]
 		isPublic = urow[2]
 
-		con.commit()
-		cur.close()
 		return jsonify({
 					'success': 'true',
 					'username': username,
@@ -178,7 +177,6 @@ def display_profile(uid):
 @app.route('/profile/update', methods=['POST'])
 def update_profile():
 	json = request.get_json()
-	session_token = request.headers.get('Authorization')
 
 	uid = json['uid']
 	username = json['username']
@@ -189,11 +187,15 @@ def update_profile():
 		cur = con.cursor()
 		c = cur.execute("SELECT session from user where uid = (?)", [uid])
 		urow = c.fetchone()
+		con.commit()
+		cur.close()
 
 		# you do not have permission to change this
-		if urow is None or urow[0] != session_token:
-			con.commit()
-			cur.close()
+		if not urow:
+			return jsonify({'success': 'false', 'reason': 'You do not have permission'})
+
+		session_token = request.headers.get('Authorization')
+		if urow[0] != session_token:
 			return jsonify({'success': 'false', 'reason': 'You do not have permission'})
 
 		c1 = cur.execute("SELECT * from user where username = (?) and uid != (?)", [username, uid])
@@ -210,12 +212,19 @@ def update_profile():
 @app.route('/stats/<int:uid>', methods=['GET'])
 def getstats_user(uid):
 	json = request.get_json()
-	session_token = request.headers.get('Authorization')
+
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
 		c = cur.execute("SELECT session, public from user where uid = (?)", [uid])
 		urow = c.fetchone()
+
+		if not urow:
+			con.commit()
+			cur.close()
+			return jsonify({'success': 'false', 'reason': 'You do not have permission'})
+
+		session_token = request.headers.get('Authorization')
 		requested_token = urow[0]
 		requested_public = urow[1]
 
@@ -250,7 +259,6 @@ def getstats_user(uid):
 @app.route('/trips/add', methods=['POST'])
 def addtrip_user():
 	json = request.get_json()
-	session_token = request.headers.get('Authorization')
 
 	uid = json['uid']
 	trip_name = json['trip_name']
@@ -278,7 +286,13 @@ def addtrip_user():
 		urow = c.fetchone()
 
 		# you do not have permission to change this
-		if urow is None or urow[0] != session_token:
+		if not urow:
+			con.commit()
+			cur.close()
+			return jsonify({'success': 'false', 'reason': 'You do not have permission'})
+
+		session_token = request.headers.get('Authorization')
+		if urow[0] != session_token:
 			con.commit()
 			cur.close()
 			return jsonify({'success': 'false', 'reason': 'You do not have permission'})
@@ -365,7 +379,6 @@ def addtrip_user():
 @app.route('/trips/<int:uid>', methods=['GET'])
 def gettrips_user(uid):
 	json = request.get_json()
-	session_token = request.headers.get('Authorization')
 
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
@@ -374,7 +387,13 @@ def gettrips_user(uid):
 		urow = c.fetchone()
 
 		# you do not have permission to change this
-		if urow is None or urow[0] != session_token:
+		if not urow:
+			con.commit()
+			cur.close()
+			return jsonify({'success': 'false', 'reason': 'You do not have permission'})
+
+		session_token = request.headers.get('Authorization')
+		if urow[0] != session_token:
 			con.commit()
 			cur.close()
 			return jsonify({'success': 'false', 'reason': 'You do not have permission'})
@@ -452,7 +471,6 @@ def gettrips_user(uid):
 @app.route('/trips/update', methods=['POST'])
 def updatetrip_user():
 	json = request.get_json()
-	session_token = request.headers.get('Authorization')
 
 	print(json)
 
@@ -483,7 +501,13 @@ def updatetrip_user():
 		urow = c.fetchone()
 
 		# you do not have permission to change this
-		if urow is None or urow[0] != session_token:
+		if not urow:
+			con.commit()
+			cur.close()
+			return jsonify({'success': 'false', 'reason': 'You do not have permission'})
+
+		session_token = request.headers.get('Authorization')
+		if urow[0] != session_token:
 			con.commit()
 			cur.close()
 			return jsonify({'success': 'false', 'reason': 'You do not have permission'})
@@ -602,13 +626,20 @@ def updatetrip_user():
 
 @app.route('/flights/<int:uid>', methods=['GET'])
 def get_flights(uid):
-	input_token = request.headers.get('Authorization')
-
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
 		c = cur.execute("SELECT session, public from user where uid = (?)", [uid])
 		urow = c.fetchone()
+
+		if not urow:
+			cur.close()
+			return jsonify({
+				'success': 'false',
+				'reason': 'You do not have permission'
+			})
+
+		input_token = request.headers.get('Authorization')
 		requested_token = urow[0]
 		requested_public = urow[1]
 		# FAIL - if current user token != requested user token and requested user profile is private
