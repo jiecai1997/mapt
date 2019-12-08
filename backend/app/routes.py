@@ -313,15 +313,11 @@ def gettrips_user(uid):
 			for flight in flightrows:
 				depart_iata = flight['depart_iata']
 				depart_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[depart_iata]).fetchone()
-
-
-				depart_datetime = depart_airport['depart_datetime']
+				depart_datetime = flight['depart_datetime']
 
 				arrival_iata = flight['arrival_iata']
 				arrival_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[arrival_iata]).fetchone()
-				arrival_datetime = arrival_airport['arrival_datetime']
-
-
+				arrival_datetime = flight['arrival_datetime']
 
 				flightdic = {}
 				flightdic['color']=row['color']
@@ -335,6 +331,106 @@ def gettrips_user(uid):
 		con.commit()
 		cur.close()
 		return jsonify({'success': True,'trips': ret})
+
+
+@app.route('/trips/update', methods=['POST'])
+def updatetrip_user():
+	json = request.get_json()
+	session_token = request.headers.get('Authorization')
+
+	uid = json['uid']
+	tid = json['trip_name']
+	color = json['color']
+	flights = json['flights']
+	monthdic = {'01':'Jan', '02':'Feb','03':'Mar', '04':'Apr','05':'May','06':'Jun','07':'Jul','08':'Aug','09':'Sep','10':'Oct','11':'Nov','12':'Dec'}
+
+	def deg2rad(deg):
+		return abs(deg * (math.pi/180))
+
+	def LatLonToMiles(lat1,lon1,lat2,lon2):
+		R = 3958.8 #Radius of the earth in miles
+		dLat = deg2rad(lat2-lat1)
+		dLon = deg2rad(lon2-lon1)
+		a = math.sin(dLat/2)**2 + math.cos(deg2rad(lat1)) * math.cos(deg2rad(lat2)) * math.sin(dLon/2)**2
+		c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+		d = R * c #Distance in miles
+		return int(d)
+
+
+	with sql.connect("app.db") as con:
+		con.row_factory = sql.Row
+		cur = con.cursor()
+		c = cur.execute("SELECT session from user where uid = (?)", [uid])
+		urow = c.fetchone()
+
+		# you do not have permission to change this
+		if urow is None or urow[0] != session_token:
+			con.commit()
+			cur.close()
+			return jsonify({'success': 'false'})
+
+		tid = cur.execute("INSERT INTO trip (uid, trip_name,color) VALUES (?,?,?)",(uid, trip_name,color))
+		tid = tid.lastrowid
+
+		for flight in flights:
+			arrival_iata = flight['arr']['airport']
+			arrival_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[arrival_iata]).fetchone()
+			arrival_tz = arrival_airport["time_zone"]
+			arrival_lat = arrival_airport["latitude"]
+			arrival_long = arrival_airport["longitude"]
+
+			depart_iata = flight['dep']['airport']
+			depart_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[depart_iata]).fetchone()
+			depart_tz = depart_airport["time_zone"]
+			depart_lat = depart_airport["latitude"]
+			depart_long = depart_airport["longitude"]
+
+			airline_iata = 'AA' #Hardcode for now
+			flight_num = 1 #Hardcode for now
+
+			print('flight')
+			print(flight)
+
+			depart_date = flight['dep']['date'].split("T")[0].split("-")
+			print('depart_date')
+			print(depart_date)
+			depart_mth = depart_date[1]
+			depart_day = depart_date[2]
+			depart_yr = depart_date[0]
+			depart_hr = int(flight['dep']['time'].split(':')[0])
+			int_depart_hr = depart_hr
+			depart_min = flight['dep']['time'].split(':')[1]
+			depart_ampm = 'AM'
+			if depart_hr >= 12:
+				depart_hr-=12
+				depart_ampm = 'PM'
+			depart_datetime = depart_yr+depart_mth+depart_day+' '+str(depart_hr)+':'+depart_min+':00 '+depart_ampm
+			dt_depart_datetime = datetime(int(depart_yr),int(depart_mth),int(depart_day),int_depart_hr,int(depart_min))
+
+			arr_date = flight['arr']['date'].split("T")[0].split("-")
+			arr_mth = arr_date[1]
+			arr_day = arr_date[2]
+			arr_yr = arr_date[0]
+			arr_hr = int(flight['arr']['time'].split(':')[0])
+			int_arr_hr = arr_hr
+			arr_min = flight['arr']['time'].split(':')[1]
+			arr_ampm = 'AM'
+			if arr_hr >= 12:
+				arr_hr-=12
+				arr_ampm = 'PM'
+			arrival_datetime = arr_yr+arr_mth+arr_day+' '+str(arr_hr)+':'+arr_min+':00 '+arr_ampm
+			dt_arr_datetime = datetime(int(arr_yr),int(arr_mth),int(arr_day),int_arr_hr,int(arr_min))
+
+			duration = (dt_arr_datetime-dt_depart_datetime).seconds//60
+			offset_mins = int((float(depart_tz)-float(arrival_tz))*60)
+			duration += offset_mins
+
+			mileage = LatLonToMiles(depart_lat,depart_long,arrival_lat,arrival_long)
+
+			cur.execute("INSERT INTO flight (tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage) VALUES (?,?,?,?,?,?,?,?,?)",(tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage))
+		con.commit()
+		cur.close()
+		return jsonify({'success': 'true'})
 
 # DEPRECATED, refer to flights/uid
 @app.route('/flights', methods=['GET', 'POST'])
