@@ -255,8 +255,6 @@ def addtrip_user():
 	uid = json['uid']
 	trip_name = json['trip_name']
 	color = json['color']
-	flights = json['flights']
-	airline = json['airline']
 	flight_number = json['number']
 	monthdic = {'01':'Jan', '02':'Feb','03':'Mar', '04':'Apr','05':'May','06':'Jun','07':'Jul','08':'Aug','09':'Sep','10':'Oct','11':'Nov','12':'Dec'}
 
@@ -318,9 +316,8 @@ def addtrip_user():
 			depart_lat = depart_airport["latitude"]
 			depart_long = depart_airport["longitude"]
 
-			airline_iata = airline #Hardcode for now
-			flight_num = flight_number #Hardcode for now
-
+			airline_iata = flight['airline']
+			flight_num = flight['number']
 			print('flight')
 			print(flight)
 
@@ -415,12 +412,12 @@ def gettrips_user(uid):
 				deptMinute = deptTimeString.split(":")[1]
 				if(depart_datetime_split[2] == "PM"):
 					deptHour += 12
-				
+
 				if(deptHour < 10):
 					deptHour = "0" + str(deptHour)
 				else:
 					deptHour = str(deptHour)
-				
+
 				deptMilitaryTimeString = deptHour + ":" + deptMinute
 				flightdic['depart_time'] = deptMilitaryTimeString
 
@@ -433,7 +430,7 @@ def gettrips_user(uid):
 				arrMinute = arrTimeString.split(":")[1]
 				if(arrival_datetime_split[2] == "PM"):
 					arrHour += 12
-				
+
 				if(arrHour < 10):
 					arrHour = "0" + str(arrHour)
 				else:
@@ -461,8 +458,6 @@ def updatetrip_user():
 	trip_name = json['trip_name']
 	tid = json['trip_id']
 	color = json['color']
-	flights = json['flights']
-	airline = json['airline']
 	flight_number = json['number']
 	monthdic = {'01':'Jan', '02':'Feb','03':'Mar', '04':'Apr','05':'May','06':'Jun','07':'Jul','08':'Aug','09':'Sep','10':'Oct','11':'Nov','12':'Dec'}
 
@@ -526,8 +521,8 @@ def updatetrip_user():
 			depart_lat = depart_airport["latitude"]
 			depart_long = depart_airport["longitude"]
 
-			airline_iata = airline #Hardcode for now
-			flight_num = flight_number #Hardcode for now
+			airline_iata = flight['airline']
+			flight_num = flight['number'] 
 
 			print('flight')
 			print(flight)
