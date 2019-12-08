@@ -42,6 +42,28 @@
                 </mat-expansion-panel-header>
 
                 <table cellspacing="10">
+                    <tr> <!-- general flight info -->
+                        <td>
+                            <mat-form-field>
+                                <input matInput type='number' placeholder="Flight Number" [(ngModel)]="flight.number">
+                            </mat-form-field>
+                        </td>
+
+                        <mat-form-field>
+                            <input matInput
+                                type="text"
+                                placeholder="Airline"
+                                [matAutocomplete]="airlineAuto"
+                                [(ngModel)]="flight.airline"
+                                required>
+                            <mat-autocomplete #airlineAuto="matAutocomplete">
+                                <mat-option *ngFor="let airline of airlines" [value]="airline">
+                                    {{airline}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </tr>
+
                     <tr> <!-- label -->
                         <td>From</td>
                         <td>To</td>
