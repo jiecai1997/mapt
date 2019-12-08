@@ -247,6 +247,59 @@ def addtrip_user():
 		cur.close()
 		return jsonify({'success': True})
 
+@app.route('/trips', methods=['POST'])
+def get_user_trips():
+	json = request.get_json()
+	session_token = request.headers.get('Authorization')
+	uid = json['userID']
+
+	with sql.connect("app.db") as con:
+		con.row_factory = sql.Row
+		cur = con.cursor()
+		c = cur.execute("SELECT session from user where uid = (?)", [uid])
+		urow = c.fetchone()
+
+		# you do not have permission to change this
+		if urow is None or urow[0] != session_token:
+			con.commit()
+			cur.close()
+			return jsonify({'success': 'false'})
+
+		cur.execute("SELECT * FROM trip WHERE uid = (?)",[uid])
+		triprows = cur.fetchall()
+		ret = []
+		for row in triprows:
+			d = {}
+			d['userid']=row['uid']
+			d['tripid']=row['tid']
+			d['tripName']=row['trip_name']
+			d['color']=row['color']
+			d['flights'] = []
+			cur.execute("SELECT * FROM flight WHERE tid = (?)",[row['tid']])
+			flightrows = cur.fetchall()
+			for flight in flightrows:
+				depart_iata = flight['depart_iata']
+				depart_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[depart_iata]).fetchone()
+				depart_lat = depart_airport["latitude"]
+				depart_long = depart_airport["longitude"]
+
+				arrival_iata = flight['arrival_iata']
+				arrival_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[arrival_iata]).fetchone()
+				arrival_lat = arrival_airport["latitude"]
+				arrival_long = arrival_airport["longitude"]
+
+				flightdic = {}
+				flightdic['color']=row['color']
+				flight['firstPointLat']= depart_lat
+				flight['firstPointLong']= depart_long
+				flight['secondPointLat']= arrival_lat
+				flight['secondPointLong']= arrival_long
+				d['flights'].append(flightdic)
+			ret.append(d)
+		con.commit()
+		cur.close()
+		return jsonify({'success': True,'trips': ret})
+
 # DEPRECATED, refer to flights/uid
 @app.route('/flights', methods=['GET', 'POST'])
 def flights():
@@ -307,13 +360,13 @@ def get_flights(uid):
 		# OTHERWISE SUCCESS, TODO - get all flights from requested user
 		c = cur.execute(
 			'''
-			SELECT 
+			SELECT
 				t.color
 				, depart_a.latitude
 				, depart_a.longitude
 				, arrival_a.latitude
 				, arrival_a.longitude
-			FROM flight f JOIN trip t ON f.tid = t.tid 
+			FROM flight f JOIN trip t ON f.tid = t.tid
 			JOIN airport depart_a ON f.depart_iata = depart_a.iata
 			JOIN airport arrival_a ON f.arrival_iata = arrival_a.iata
 			WHERE t.uid = (?)
@@ -331,10 +384,10 @@ def get_flights(uid):
 			depart_long = flight[2]
 			arrival_lat = flight[3]
 			arrival_long = flight[4]
-	
+
 			flights_arr.append({
 				'color':color
-				, 'firstPointLat':depart_lat 
+				, 'firstPointLat':depart_lat
 				, 'firstPointLong':depart_long
 				, 'secondPointLat':arrival_lat
 				, 'secondPointLong':arrival_long
@@ -346,21 +399,21 @@ def get_flights(uid):
 		})
 
 
-@app.route('/trips', methods=['GET', 'POST'])
-def trips():
-	form = TripsForm(request.form)
-	if request.method == 'POST' and form.validate():
-		uid = form.uid.data
-		trip_name = form.trip_name.data
-		with sql.connect("app.db") as con:
-			con.row_factory = sql.Row
-			cur = con.cursor()
-			cur.execute("INSERT INTO trip (uid, trip_name) VALUES (?,?)",(uid, trip_name))
-			con.commit()
-			cur.close()
-			flash('You Added A Trip!')
-			return redirect('/list')
-	return {'trips':[]}
+# @app.route('/trips', methods=['GET', 'POST'])
+# def trips():
+# 	form = TripsForm(request.form)
+# 	if request.method == 'POST' and form.validate():
+# 		uid = form.uid.data
+# 		trip_name = form.trip_name.data
+# 		with sql.connect("app.db") as con:
+# 			con.row_factory = sql.Row
+# 			cur = con.cursor()
+# 			cur.execute("INSERT INTO trip (uid, trip_name) VALUES (?,?)",(uid, trip_name))
+# 			con.commit()
+# 			cur.close()
+# 			flash('You Added A Trip!')
+# 			return redirect('/list')
+# 	return {'trips':[]}
 
 @app.route('/list')
 def list():
