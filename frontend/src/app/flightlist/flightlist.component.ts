@@ -49,8 +49,8 @@ export class FlightlistComponent implements OnInit {
   }
 
   getAirportSuggestions(flight: any, isDep: boolean): any {
-    const depAirport = (flight.dep.airport || '').toLowerCase(),
-          arrAirport = (flight.arr.airport || '').toLowerCase();
+    const depAirport = (flight.departAirport || '').toLowerCase(),
+          arrAirport = (flight.arrivalAirport || '').toLowerCase();
 
     var find: any, exclude: any;
     if(isDep){
@@ -63,7 +63,7 @@ export class FlightlistComponent implements OnInit {
   }
 
   getFlightDescription(flight: any, index: number): string {
-    if(flight.dep.airport && flight.arr.airport){
+    if(flight.departAirport && flight.arrivalAirport){
       return `${flight.departAirport} \u2794 ${flight.arrivalAirport}`; // DEP -> ARR
     }
     return `Flight ${index + 1}`;

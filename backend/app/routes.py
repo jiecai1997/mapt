@@ -321,10 +321,16 @@ def gettrips_user(uid):
 
 				flightdic = {}
 				flightdic['color']=row['color']
+
 				flightdic['departAirport']= depart_iata
-				flightdic['depart_datetime'] = depart_datetime
+				depart_datetime_split = depart_datetime.split(" ")
+				flightdic['depart_date'] = depart_datetime_split[0]
+				flightdic['depart_time'] = depart_datetime_split[1] + " " + depart_datetime_split[2]
+
 				flightdic['arrivalAirport']= arrival_iata
-				flightdic['arrival_datetime'] = arrival_datetime
+				arrival_datetime_split = arrival_datetime.split(" ")
+				flightdic['arrival_date'] = arrival_datetime_split[0]
+				flightdic['arrival_time'] = arrival_datetime_split[1] + " " + arrival_datetime_split[2]
 
 				d['flights'].append(flightdic)
 			ret.append(d)
