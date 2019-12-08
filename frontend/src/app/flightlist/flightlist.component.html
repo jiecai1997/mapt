@@ -76,7 +76,7 @@
                                     type="text"
                                     placeholder="Departure Airport"
                                     [matAutocomplete]="depAuto"
-                                    [(ngModel)]="flight.dep.airport"
+                                    [(ngModel)]="flight.depart_airport"
                                     required>
                                 <mat-autocomplete #depAuto="matAutocomplete">
                                     <mat-option *ngFor="let airport of getAirportSuggestions(flight, true)" [value]="airport">
@@ -91,7 +91,7 @@
                                     type="text"
                                     placeholder="Arrival Airport"
                                     [matAutocomplete]="arrAuto"
-                                    [(ngModel)]="flight.arr.airport"
+                                    [(ngModel)]="flight.arrival_airport"
                                     required>
                                 <mat-autocomplete #arrAuto="matAutocomplete">
                                     <mat-option *ngFor="let airport of getAirportSuggestions(flight, false)" [value]="airport">
@@ -108,7 +108,7 @@
                                 <input matInput 
                                     [matDatepicker]="depPicker" 
                                     placeholder="Departure Date" 
-                                    [(ngModel)]="flight.dep.date"
+                                    [(ngModel)]="flight.depart_date"
                                     required>
                                 <mat-datepicker-toggle matSuffix [for]="depPicker"></mat-datepicker-toggle>
                                 <mat-datepicker #depPicker></mat-datepicker>
@@ -119,7 +119,7 @@
                                 <input matInput 
                                     [matDatepicker]="arrPicker" 
                                     placeholder="Arrival Date" 
-                                    [(ngModel)]="flight.arr.date"
+                                    [(ngModel)]="flight.arrival_date"
                                     required>
                                 <mat-datepicker-toggle matSuffix [for]="arrPicker"></mat-datepicker-toggle>
                                 <mat-datepicker #arrPicker></mat-datepicker>
@@ -130,12 +130,12 @@
                     <tr> <!-- time -->
                         <td>
                             <mat-form-field>
-                                <input matInput type="time" placeholder="Departure Time" [(ngModel)]="flight.dep.time" required>
+                                <input matInput type="time" placeholder="Departure Time" [(ngModel)]="flight.depart_time" required>
                             </mat-form-field>
                         </td>
                         <td>
                             <mat-form-field>
-                                <input matInput type="time" placeholder="Arrival Time" [(ngModel)]="flight.arr.time" required>
+                                <input matInput type="time" placeholder="Arrival Time" [(ngModel)]="flight.arrival_time" required>
                             </mat-form-field>
                         </td>
                     </tr>

@@ -57,11 +57,12 @@ export class FlightsService {
 
   // anything to change here? Similar to add right? FIGURE OUT A WAY TO GET SESSIONTOKEN INTO THE HEADERS?
   updateTrip(tripID:string, tripName:string, color:string, flights:any[]){
-    const reqBody = {'userID': this.loginService.getUID(), 'tripID': tripID, 'tripName': tripName, 'color': color, 'flights': flights};
+    console.log('tripId', tripID);
+    const reqBody = {'color': color, 'uid': this.loginService.getUID(), 'trip_name': tripName, 'trip_id': tripID, 'flights': flights, 'random': 1234};
 
     const httpOptions = this.createAuthOptions();
 
-    return this.http.put(this.serverURL + '/trips/update', reqBody, httpOptions);
+    return this.http.post(this.serverURL + '/trips/update', reqBody, httpOptions);
   }
 
 

@@ -77,8 +77,8 @@ export class FlightlistComponent implements OnInit {
   }
 
   getAirportSuggestions(flight: any, isDep: boolean): any {
-    const depAirport = (flight.dep.airport || '').toLowerCase(),
-          arrAirport = (flight.arr.airport || '').toLowerCase();
+    const depAirport = (flight['depart_airport'] || '').toLowerCase(),
+          arrAirport = (flight['arrival_airport'] || '').toLowerCase();
 
     var find: any, exclude: any;
     if(isDep){
@@ -104,6 +104,7 @@ export class FlightlistComponent implements OnInit {
   saveTrip(tripIndex): void {
     this.showSpinner = true;
     const trip = this.trips[tripIndex];
+    console.log('addtrip', this.isAddTrip)
 
     if(this.isAddTrip){
       // add trip
@@ -121,8 +122,8 @@ export class FlightlistComponent implements OnInit {
         this.showSpinner = false;
       })
     }else{
-      // update trip
-      this.flightsService.updateTrip(trip.tripID, trip.tripName, trip.color, trip.flights).subscribe(result => {
+      console.log('got here')
+      this.flightsService.updateTrip(trip.tripid, trip.tripName, trip.color, trip.flights).subscribe(result => {
         if(result['success'] == 'true'){
           const uid = this.loginService.getUID().toString();
           this.router.navigateByUrl('').then(() => {
@@ -137,16 +138,16 @@ export class FlightlistComponent implements OnInit {
   }
 
   hasErrors(trip: any): boolean{
-    console.log(trip);
+    // console.log(trip);
     var hasFlightError = false;
     trip.flights.forEach(flight => {
       hasFlightError = hasFlightError || 
-        flight.dep.airport == undefined || flight.dep.airport == null ||
-        flight.arr.airport == undefined || flight.arr.airport == null ||
-        flight.dep.date == undefined || flight.dep.date == null ||
-        flight.arr.date == undefined || flight.arr.date == null ||
-        flight.dep.time == undefined || flight.dep.time == null || 
-        flight.arr.time == undefined || flight.arr.time == null
+        flight['departAirport'] == undefined || flight['departAirport'] == null ||
+        flight['arrivalAirport'] == undefined || flight['arrivalAirport'] == null ||
+        flight['depart_date'] == undefined || flight['depart_date'] == null ||
+        flight['arrival_date'] == undefined || flight['arrival_date'] == null ||
+        flight['depart_time'] == undefined || flight['depart_time'] == null || 
+        flight['arrival_time'] == undefined || flight['arrival_time'] == null
     });
 
     return hasFlightError || trip.tripName == '' || trip.color == '';

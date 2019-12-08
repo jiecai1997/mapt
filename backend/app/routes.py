@@ -220,7 +220,7 @@ def getstats_user(uid):
 		requested_public = urow[1]
 
 		# you do not have permission to change this
-		if input_token != requested_token and requested_public == 0:
+		if session_token != requested_token and requested_public == 0:
 			con.commit()
 			cur.close()
 			return jsonify({'success': 'false', 'reason': 'You do not have permission'})
@@ -455,9 +455,11 @@ def updatetrip_user():
 	json = request.get_json()
 	session_token = request.headers.get('Authorization')
 
+	print(json)
+
 	uid = json['uid']
 	trip_name = json['trip_name']
-	tid = json['tripID']
+	tid = json['trip_id']
 	color = json['color']
 	flights = json['flights']
 	airline = json['airline']
