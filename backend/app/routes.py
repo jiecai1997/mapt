@@ -105,7 +105,7 @@ def verify_user(uid):
 			return jsonify({'loggedIn': 'true'})
 		# FAILURE - if login token for user stored in database != header token
 		else:
-			return jsonify({'loggedIn': 'false'})
+			return jsonify({'loggedIn': 'false', 'reason': 'you do not have permission, login first'})
 
 
 @app.route('/profile/<int:uid>', methods=['GET'])
@@ -122,7 +122,7 @@ def display_profile(uid):
 		if urow is None or urow[0] != session_token:
 			con.commit()
 			cur.close()
-			return jsonify({'success': 'false'})
+			return jsonify({'success': 'false', 'reason': 'you do not have permission, login first'})
 
 		# success - user exists
 		username = urow[1]
@@ -156,7 +156,12 @@ def update_profile():
 		if urow is None or urow[0] != session_token:
 			con.commit()
 			cur.close()
-			return jsonify({'success': 'false'})
+			return jsonify({'success': 'false', 'reason': 'you do not have permission, login first'})
+
+		c1 = cur.execute("SELECT * from user where username = (?) and uid != (?)", [username, uid])
+		urow1 = c.fetchone()
+		if urow1:
+			return jsonify({'success': 'false', 'reason': 'username already exists'})
 
 		cur.execute("UPDATE user SET username = (?), public = (?) WHERE uid = (?)", [username, isPublic, uid])
 		con.commit()
@@ -178,7 +183,7 @@ def getstats_user(uid):
 		if urow is None or urow[0] != session_token:
 			con.commit()
 			cur.close()
-			return jsonify({'success': 'false'})
+			return jsonify({'success': 'false', 'reason': 'you do not have permission, login first'})
 
 		stats_per_trip = cur.execute("SELECT trip_name, SUM(mileage), SUM(duration) FROM Trip NATURAL JOIN Flight WHERE uid = (?) GROUP BY tid",[uid])
 		result = cur.fetchall()
@@ -229,7 +234,7 @@ def addtrip_user():
 		if urow is None or urow[0] != session_token:
 			con.commit()
 			cur.close()
-			return jsonify({'success': 'false'})
+			return jsonify({'success': 'false', 'reason': 'you do not have permission, login first'})
 
 		c1 = cur.execute("SELECT * from trip where uid = (?) and trip_name = (?)", [uid, trip_name])
 		urow1 = c.fetchone()
@@ -318,7 +323,7 @@ def gettrips_user(uid):
 		if urow is None or urow[0] != session_token:
 			con.commit()
 			cur.close()
-			return jsonify({'success': 'false'})
+			return jsonify({'success': 'false', 'reason': 'you do not have permission, login first'})
 
 		cur.execute("SELECT * FROM trip WHERE uid = (?)",[uid])
 		triprows = cur.fetchall()
@@ -396,11 +401,11 @@ def updatetrip_user():
 		if urow is None or urow[0] != session_token:
 			con.commit()
 			cur.close()
-			return jsonify({'success': 'false'})
+			return jsonify({'success': 'false', 'reason': 'you do not have permission, login first'})
 
 		cur.execute("DELETE FROM trip WHERE tid = (?)",[tid])
 		cur.execute("DELETE FROM flight WHERE tid = (?)",[tid])
-		tid = cur.execute("INSERT INTO trip (uid, trip_name,color) VALUES (?,?,?)",(uid, trip_name,color))
+		tid = cur.execute("INSERT INTO trip (uid, trip_name, color) VALUES (?,?,?)",(uid, trip_name,color))
 		tid = tid.lastrowid
 
 		for flight in flights:
@@ -465,35 +470,35 @@ def updatetrip_user():
 		cur.close()
 		return jsonify({'success': 'true'})
 
-# DEPRECATED, refer to flights/uid
-@app.route('/flights', methods=['GET', 'POST'])
-def flights():
-	if request.method == 'GET':
-		json = request.get_json()
-		print('headers')
-		print(request.headers)
-
-		# username = json['userid']
-		# STILL NEED TO PERFORM TOKEN VALIDATION IN ALL ROUTES, CHECK IF USER ID IS PRIVATE IF NOT
-
-		with sql.connect("app.db") as con:
-			con.row_factory = sql.Row
-			cur = con.cursor()
-			cur.execute("SELECT departAirports.Latitude AS deptLat, departAirports.Longitude AS deptLong, arriveAirports.Latitude as arrLat, arriveAirports.Longitude as arrLong FROM flight, airport AS departAirports, airport AS arriveAirports WHERE flight.depart_iata = departAirports.IATA AND flight.arrival_iata = arriveAirports.IATA")
-			flightRows = cur.fetchall()
-		print(flightRows)
-		flights = []
-		for flight in flightRows:
-			# NEED TO FETCH CORRECT COLOR BY JOINING WITH TRIP - RIGHT NOW, HARDCODED WITH HOTPINK
-			tempDict = {'firstPointLat': flight['deptLat'], 'firstPointLong': flight['deptLong'], 'secondPointLat': flight['arrLat'], 'secondPointLong': flight['arrLong'], 'color':'hotpink'}
-			flights.append(tempDict)
-		print('here')
-
-		print(flights)
-		# return jsonify({'flights': flights, 'success': 'true'})
-		return jsonify({'flights': [{'firstPointLat': 42, 'firstPointLong': 42, 'secondPointLat': 21, 'secondPointLong': 21, 'color':'lime'}], 'success': 'true'})
-	else: # request method is a POST
-		return {}
+# # DEPRECATED, refer to flights/uid
+# @app.route('/flights', methods=['GET', 'POST'])
+# def flights():
+# 	if request.method == 'GET':
+# 		json = request.get_json()
+# 		print('headers')
+# 		print(request.headers)
+#
+# 		# username = json['userid']
+# 		# STILL NEED TO PERFORM TOKEN VALIDATION IN ALL ROUTES, CHECK IF USER ID IS PRIVATE IF NOT
+#
+# 		with sql.connect("app.db") as con:
+# 			con.row_factory = sql.Row
+# 			cur = con.cursor()
+# 			cur.execute("SELECT departAirports.Latitude AS deptLat, departAirports.Longitude AS deptLong, arriveAirports.Latitude as arrLat, arriveAirports.Longitude as arrLong FROM flight, airport AS departAirports, airport AS arriveAirports WHERE flight.depart_iata = departAirports.IATA AND flight.arrival_iata = arriveAirports.IATA")
+# 			flightRows = cur.fetchall()
+# 		print(flightRows)
+# 		flights = []
+# 		for flight in flightRows:
+# 			# NEED TO FETCH CORRECT COLOR BY JOINING WITH TRIP - RIGHT NOW, HARDCODED WITH HOTPINK
+# 			tempDict = {'firstPointLat': flight['deptLat'], 'firstPointLong': flight['deptLong'], 'secondPointLat': flight['arrLat'], 'secondPointLong': flight['arrLong'], 'color':'hotpink'}
+# 			flights.append(tempDict)
+# 		print('here')
+#
+# 		print(flights)
+# 		# return jsonify({'flights': flights, 'success': 'true'})
+# 		return jsonify({'flights': [{'firstPointLat': 42, 'firstPointLong': 42, 'secondPointLat': 21, 'secondPointLong': 21, 'color':'lime'}], 'success': 'true'})
+# 	else: # request method is a POST
+# 		return {}
 
 @app.route('/flights/<int:uid>', methods=['GET'])
 def get_flights(uid):
@@ -503,7 +508,7 @@ def get_flights(uid):
 	if input_token is None:
 		return jsonify({
 			'success': 'false',
-			'reason': 'none or invalid session token'
+			'reason': 'you do not have permission, login first'
 		})
 
 	with sql.connect("app.db") as con:
