@@ -26,6 +26,7 @@ def register_user():
 		cur.close()
 
 		return jsonify({'success': 'true'}) # TODO: ADD ERROR CHECKING
+		#TODO: not hardcoded public
 
 @app.route('/login/loginattempt', methods=['POST'])
 def login_attempt():
@@ -187,8 +188,8 @@ def addtrip_user():
 			cur.close()
 			return jsonify({'success': 'false'})
 
-		cur.execute("INSERT INTO trip (uid, trip_name,color) VALUES (?,?,?)",(uid, trip_name,color))
-		tid = cur.execute("SELECT last_insert_rowid()")
+		tid = cur.execute("INSERT INTO trip (uid, trip_name,color) VALUES (?,?,?)",(uid, trip_name,color))
+		tid = tid.lastrowid
 
 		for flight in flights:
 			arrival_iata = flight['arr']['airport']
