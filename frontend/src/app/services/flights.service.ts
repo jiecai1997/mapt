@@ -16,7 +16,7 @@ export class FlightsService {
 
   private serverURL = 'http://localhost:5000';
 
-  // FIX THIS SHIT
+
   getFlights(){
 
     const sessionToken = this.loginService.getToken();
@@ -25,13 +25,18 @@ export class FlightsService {
     const uid = this.loginService.getUID();
     const httpOptions = this.createAuthOptions();
 
-    return this.http.get(this.serverURL + '/flights', httpOptions);
+    return this.http.get(this.serverURL + '/flights/' + uid, httpOptions);
   
   }
 
-  getTrips():Observable<any> {
+  getTrips() {
+    const uid = this.loginService.getUID();
     const httpOptions = this.createAuthOptions();
-    return this.http.get<any>(this.serverURL + '/trips', httpOptions);
+    this.http.get(this.serverURL + '/trips/' + uid, httpOptions).subscribe(result => {
+      console.log('trip result from service', result);
+    })
+
+    return this.http.get(this.serverURL + '/trips/' + uid, httpOptions);
   }
 
   // eventually, have the backend give us a session token for the current user, and then feed that session token as well
@@ -42,7 +47,7 @@ export class FlightsService {
   // we also need to think about color - will that get fed in from the frontend? Color string that can be sent w requestBody,
   // have that as a column - will need that in save trip as well
   addTrip(tripName:string, color:string, flights:any[]){
-    const reqBody = {'userID': this.loginService.getUID(), 'tripName': tripName, 'color': color, 'flights': flights};
+    const reqBody = {'uid': this.loginService.getUID(), 'trip_name': tripName, 'color': color, 'flights': flights};
     console.log('reqBody', reqBody);
 
     const httpOptions = this.createAuthOptions();
@@ -62,7 +67,12 @@ export class FlightsService {
 
   public getStats(){
     const httpOptions = this.createAuthOptions();
-    return this.http.get(this.serverURL + '/stats/?uid=' + this.loginService.getUID(), httpOptions);
+
+    this.http.get<any>(this.serverURL + '/stats/' + this.loginService.getUID(), httpOptions).subscribe(result => {
+      console.log('stats result from service', result);
+    })
+
+    return this.http.get<any>(this.serverURL + '/stats/' + this.loginService.getUID(), httpOptions);
   }
 
 
