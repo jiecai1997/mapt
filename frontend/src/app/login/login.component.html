@@ -61,6 +61,16 @@
                                 </mat-error>
                         </mat-form-field>
                     </td></tr>
+
+                    <!-- public -->
+                    <tr *ngIf="isCreateAccount"><td>
+                        <mat-slide-toggle matInput
+                            name="ispublic"
+                            color="primary"
+                            [(ngModel)] = "isPublic">
+                            Public Account
+                        </mat-slide-toggle>
+                    </td></tr>
                 </table>
             </form>
         </mat-card-content>

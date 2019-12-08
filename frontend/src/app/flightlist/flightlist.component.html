@@ -18,8 +18,8 @@
                     <mat-form-field>
                         <input matInput type="text" placeholder="Display Color" [matAutocomplete]="colorAuto" [(ngModel)]="trip.color">
                         <mat-autocomplete #colorAuto="matAutocomplete">
-                            <mat-option *ngFor="let color of colors" [value]="color">
-                                <span [style.color]="color">{{color}}</span>
+                            <mat-option *ngFor="let color of getColorSuggestions(trip.color)" [value]="color" [style.background-color]="color.name">
+                                <span [style.color]="color.grayscale < 0.6 ? 'white' : 'black'">{{color.name}}</span>
                             </mat-option>
                         </mat-autocomplete>
                     </mat-form-field>

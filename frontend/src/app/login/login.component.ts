@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
   email: string;
   username: string;
   password: string;
+  isPublic: boolean = false;
 
   error: string = '';
   showSpinner: boolean = false;
@@ -44,20 +45,19 @@ export class LoginComponent implements OnInit {
     this.showSpinner = true;
 
     if(this.isCreateAccount){
-      this.loginService.newUser(this.username, this.email, this.password).subscribe(
+      this.loginService.newUser(this.username, this.email, this.password, this.isPublic).subscribe(
         result => {
           if(result['success'] == 'true'){
             // account created succesfully so log them in
             this.submitLogin();
           } else{
-            console.log('account creation unsuccessful'); //TODO: deal with this case
-            this.error = 'username already taken';
-            this.username = undefined;
+            this.error = result['reason'];
+            this.username = this.email = undefined;
           }
           this.showSpinner = false;
         }, error => {
-          console.log('error', error);
-          this.error = 'account creation failed - please try again';
+          this.error = 'account creation failed';
+          this.username = this.email = this.password = undefined;
           this.showSpinner = false;
         });
     }
@@ -69,19 +69,14 @@ export class LoginComponent implements OnInit {
     this.loginService.attemptLogin(this.email, this.password).subscribe(result => {
       if(result['success'] == 'true'){
         this.loginService.setSessionToken(result['sessionToken']);
-
-        console.log('got here');
-        console.log('result', result);
         this.router.navigate([result['userid']]);
       } else{
-        console.log('UNSUCCESSFUL'); //TODO: deal with this case
         this.error = 'username or password is incorrect';
         this.email = this.username = this.password = undefined;
       }
       this.showSpinner = false;
     }, error => {
-      console.log('error', error);
-      this.error = 'login failed - please try again';
+      this.error = 'login failed';
       this.showSpinner = false;
     });
   }

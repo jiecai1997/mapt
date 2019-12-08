@@ -36,13 +36,13 @@ export class LoginService {
     localStorage.setItem('sessionToken', sessionToken);
   }
 
-  newUser(username:string, email:string, password:string){
+  newUser(username:string, email:string, password:string, isPublic:boolean){
     // put request to make new user, make a salt-generating function to write to db
     // write to DB salted password - see how to work with request bodies
     
     const hashedSalty:string = this.generatePassword(email, password);
 
-    const reqBody = {'username':username, 'email': email, 'hashedPassword': hashedSalty, 'public': 0};
+    const reqBody = {'username':username, 'email': email, 'hashedPassword': hashedSalty, 'public': isPublic ? 1 : 0};
 
     return this.http.post(this.serverURL + '/login/register', reqBody);
   }
