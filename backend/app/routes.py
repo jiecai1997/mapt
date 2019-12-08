@@ -20,18 +20,28 @@ def register_user():
 	password = json['hashedPassword']
 	is_public = json['public']
 
+	if len(username) >= 20:
+		return jsonify({'success': 'false', 'reason': 'username too long'})
+	if len(email) >= 50:
+		return jsonify({'success': 'false', 'reason': 'email too long'})
+	if len(password) >= 20:
+		return jsonify({'success': 'false', 'reason': 'password too long'})
+
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
 
 		# CHECK - if username or password already exists
-		c = cur.execute("SELECT * FROM user WHERE username=(?) OR email=(?)", (username, email))
+		c = cur.execute("SELECT * FROM user WHERE username=(?)", (username))
 		urow = c.fetchone()
-
-		# FAILURE - username or password already exists
 		if urow:
 			cur.close()
-			return jsonify({'success': 'false', 'reason': 'username exists OR email exists'})
+			return jsonify({'success': 'false', 'reason': 'username exists'})
+		c1 = cur.execute("SELECT * FROM user WHERE email=(?)", (email))
+		urow0 = c1.fetchone()
+		if urow0:
+			cur.close()
+			return jsonify({'success': 'false', 'reason': 'email exists'})
 
 		# SUCCESS - no duplicate entries, add user to database
 		cur.execute("INSERT INTO user (username, email, password, public) VALUES (?,?,?,?)",(username, email, password, is_public))
@@ -77,7 +87,7 @@ def login_attempt():
 		# fail - wrong password for user
 		else:
 			cur.close()
-			return jsonify({'success': 'false', 'reason': 'wrong password'}) # TODO: ERROR CHECKING
+			return jsonify({'success': 'false', 'reason': 'wrong password'})
 
 # check if a user is logged in
 @app.route('/login/verify/<int:uid>', methods=['GET'])
