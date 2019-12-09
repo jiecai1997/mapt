@@ -5,6 +5,11 @@ html, body, .mat-app-background { /* make theme take up whole page */
     overflow-y: auto;
 }
 
+::-webkit-scrollbar {  /* hide scrollbar */
+    width: 0px;
+    background: transparent;
+}
+
 body { 
     margin: 0; 
     font-family: Roboto, "Helvetica Neue", sans-serif;
