@@ -31,12 +31,12 @@ def get_airline(substring):
 	with sql.connect("app.db") as con:
 		con.row_factory = sql.Row
 		cur = con.cursor()
-		c = cur.execute("SELECT iata from airline where iata LIKE (?)", [substring])
+		c = cur.execute("SELECT name from airline where name LIKE (?)", [substring])
 		urow = c.fetchall()
 		ret = []
 		i = 0
 		for row in urow:
-			ret.append(row['iata'])
+			ret.append(row['name'])
 			i+=1
 			if i == 15:
 				break
