@@ -236,7 +236,7 @@ def getstats_user(uid):
 		stats_per_trip = cur.execute("SELECT SUM(mileage) as mileage, SUM(duration) as duration FROM Trip NATURAL JOIN Flight WHERE uid = (?)",[uid])
 		result = cur.fetchall()
 
-		num_flight = cur.execute("SELECT COUNT(*) as count FROM flight JOIN trip WHERE uid = (?)", [uid])
+		num_flight = cur.execute("SELECT COUNT(*) as count FROM flight NATURAL JOIN trip WHERE uid = (?)", [uid])
 		nflight = cur.fetchone()
 
 		num_trip = cur.execute("SELECT COUNT(*) as count FROM trip WHERE uid = (?)", [uid])
@@ -246,9 +246,9 @@ def getstats_user(uid):
 			'''
 			SELECT COUNT(DISTINCT airport) FROM 
 			(
-				SELECT DISTINCT depart_iata as airport FROM flight JOIN trip WHERE uid = (?)
+				SELECT DISTINCT depart_iata as airport FROM flight NATURAL JOIN trip WHERE uid = (?)
 				UNION
-				SELECT DISTINCT arrival_iata as airport FROM flight JOIN trip WHERE uid = (?)
+				SELECT DISTINCT arrival_iata as airport FROM flight NATURAL JOIN trip WHERE uid = (?)
 			) AS airports
 			'''
 		, [uid, uid]
@@ -259,9 +259,9 @@ def getstats_user(uid):
 			'''
 			SELECT COUNT(DISTINCT country) FROM
 			(
-				SELECT DISTINCT country FROM flight JOIN trip JOIN airport ON depart_iata = iata WHERE uid = (?)
+				SELECT DISTINCT country FROM flight NATURAL JOIN trip JOIN airport ON depart_iata = iata WHERE uid = (?)
 				UNION
-				SELECT DISTINCT country FROM flight JOIN trip JOIN airport ON arrival_iata = iata WHERE uid = (?)
+				SELECT DISTINCT country FROM flight NATURAL JOIN trip JOIN airport ON arrival_iata = iata WHERE uid = (?)
 			) AS countries
 			'''
 		, [uid, uid])
