@@ -57,7 +57,7 @@ export class LoginComponent implements OnInit {
           this.showSpinner = false;
         }, error => {
           this.error = 'account creation failed';
-          this.username = this.email = this.password = undefined;
+          this.email = this.password = undefined;
           this.showSpinner = false;
         });
     }
@@ -71,8 +71,8 @@ export class LoginComponent implements OnInit {
         this.loginService.setSessionToken(result['sessionToken']);
         this.router.navigate([result['userid']]);
       } else{
-        this.error = 'username or password is incorrect';
-        this.email = this.username = this.password = undefined;
+        this.error = result['reason'];
+        this.email = this.password = undefined;
       }
       this.showSpinner = false;
     }, error => {

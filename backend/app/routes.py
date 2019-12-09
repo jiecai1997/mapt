@@ -70,12 +70,12 @@ def register_user():
 		cur = con.cursor()
 
 		# CHECK - if username or password already exists
-		c = cur.execute("SELECT * FROM user WHERE username=(?)", (username))
+		c = cur.execute("SELECT * FROM user WHERE username=(?)", [username])
 		urow = c.fetchone()
 		if urow:
 			cur.close()
 			return jsonify({'success': 'false', 'reason': 'This username is taken'})
-		c1 = cur.execute("SELECT * FROM user WHERE email=(?)", (email))
+		c1 = cur.execute("SELECT * FROM user WHERE email=(?)", [email])
 		urow0 = c1.fetchone()
 		if urow0:
 			cur.close()
@@ -102,7 +102,7 @@ def login_attempt():
 
 		# fail - no user exists
 		if urow is None:
-			return jsonify({'success': 'false', 'reason': 'There no account with this email'})
+			return jsonify({'success': 'false', 'reason': 'There is no account with this email'})
 
 		db_uid = urow[0]
 		db_username = urow[1]
@@ -234,10 +234,10 @@ def getstats_user(uid):
 		for row in result:
 			d1={}
 			d1['title']='mileage'
-			d1['value']=row['mileage']
+			d1['value']=str(row["mileage"] or 0) + ' miles'
 			d2={}
 			d2['title']='duration'
-			minutes = row['duration']
+			minutes = row['duration'] or 0
 			hours = minutes/60
 			minutesRemaining = minutes % 60
 			d2['value']=str(int(hours)) + " hours and " + str(minutesRemaining) + " minutes"
