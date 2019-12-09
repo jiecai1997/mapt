@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FlightsService } from '@app/services/flights.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-stats',
@@ -9,11 +10,15 @@ import { FlightsService } from '@app/services/flights.service';
 export class StatsComponent implements OnInit {
   stats: Array<any> = [];
 
-  constructor(private flightsService: FlightsService) { }
+  constructor(private router: Router, private flightsService: FlightsService) { }
 
   ngOnInit() {
     this.flightsService.getStats().subscribe(result => {
-      this.stats = result['stats'];
+      if(result['success'] == 'true'){
+        this.stats = result['stats'];
+      }else{
+          this.router.navigate([''])
+      }
     });
   }
 

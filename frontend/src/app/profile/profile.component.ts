@@ -22,6 +22,7 @@ export class ProfileComponent implements OnInit {
     Validators.required
   ]);
 
+  error: string = '';
   showSpinner: boolean = false;
 
   constructor(private router: Router, private flightsService: FlightsService, private loginService:LoginService) { }
@@ -33,7 +34,7 @@ export class ProfileComponent implements OnInit {
         this.origIsPublic = this.isPublic = result['isPublic'];
       }
       else{
-        console.log('GETTING PROFILE INFO FAILED'); //TODO: deal with this case
+        this.router.navigate(['']);
       }
     });
   }
@@ -50,7 +51,7 @@ export class ProfileComponent implements OnInit {
         });
       }
       else{
-        console.log('FAILED TO UPDATE ACCOUNT INFO'); //TODO: deal with this case
+        this.error = result['reason'];
         this.cancel();
       }
       this.showSpinner = false;

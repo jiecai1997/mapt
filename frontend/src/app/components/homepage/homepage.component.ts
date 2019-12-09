@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { LoginService } from '@app/services/login.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { LoginService } from '@app/services/login.service';
+import { FlightsService } from '@app/services/flights.service';
 
 @Component({
   selector: 'app-homepage',
@@ -8,20 +9,25 @@ import { Router, ActivatedRoute } from '@angular/router';
   styleUrls: ['./homepage.component.css']
 })
 export class HomepageComponent implements OnInit {
-  loggedIn: boolean = true;
+  loggedIn: boolean = false;
 
-  constructor(private route: ActivatedRoute, private router: Router, private loginService: LoginService) { }
+  constructor(private route: ActivatedRoute, private router: Router, private loginService: LoginService, private flightService: FlightsService) { }
 
   ngOnInit() {
     // set uid based on url
-    const uid = this.route.snapshot.paramMap.get('id');
-    this.loginService.setUID(parseInt(uid));
+    const uid: number = parseInt(this.route.snapshot.paramMap.get('id'));
     console.log('uid', uid);
 
-    // determine if user is logged in
-    // this.loginService.verifyLoggedIn().subscribe(result => {
-    //   if(result['loggedin'])
-    // });
+    if(isNaN(uid)){
+      this.router.navigate(['']);
+    }else{
+      this.loginService.setUID(uid);
+
+      // determine if user is logged in
+      this.flightService.verifyLogin().subscribe(result => {
+        this.loggedIn = result['loggedIn'];
+      });
+    }
   }
 
   logout(): void {

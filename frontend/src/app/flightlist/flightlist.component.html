@@ -4,6 +4,7 @@
         <mat-expansion-panel *ngFor="let trip of trips; let tripIndex = index" [expanded]="isAddTrip && tripIndex == 0">
             <mat-expansion-panel-header>
                 <mat-panel-title>{{trip.tripName}}</mat-panel-title>
+                <mat-card-subtitle *ngIf="errors[tripIndex].length > 0" class="warn-text">{{errors[tripIndex]}}</mat-card-subtitle>
             </mat-expansion-panel-header>
         
             <mat-divider></mat-divider>
