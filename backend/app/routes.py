@@ -325,8 +325,15 @@ def addtrip_user():
 			depart_lat = depart_airport["latitude"]
 			depart_long = depart_airport["longitude"]
 
-			airline_iata = flight['airline']
-			flight_num = flight['number']
+			if 'airline' in flight:
+				airline_iata = flight['airline']
+			else:
+				airline_iata = None
+
+			if 'number' in flight:
+				flight_num = flight['number']
+			else:
+				flight_num = None
 
 			depart_date = flight['depart_date'].split("T")[0].split("-")
 			depart_mth = depart_date[1]
@@ -542,8 +549,15 @@ def updatetrip_user():
 			depart_lat = depart_airport["latitude"]
 			depart_long = depart_airport["longitude"]
 
-			airline_iata = flight['airline']
-			flight_num = flight['number']
+			if 'airline' in flight:
+				airline_iata = flight['airline']
+			else:
+				airline_iata = None
+
+			if 'number' in flight:
+				flight_num = flight['number']
+			else:
+				flight_num = None
 
 			depart_date = flight['depart_date'].split("T")[0].split("-")
 			depart_mth = depart_date[1]
@@ -588,7 +602,7 @@ def updatetrip_user():
 			cur.execute("INSERT INTO flight (tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage) VALUES (?,?,?,?,?,?,?,?,?)",(tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage))
 		con.commit()
 		cur.close()
-		return jsonify({'success': 'true'})
+		return jsonify({'success': 'true'})``
 
 # # DEPRECATED, refer to flights/uid
 # @app.route('/flights', methods=['GET', 'POST'])
