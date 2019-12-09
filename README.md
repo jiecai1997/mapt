@@ -17,3 +17,4 @@ If you want to see the current state of the database you can go to http://127.0.
 
 ## Play around with Mapt!
 You can create an account, add your trips, view other user's mapt (if they are public), and see statistics about your travel history!
+Using the version of app.db given in the repo, you can view a sample profile by going to localhost:4200/1
