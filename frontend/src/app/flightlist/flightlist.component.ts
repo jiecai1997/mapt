@@ -33,7 +33,7 @@ export class FlightlistComponent implements OnInit {
 
     if(this.isAddTrip){
       // add one trip with one flight
-      this.trips = [{tripName: '', color: '', flights: []}]
+      this.trips = [{tripName: 'Trip Name', color: '', flights: []}]
       this.errors = [''];
       this.addFlight(0); // start with one flight
     }else{
@@ -70,7 +70,7 @@ export class FlightlistComponent implements OnInit {
   }
 
   addFlight(tripIndex: number): void{
-    this.trips[tripIndex].flights.push({dep: {}, arr: {}});
+    this.trips[tripIndex].flights.push({});
     this.lastAddedTo = tripIndex;
   }
 
@@ -141,16 +141,16 @@ export class FlightlistComponent implements OnInit {
   }
 
   hasErrors(trip: any): boolean{
-    // console.log(trip);
+    console.log('hsaerror', trip);
     var hasFlightError = false;
     trip.flights.forEach(flight => {
       hasFlightError = hasFlightError || 
-        flight['departAirport'] == undefined || flight['departAirport'] == null ||
-        flight['arrivalAirport'] == undefined || flight['arrivalAirport'] == null ||
-        flight['depart_date'] == undefined || flight['depart_date'] == null ||
-        flight['arrival_date'] == undefined || flight['arrival_date'] == null ||
-        flight['depart_time'] == undefined || flight['depart_time'] == null || 
-        flight['arrival_time'] == undefined || flight['arrival_time'] == null
+        flight['departAirport'] == undefined || flight['departAirport'] == null || flight['departAirport'] == '' ||
+        flight['arrivalAirport'] == undefined || flight['arrivalAirport'] == null || flight['arrivalAirport'] == '' ||
+        flight['depart_date'] == undefined || flight['depart_date'] == null ||  flight['depart_date'] == '' ||
+        flight['arrival_date'] == undefined || flight['arrival_date'] == null || flight['arrival_date'] == '' ||
+        flight['depart_time'] == undefined || flight['depart_time'] == null || flight['depart_time'] == '' || 
+        flight['arrival_time'] == undefined || flight['arrival_time'] == null || flight['arrival_time'] == ''
     });
 
     return hasFlightError || trip.tripName == '' || trip.color == '';

@@ -184,20 +184,24 @@ def update_profile():
 		cur = con.cursor()
 		c = cur.execute("SELECT session from user where uid = (?)", [uid])
 		urow = c.fetchone()
-		con.commit()
-		cur.close()
 
 		# you do not have permission to change this
 		if not urow:
+			con.commit()
+			cur.close()
 			return jsonify({'success': 'false', 'reason': 'You do not have permission'})
 
 		session_token = request.headers.get('Authorization')
 		if urow[0] != session_token:
+			con.commit()
+			cur.close()
 			return jsonify({'success': 'false', 'reason': 'You do not have permission'})
 
 		c1 = cur.execute("SELECT * from user where username = (?) and uid != (?)", [username, uid])
 		urow1 = c.fetchone()
 		if urow1:
+			con.commit()
+			cur.close()
 			return jsonify({'success': 'false', 'reason': 'This username is taken'})
 
 		cur.execute("UPDATE user SET username = (?), public = (?) WHERE uid = (?)", [username, isPublic, uid])
