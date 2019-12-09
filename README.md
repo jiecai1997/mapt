@@ -11,7 +11,8 @@ Make sure that all dependencies are installed. The frontend dependencies are thr
 ## Backend
 NOTE: Do not remove or delete the database or migrations folder. The database has been created and seeded appropriately.
 1. `cd` to the backend directory
-2. on mac or linux, run `./flast-restart-on-file-change.sh`; on windows run `set FLASK_DEBUG=1 && set FLASK_APP=app.py && flask run`
+2. run `pip3 install -r requirements.txt` to install dependencies 
+3. on mac or linux, run `./flast-restart-on-file-change.sh`; on windows run `set FLASK_DEBUG=1 && set FLASK_APP=app.py && flask run`
 If you want to see the current state of the database you can go to http://127.0.0.1:5000/list in your browser (or localhost:5000/list)
 
 ## Play around with Mapt!
