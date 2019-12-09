@@ -449,7 +449,7 @@ def gettrips_user(uid):
 
 				flightdic = {}
 
-				flightdic['airline']=cur.execute("SELECT name FROM airline WHERE iata = (?)",[flight['airline_iata']])
+				flightdic['airline']=cur.execute("SELECT name FROM airline WHERE iata = (?)",[flight['airline_iata']]).fetchone()['name']
 				flightdic['number']=flight['flight_num']
 
 				flightdic['color']=row['color']
