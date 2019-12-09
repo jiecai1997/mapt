@@ -242,16 +242,29 @@ def getstats_user(uid):
 		num_trip = cur.execute("SELECT COUNT(*) as count FROM trip WHERE uid = (?)", [uid])
 		ntrip = cur.fetchone()
 
-		num_airport = cur.execute("SELECT COUNT(DISTINCT airport) FROM (
-		SELECT DISTINCT depart_iata as airport FROM flight JOIN trip WHERE uid = (?)
-		UNION
-		SELECT DISTINCT arrival_iata as airport FROM flight JOIN trip WHERE uid = (?))", [uid, uid])
+		num_airport = cur.execute(
+			'''
+			SELECT COUNT(DISTINCT airport) FROM 
+			(
+				SELECT DISTINCT depart_iata as airport FROM flight JOIN trip WHERE uid = (?)
+				UNION
+				SELECT DISTINCT arrival_iata as airport FROM flight JOIN trip WHERE uid = (?)
+			) AS airports
+			'''
+		, [uid, uid]
+		)
 		nairport = cur.fetchone()
 
-		num_country = cur.execute("SELECT COUNT(DISTINCT country) FROM (
-		SELECT DISTINCT country FROM flight JOIN trip JOIN airport ON depart_iata = iata WHERE uid = (?)
-		UNION
-		SELECT DISTINCT country FROM flight JOIN trip JOIN airport ON arrival_iata = iata WHERE uid = (?))", [uid, uid])
+		num_country = cur.execute(
+			'''
+			SELECT COUNT(DISTINCT country) FROM
+			(
+				SELECT DISTINCT country FROM flight JOIN trip JOIN airport ON depart_iata = iata WHERE uid = (?)
+				UNION
+				SELECT DISTINCT country FROM flight JOIN trip JOIN airport ON arrival_iata = iata WHERE uid = (?)
+			) AS countries
+			'''
+		, [uid, uid])
 		ncountry = cur.fetchone()
 
 		con.commit()
