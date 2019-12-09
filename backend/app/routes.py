@@ -272,6 +272,19 @@ def getstats_user(uid):
 
 		trip_stats = []
 
+		for row in result:
+			d1={}
+			d1['title']='Total Mileage'
+			d1['value']=str(row["mileage"] or 0) + ' miles'
+			d2={}
+			d2['title']='Total Duration'
+			minutes = row['duration'] or 0
+			hours = minutes/60
+			minutesRemaining = minutes % 60
+			d2['value']=str(int(hours)) + " hours and " + str(minutesRemaining) + " minutes"
+			trip_stats.append(d1)
+			trip_stats.append(d2)
+
 		d3={}
 		d3['title']='Total Flights'
 		d3['value']=str(nflight[0])
@@ -291,19 +304,6 @@ def getstats_user(uid):
 		d6['title']='Total Countries'
 		d6['value']=str(ncountry[0])
 		trip_stats.append(d6)
-
-		for row in result:
-			d1={}
-			d1['title']='Total Mileage'
-			d1['value']=str(row["mileage"] or 0) + ' miles'
-			d2={}
-			d2['title']='Total Duration'
-			minutes = row['duration'] or 0
-			hours = minutes/60
-			minutesRemaining = minutes % 60
-			d2['value']=str(int(hours)) + " hours and " + str(minutesRemaining) + " minutes"
-			trip_stats.append(d1)
-			trip_stats.append(d2)
 
 		return jsonify({'success': 'true', 'stats': trip_stats})
 
