@@ -236,41 +236,41 @@ def getstats_user(uid):
 		stats_per_trip = cur.execute("SELECT SUM(mileage) as mileage, SUM(duration) as duration FROM Trip NATURAL JOIN Flight WHERE uid = (?)",[uid])
 		result = cur.fetchall()
 
-		num_flight = cur.execute("SELECT COUNT(*) as count FROM flight NATURAL JOIN trip WHERE uid = (?)", [uid])
+		num_flight = cur.execute("SELECT COUNT(*) as count FROM flight JOIN trip WHERE uid = (?)", [uid])
 		nflight = cur.fetchone()
 
 		num_trip = cur.execute("SELECT COUNT(*) as count FROM trip WHERE uid = (?)", [uid])
 		ntrip = cur.fetchone()
 
-		num_airport = cur.execute(
-			'''
-			SELECT COUNT(DISTINCT airport) FROM 
-			(
-				SELECT DISTINCT depart_iata as airport FROM flight NATURAL JOIN trip WHERE uid = (?)
-				UNION
-				SELECT DISTINCT arrival_iata as airport FROM flight NATURAL JOIN trip WHERE uid = (?)
-			) AS airports
-			'''
-		, [uid, uid]
-		)
+		num_airport = cur.execute("SELECT COUNT(DISTINCT airport) FROM (
+		SELECT DISTINCT depart_iata as airport FROM flight JOIN trip WHERE uid = (?)
+		UNION
+		SELECT DISTINCT arrival_iata as airport FROM flight JOIN trip WHERE uid = (?))", [uid, uid])
 		nairport = cur.fetchone()
 
-		num_country = cur.execute(
-			'''
-			SELECT COUNT(DISTINCT country) FROM
-			(
-				SELECT DISTINCT country FROM flight NATURAL JOIN trip JOIN airport ON depart_iata = iata WHERE uid = (?)
-				UNION
-				SELECT DISTINCT country FROM flight NATURAL JOIN trip JOIN airport ON arrival_iata = iata WHERE uid = (?)
-			) AS countries
-			'''
-		, [uid, uid])
+		num_country = cur.execute("SELECT COUNT(DISTINCT country) FROM (
+		SELECT DISTINCT country FROM flight JOIN trip JOIN airport ON depart_iata = iata WHERE uid = (?)
+		UNION
+		SELECT DISTINCT country FROM flight JOIN trip JOIN airport ON arrival_iata = iata WHERE uid = (?))", [uid, uid])
 		ncountry = cur.fetchone()
 
 		con.commit()
 		cur.close()
 
 		trip_stats = []
+
+		for row in result:
+			d1={}
+			d1['title']='Total Mileage'
+			d1['value']=str(row["mileage"] or 0) + ' miles'
+			d2={}
+			d2['title']='Total Duration'
+			minutes = row['duration'] or 0
+			hours = minutes/60
+			minutesRemaining = minutes % 60
+			d2['value']=str(int(hours)) + " hours and " + str(minutesRemaining) + " minutes"
+			trip_stats.append(d1)
+			trip_stats.append(d2)
 
 		d3={}
 		d3['title']='Total Flights'
@@ -291,20 +291,7 @@ def getstats_user(uid):
 		d6['title']='Total Countries'
 		d6['value']=str(ncountry[0])
 		trip_stats.append(d6)
-
-		for row in result:
-			d1={}
-			d1['title']='Total Mileage'
-			d1['value']=str(row["mileage"] or 0) + ' miles'
-			d2={}
-			d2['title']='Total Duration'
-			minutes = row['duration'] or 0
-			hours = minutes/60
-			minutesRemaining = minutes % 60
-			d2['value']=str(int(hours)) + " hours and " + str(minutesRemaining) + " minutes"
-			trip_stats.append(d1)
-			trip_stats.append(d2)
-
+		
 		return jsonify({'success': 'true', 'stats': trip_stats})
 
 
