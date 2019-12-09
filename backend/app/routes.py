@@ -134,7 +134,7 @@ def verify_user(uid):
 
 		input_token = request.headers.get('Authorization')
 		if not urow or urow[0] != input_token:
-			# FAILURE - user does not exist or login token for user stored in database != header token		
+			# FAILURE - user does not exist or login token for user stored in database != header token
 			return jsonify({'loggedIn': 'false', 'reason': 'You do not have permission'})
 		else:
 			# SUCCESS - if login token for user stored in database = header token
@@ -236,16 +236,22 @@ def getstats_user(uid):
 		stats_per_trip = cur.execute("SELECT SUM(mileage) as mileage, SUM(duration) as duration FROM Trip NATURAL JOIN Flight WHERE uid = (?)",[uid])
 		result = cur.fetchall()
 
-		num_flight = cur.execute("SELECT COUNT(*) as count FROM flight WHERE uid = (?)", [uid])
+		num_flight = cur.execute("SELECT COUNT(*) as count FROM flight JOIN trip WHERE uid = (?)", [uid])
 		nflight = cur.fetchone()
 
 		num_trip = cur.execute("SELECT COUNT(*) as count FROM trip WHERE uid = (?)", [uid])
 		ntrip = cur.fetchone()
 
-		num_airport = cur.execute("SELECT COUNT(DISTINCT airport) FROM (SELECT DISTINCT depart_iata as airport FROM flight WHERE uid = (?) UNION SELECT DISTINCT arrival_iata as airport FROM flight  WHERE uid = (?))", [uid, uid])
+		num_airport = cur.execute("SELECT COUNT(DISTINCT airport) FROM (
+		SELECT DISTINCT depart_iata as airport FROM flight JOIN trip WHERE uid = (?)
+		UNION
+		SELECT DISTINCT arrival_iata as airport FROM flight JOIN trip WHERE uid = (?))", [uid, uid])
 		nairport = cur.fetchone()
 
-		num_country = cur.execute("SELECT COUNT(DISTINCT country) FROM (SELECT DISTINCT country FROM flight JOIN airport ON depart_iata = iata WHERE uid = (?) UNION SELECT DISTINCT country FROM flight JOIN airport ON arrival_iata = iata WHERE uid = (?))", [uid, uid])
+		num_country = cur.execute("SELECT COUNT(DISTINCT country) FROM (
+		SELECT DISTINCT country FROM flight JOIN trip JOIN airport ON depart_iata = iata WHERE uid = (?)
+		UNION
+		SELECT DISTINCT country FROM flight JOIN trip JOIN airport ON arrival_iata = iata WHERE uid = (?))", [uid, uid])
 		ncountry = cur.fetchone()
 
 		con.commit()
