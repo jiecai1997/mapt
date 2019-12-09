@@ -47,7 +47,6 @@ class Trip(db.Model):
 	trip_name = db.Column(db.String(30), default="Trip Created on " + str(datetime.now()), nullable=False)
 	color = db.Column(db.String(30), nullable=False)
 	flight_rel = db.relationship('Flight', backref=db.backref('flight', lazy=True))
-	detail_rel = db.relationship('Detail', backref=db.backref('trip', lazy=True))
 
 	def __repr__(self):
 		return '<Trip {}>'.format(self.tid)
@@ -78,7 +77,6 @@ class Airport(db.Model):
 	dst = db.Column(db.String(1), nullable=False)
 	aflight_rel = db.relationship('Flight', backref=db.backref('arrival', lazy=True), foreign_keys = 'Flight.arrival_iata')
 	dflight_rel = db.relationship('Flight', backref=db.backref('depart', lazy=True), foreign_keys = 'Flight.depart_iata')
-	detail_rel = db.relationship('Detail', backref=db.backref('airport', lazy=True))
 
 	def __repr__(self):
 		return '<Airport {}>'.format(self.iata)
@@ -105,13 +103,3 @@ class Flight(db.Model):
 
 	def __repr__(self):
 		return '<Flight {}>'.format(self.fid)
-
-
-class Detail(db.Model):
-	did = db.Column(db.Integer, primary_key=True)
-	tid = db.Column(db.Integer, db.ForeignKey('trip.tid', ondelete="CASCADE"), nullable=False)
-	iata = db.Column(db.String(3), db.ForeignKey('airport.iata', ondelete="CASCADE"), nullable=False)
-	note = db.Column(db.String(500), nullable=False)
-
-	def __repr__(self):
-		return '<Detail {}>'.format(self.did)
