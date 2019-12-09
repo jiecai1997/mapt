@@ -11,8 +11,8 @@
 </mat-toolbar>
 
 <mat-tab-group class="hidden-tabs" [(selectedIndex)]="selectedTab">
-    <mat-tab> <app-mappage></app-mappage> </mat-tab>
-    <mat-tab *ngIf="loggedIn"> <app-flightlist [isAddTrip]="true"></app-flightlist> </mat-tab>
-    <mat-tab *ngIf="loggedIn"> <app-flightlist [isAddTrip]="false"></app-flightlist> </mat-tab>
-    <mat-tab *ngIf="loggedIn"> <app-profile></app-profile> </mat-tab>
+    <mat-tab><div class="subbar"> <app-mappage></app-mappage> </div></mat-tab>
+    <mat-tab *ngIf="loggedIn"><div class="subbar"> <app-flightlist [isAddTrip]="true"></app-flightlist> </div></mat-tab>
+    <mat-tab *ngIf="loggedIn"><div class="subbar"> <app-flightlist [isAddTrip]="false"></app-flightlist> </div></mat-tab>
+    <mat-tab *ngIf="loggedIn"><div class="subbar"> <app-profile></app-profile> </div></mat-tab>
 </mat-tab-group>

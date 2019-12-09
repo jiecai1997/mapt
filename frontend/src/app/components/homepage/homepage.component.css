@@ -4,9 +4,5 @@ span{
 
 .logout-button {
     position: absolute;
-    right: 2%; /* move to right side of top bar"
-}
-
-::ng-deep .mat-tab-body-content { /* deep ensures that property from angular mat theme file is overriden */
-    overflow: hidden !important;
+    right: 2%; /* move to right side of top bar */
 }
