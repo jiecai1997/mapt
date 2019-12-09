@@ -2,7 +2,12 @@
 
 html, body, .mat-app-background { /* make theme take up whole page */
     height: 100%;
-    overflow: hidden;
+    overflow-y: auto;
+}
+
+::-webkit-scrollbar {  /* hide scrollbar */
+    width: 0px;
+    background: transparent;
 }
 
 body { 
@@ -12,6 +17,15 @@ body {
 
 mat-card {
     margin: 5px;
+}
+
+mat-toolbar {  /* ensure that topbar does not scroll */
+    position: fixed;
+    width: 100%;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    border-top: 0;
 }
 
 .mat-spinner {
@@ -28,7 +42,8 @@ mat-card {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-top: 50px;
+    padding-top: 25px;
+    padding-bottom: 25px;
 }
 
 .form-card-container table { /* select tables in .form-card-containers */
@@ -41,4 +56,8 @@ mat-card {
 
 .warn-text {
     color: #f44336; /* mat theme warn color */
+}
+
+.subbar {
+    padding-top: 64px;
 }
