@@ -25,7 +25,7 @@ export class HomepageComponent implements OnInit {
 
       // determine if user is logged in
       this.flightService.verifyLogin().subscribe(result => {
-        this.loggedIn = result['loggedIn'];
+        this.loggedIn = result['loggedIn'] == 'true';
       });
     }
   }

@@ -33,9 +33,6 @@ export class ProfileComponent implements OnInit {
         this.origUsername = this.username = result['username'];
         this.origIsPublic = this.isPublic = result['isPublic'];
       }
-      else{
-        this.router.navigate(['']);
-      }
     });
   }
 

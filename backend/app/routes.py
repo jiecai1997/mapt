@@ -132,15 +132,13 @@ def verify_user(uid):
 		urow = c.fetchone()
 		cur.close()
 
-		# FAILURE - if login token for user stored in database != header token
-		if not urow:
-			return jsonify({'loggedIn': 'false', 'reason': 'You do not have permission'})
-
-		# SUCCESS - if login token for user stored in database = header token
 		input_token = request.headers.get('Authorization')
-		if urow[0] == input_token:
+		if not urow or urow[0] != input_token:
+			# FAILURE - user does not exist or login token for user stored in database != header token		
+			return jsonify({'loggedIn': 'false', 'reason': 'You do not have permission'})
+		else:
+			# SUCCESS - if login token for user stored in database = header token
 			return jsonify({'loggedIn': 'true'})
-
 
 
 @app.route('/profile/<int:uid>', methods=['GET'])
