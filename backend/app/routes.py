@@ -62,7 +62,7 @@ def register_user():
 		return jsonify({'success': 'false', 'reason': 'Your username is too long'})
 	if len(email) >= 50:
 		return jsonify({'success': 'false', 'reason': 'Your email is too long'})
-	if len(password) >= 20:
+	if len(password) >= 50:
 		return jsonify({'success': 'false', 'reason': 'Your password is too long'})
 
 	with sql.connect("app.db") as con:
@@ -255,7 +255,7 @@ def addtrip_user():
 	uid = json['uid']
 	trip_name = json['trip_name']
 	color = json['color']
-	flight_number = json['number']
+	flights = json['flights']
 	monthdic = {'01':'Jan', '02':'Feb','03':'Mar', '04':'Apr','05':'May','06':'Jun','07':'Jul','08':'Aug','09':'Sep','10':'Oct','11':'Nov','12':'Dec'}
 
 	def deg2rad(deg):
@@ -393,14 +393,16 @@ def gettrips_user(uid):
 			flightrows = cur.fetchall()
 			for flight in flightrows:
 				depart_iata = flight['depart_iata']
-				depart_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[depart_iata]).fetchone()
 				depart_datetime = flight['depart_datetime']
 
 				arrival_iata = flight['arrival_iata']
-				arrival_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[arrival_iata]).fetchone()
 				arrival_datetime = flight['arrival_datetime']
 
 				flightdic = {}
+
+				flightdic['airline']=flight['airline']
+				flightdic['number']=flight['number']
+
 				flightdic['color']=row['color']
 
 				flightdic['departAirport']= depart_iata
@@ -522,7 +524,7 @@ def updatetrip_user():
 			depart_long = depart_airport["longitude"]
 
 			airline_iata = flight['airline']
-			flight_num = flight['number'] 
+			flight_num = flight['number']
 
 			print('flight')
 			print(flight)
