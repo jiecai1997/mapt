@@ -45,21 +45,19 @@ export class FlightlistComponent implements OnInit {
             this.trips.forEach(x => {
               let flights = x['flights'];
               flights.forEach(flight => {
-
                 let originalArrDate = flight['arrival_date'];
-                let originalArrYear = originalArrDate.substring(0,4);
-                let originalArrMonth = originalArrDate.substring(4,6);
-                let originalArrDay = originalArrDate.substring(6,8);
+                let originalArrYear = parseInt(originalArrDate.substring(0,4));
+                let originalArrMonth = parseInt(originalArrDate.substring(4,6)) - 1;
+                let originalArrDay = parseInt(originalArrDate.substring(6,8));
 
                 flight['arrival_date'] = new Date(originalArrYear, originalArrMonth, originalArrDay)
 
                 let originalDeptDate = flight['depart_date'];
-                let originalDeptYear = originalDeptDate.substring(0,4);
-                let originalDeptMonth = originalDeptDate.substring(4,6);
-                let originalDeptDay = originalDeptDate.substring(6,8);
+                let originalDeptYear = parseInt(originalDeptDate.substring(0,4));
+                let originalDeptMonth = parseInt(originalDeptDate.substring(4,6)) - 1;
+                let originalDeptDay = parseInt(originalDeptDate.substring(6,8));
 
                 flight['depart_date'] = new Date(originalDeptYear, originalDeptMonth, originalDeptDay)
-
               })
             })
 
@@ -132,7 +130,7 @@ export class FlightlistComponent implements OnInit {
             this.router.navigate([uid]);
           });
         } else{
-          console.log('Modifying trip failed'); //TODO: deal with this case
+          console.log('Modifying trip failed');
           this.errors[tripIndex] = result['reason'];
         }
         this.showSpinner = false;
@@ -141,7 +139,6 @@ export class FlightlistComponent implements OnInit {
   }
 
   hasErrors(trip: any): boolean{
-    console.log('hsaerror', trip);
     var hasFlightError = false;
     trip.flights.forEach(flight => {
       hasFlightError = hasFlightError || 
