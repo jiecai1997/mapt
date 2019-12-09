@@ -134,7 +134,7 @@ def verify_user(uid):
 
 		input_token = request.headers.get('Authorization')
 		if not urow or urow[0] != input_token:
-			# FAILURE - user does not exist or login token for user stored in database != header token		
+			# FAILURE - user does not exist or login token for user stored in database != header token
 			return jsonify({'loggedIn': 'false', 'reason': 'You do not have permission'})
 		else:
 			# SUCCESS - if login token for user stored in database = header token
@@ -235,16 +235,69 @@ def getstats_user(uid):
 
 		stats_per_trip = cur.execute("SELECT SUM(mileage) as mileage, SUM(duration) as duration FROM Trip NATURAL JOIN Flight WHERE uid = (?)",[uid])
 		result = cur.fetchall()
+
+		num_flight = cur.execute("SELECT COUNT(*) as count FROM flight JOIN trip WHERE uid = (?)", [uid])
+		nflight = cur.fetchone()
+
+		num_trip = cur.execute("SELECT COUNT(*) as count FROM trip WHERE uid = (?)", [uid])
+		ntrip = cur.fetchone()
+
+		num_airport = cur.execute(
+			'''
+			SELECT COUNT(DISTINCT airport) FROM 
+			(
+				SELECT DISTINCT depart_iata as airport FROM flight JOIN trip WHERE uid = (?)
+				UNION
+				SELECT DISTINCT arrival_iata as airport FROM flight JOIN trip WHERE uid = (?)
+			) AS airports
+			'''
+		, [uid, uid]
+		)
+		nairport = cur.fetchone()
+
+		num_country = cur.execute(
+			'''
+			SELECT COUNT(DISTINCT country) FROM
+			(
+				SELECT DISTINCT country FROM flight JOIN trip JOIN airport ON depart_iata = iata WHERE uid = (?)
+				UNION
+				SELECT DISTINCT country FROM flight JOIN trip JOIN airport ON arrival_iata = iata WHERE uid = (?)
+			) AS countries
+			'''
+		, [uid, uid])
+		ncountry = cur.fetchone()
+
 		con.commit()
 		cur.close()
 
 		trip_stats = []
+
+		d3={}
+		d3['title']='Total Flights'
+		d3['value']=str(nflight[0])
+		trip_stats.append(d3)
+
+		d4={}
+		d4['title']='Total Trips'
+		d4['value']=str(ntrip[0])
+		trip_stats.append(d4)
+
+		d5={}
+		d5['title']='Total Airports'
+		d5['value']=str(nairport[0])
+		trip_stats.append(d5)
+
+		d6={}
+		d6['title']='Total Countries'
+		d6['value']=str(ncountry[0])
+		trip_stats.append(d6)
+
 		for row in result:
 			d1={}
-			d1['title']='Total mileage'
+			d1['title']='Total Mileage'
 			d1['value']=str(row["mileage"] or 0) + ' miles'
 			d2={}
-			d2['title']='Total duration'
+			d2['title']='Total Duration'
 			minutes = row['duration'] or 0
 			hours = minutes/60
 			minutesRemaining = minutes % 60
