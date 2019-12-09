@@ -106,6 +106,15 @@ export class FlightsService {
   }
 
 
+  public autocompleteAirports(search: string){
+    return this.http.get(this.serverURL + '/airports/' + search);
+  }
+
+
+  public autocompleteAirlines(search: string){
+    return this.http.get(this.serverURL + '/airlines/' + search);
+  }
+
   private createAuthOptions(){
 
     const sessionToken = this.loginService.getToken();

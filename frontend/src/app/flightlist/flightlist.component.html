@@ -57,7 +57,7 @@
                                 [matAutocomplete]="airlineAuto"
                                 [(ngModel)]="flight.airline">
                             <mat-autocomplete #airlineAuto="matAutocomplete">
-                                <mat-option *ngFor="let airline of airlines" [value]="airline">
+                                <mat-option *ngFor="let airline of getAirlineSuggestions(flight.airline)" [value]="airline">
                                     {{airline}}
                                 </mat-option>
                             </mat-autocomplete>
@@ -79,7 +79,7 @@
                                     [(ngModel)]="flight.departAirport"
                                     required>
                                 <mat-autocomplete #depAuto="matAutocomplete">
-                                    <mat-option *ngFor="let airport of getAirportSuggestions(flight, true)" [value]="airport">
+                                    <mat-option *ngFor="let airport of getAirportSuggestions(flight.departAirport)" [value]="airport">
                                         {{airport}}
                                     </mat-option>
                                 </mat-autocomplete>
@@ -94,7 +94,7 @@
                                     [(ngModel)]="flight.arrivalAirport"
                                     required>
                                 <mat-autocomplete #arrAuto="matAutocomplete">
-                                    <mat-option *ngFor="let airport of getAirportSuggestions(flight, false)" [value]="airport">
+                                    <mat-option *ngFor="let airport of getAirportSuggestions(flight.arrivalAirport)" [value]="airport">
                                         {{airport}}
                                     </mat-option>
                                 </mat-autocomplete>
