@@ -1,8 +1,5 @@
-from app import app, bcrypt
+from app import app
 from flask import render_template, flash, redirect, url_for, session, request
-from app.forms import LoginForm, RegisterForm, FlightsForm, TripsForm
-from app.models import User
-from flask_login import login_user, current_user, logout_user, login_required
 import sqlite3 as sql
 from flask import jsonify
 import random
