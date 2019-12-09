@@ -314,7 +314,6 @@ def addtrip_user():
 			arrival_iata = flight['arrivalAirport']
 			arrival_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[arrival_iata]).fetchone()
 			if not arrival_airport:
-				con.commit()
 				cur.close()
 				return jsonify({'success':'false','reason':'The arrival airport does not exist'})
 			arrival_tz = arrival_airport["time_zone"]
@@ -324,7 +323,6 @@ def addtrip_user():
 			depart_iata = flight['departAirport']
 			depart_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[depart_iata]).fetchone()
 			if not depart_airport:
-				con.commit()
 				cur.close()
 				return jsonify({'success':'false','reason':'The departure airport does not exist'})
 			depart_tz = depart_airport["time_zone"]
@@ -333,12 +331,8 @@ def addtrip_user():
 
 			airline_iata = flight['airline']
 			flight_num = flight['number']
-			print('flight')
-			print(flight)
 
 			depart_date = flight['depart_date'].split("T")[0].split("-")
-			print('depart_date')
-			print(depart_date)
 			depart_mth = depart_date[1]
 			depart_day = depart_date[2]
 			depart_yr = depart_date[0]
@@ -369,8 +363,14 @@ def addtrip_user():
 			duration = (dt_arr_datetime-dt_depart_datetime).seconds//60
 			offset_mins = int((float(depart_tz)-float(arrival_tz))*60)
 			duration += offset_mins
+			if duration <= 0:
+				cur.close()
+				return jsonify({'success':'false','reason':'The duration is not positive'})
 
 			mileage = LatLonToMiles(depart_lat,depart_long,arrival_lat,arrival_long)
+			if mileage == 0:
+				cur.close()
+				return jsonify({'success':'false','reason':'The departure and arrival airport is the same'})
 
 			cur.execute("INSERT INTO flight (tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage) VALUES (?,?,?,?,?,?,?,?,?)",(tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage))
 		con.commit()
@@ -531,7 +531,6 @@ def updatetrip_user():
 			arrival_iata = flight['arrivalAirport']
 			arrival_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[arrival_iata]).fetchone()
 			if not arrival_airport:
-				con.commit()
 				cur.close()
 				return jsonify({'success':'false','reason':'The arrival airport does not exist'})
 			arrival_tz = arrival_airport["time_zone"]
@@ -541,7 +540,6 @@ def updatetrip_user():
 			depart_iata = flight['departAirport']
 			depart_airport = cur.execute("SELECT * FROM airport WHERE airport.iata = (?)",[depart_iata]).fetchone()
 			if not depart_airport:
-				con.commit()
 				cur.close()
 				return jsonify({'success':'false','reason':'The departure airport does not exist'})
 			depart_tz = depart_airport["time_zone"]
@@ -551,12 +549,7 @@ def updatetrip_user():
 			airline_iata = flight['airline']
 			flight_num = flight['number']
 
-			print('flight')
-			print(flight)
-
 			depart_date = flight['depart_date'].split("T")[0].split("-")
-			print('depart_date')
-			print(depart_date)
 			depart_mth = depart_date[1]
 			depart_day = depart_date[2]
 			depart_yr = depart_date[0]
@@ -587,8 +580,14 @@ def updatetrip_user():
 			duration = (dt_arr_datetime-dt_depart_datetime).seconds//60
 			offset_mins = int((float(depart_tz)-float(arrival_tz))*60)
 			duration += offset_mins
+			if duration <= 0:
+				cur.close()
+				return jsonify({'success':'false','reason':'The duration is not positive'})
 
 			mileage = LatLonToMiles(depart_lat,depart_long,arrival_lat,arrival_long)
+			if mileage == 0:
+				cur.close()
+				return jsonify({'success':'false','reason':'The departure and arrival airport is the same'})
 
 			cur.execute("INSERT INTO flight (tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage) VALUES (?,?,?,?,?,?,?,?,?)",(tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage))
 		con.commit()
