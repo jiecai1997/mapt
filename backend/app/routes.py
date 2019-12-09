@@ -243,10 +243,10 @@ def getstats_user(uid):
 		trip_stats = []
 		for row in result:
 			d1={}
-			d1['title']='mileage'
+			d1['title']='Total mileage'
 			d1['value']=str(row["mileage"] or 0) + ' miles'
 			d2={}
-			d2['title']='duration'
+			d2['title']='Total duration'
 			minutes = row['duration'] or 0
 			hours = minutes/60
 			minutesRemaining = minutes % 60
@@ -372,12 +372,12 @@ def addtrip_user():
 			duration += offset_mins
 			if duration <= 0:
 				cur.close()
-				return jsonify({'success':'false','reason':'The duration is not positive'})
+				return jsonify({'success':'false','reason':'Arrival date/time is before departure date/time'})
 
 			mileage = LatLonToMiles(depart_lat,depart_long,arrival_lat,arrival_long)
 			if mileage == 0:
 				cur.close()
-				return jsonify({'success':'false','reason':'The departure and arrival airport is the same'})
+				return jsonify({'success':'false','reason':'The departure and arrival airports are the same'})
 
 			cur.execute("INSERT INTO flight (tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage) VALUES (?,?,?,?,?,?,?,?,?)",(tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage))
 		con.commit()
@@ -427,8 +427,8 @@ def gettrips_user(uid):
 
 				flightdic = {}
 
-				flightdic['airline']=flight['airline']
-				flightdic['number']=flight['number']
+				flightdic['airline']=flight['airline_iata']
+				flightdic['number']=flight['flight_num']
 
 				flightdic['color']=row['color']
 
@@ -606,7 +606,7 @@ def updatetrip_user():
 			cur.execute("INSERT INTO flight (tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage) VALUES (?,?,?,?,?,?,?,?,?)",(tid, airline_iata, flight_num, depart_iata, arrival_iata, depart_datetime, arrival_datetime, duration, mileage))
 		con.commit()
 		cur.close()
-		return jsonify({'success': 'true'})``
+		return jsonify({'success': 'true'})
 
 # # DEPRECATED, refer to flights/uid
 # @app.route('/flights', methods=['GET', 'POST'])
