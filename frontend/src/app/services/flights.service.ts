@@ -117,7 +117,7 @@ export class FlightsService {
 
   private createAuthOptions(){
 
-    const sessionToken = this.loginService.getToken();
+    const sessionToken = this.loginService.getToken() || "SESSIONTOKEN";
 
     const httpOptions = {
       headers: new HttpHeaders({

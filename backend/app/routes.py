@@ -334,7 +334,7 @@ def addtrip_user():
 			depart_lat = depart_airport["latitude"]
 			depart_long = depart_airport["longitude"]
 
-			if 'airline' in flight and flight['airline']!="":
+			if 'airline' in flight and flight['airline'] and flight['airline'] != "":
 				airline = flight['airline']
 				airlinerow = cur.execute("SELECT * FROM airline WHERE airline.name = (?)",[airline]).fetchone()
 				if not airlinerow:
@@ -583,7 +583,7 @@ def updatetrip_user():
 			depart_lat = depart_airport["latitude"]
 			depart_long = depart_airport["longitude"]
 
-			if 'airline' in flight and flight['airline']!="":
+			if 'airline' in flight and flight['airline'] and flight['airline'] != "":
 				airline = flight['airline']
 				airlinerow = cur.execute("SELECT * FROM airline WHERE airline.name = (?)",[airline]).fetchone()
 				if not airlinerow:
